@@ -244,6 +244,13 @@ models/*.bin
 models/*.pt
 models/*.safetensors
 
+# Checkpoint files (large model files)
+checkpoints/
+*.state_dict
+*.ckpt
+*.pth
+*.safetensors
+
 # Streamlit secrets
 .streamlit/secrets.toml
 
