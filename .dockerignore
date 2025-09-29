@@ -1,0 +1,81 @@
+# Docker ignore patterns for better build performance
+
+# Git and version control
+.git/
+.gitignore
+.gitattributes
+
+# Python cache and bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Documentation and README files not needed in container
+README.md
+README_HF_DOCKER.md
+*.md
+docs/
+documentation/
+
+# Test files
+test/
+tests/
+*_test.py
+test_*.py
+
+# Large ML models (downloaded at runtime)
+models/
+checkpoints/
+*.bin
+*.safetensors
+*.pkl
+*.joblib
+
+# Logs and temporary files
+*.log
+logs/
+temp/
+tmp/
+
+# Data files (except for sample data if needed)
+data/processed/
+data/history/
+
+# Development requirements
+requirements.txt
+requirements-dev.txt
+poetry.lock
+Pipfile
+Pipfile.lock
+
+# CI/CD files
+.github/
+.gitlab-ci.yml
+.travis.yml
+Jenkinsfile
