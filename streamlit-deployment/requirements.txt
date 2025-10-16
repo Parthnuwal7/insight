@@ -1,0 +1,18 @@
+# Frontend Requirements - Streamlit Cloud Compatible
+# Only UI and API libraries - NO ML dependencies
+
+streamlit>=1.28.0
+pandas>=1.5.0
+numpy>=1.24.0
+plotly>=5.15.0
+requests>=2.31.0
+streamlit-option-menu>=0.3.6
+streamlit-aggrid>=0.3.4
+networkx>=3.1
+
+# Optional extras for enhanced UI
+pillow>=10.0.0
+openpyxl>=3.1.0
+
+# Total size: ~60MB (vs 1.5GB with ML libraries)
+# Perfect for Streamlit Cloud free tier!
