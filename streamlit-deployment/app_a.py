@@ -794,9 +794,103 @@ def create_language_distribution(df: pd.DataFrame) -> go.Figure:
         st.warning(f"Could not generate language chart: {str(e)}")
         return go.Figure()
 
-def create_aspect_network(df: pd.DataFrame) -> go.Figure:
+def create_aspect_network(df: pd.DataFrame, network_data: dict = None) -> go.Figure:
     """Create network graph of aspect co-occurrences"""
     try:
+        # If backend provided network data, use it
+        if network_data:
+            try:
+                import networkx as nx
+                from networkx.readwrite import json_graph
+                
+                # Reconstruct graph from JSON
+                G = json_graph.node_link_graph(network_data)
+                
+                if len(G.nodes()) == 0:
+                    fig = go.Figure()
+                    fig.add_annotation(
+                        text="No aspect relationships found",
+                        xref="paper", yref="paper",
+                        x=0.5, y=0.5, showarrow=False
+                    )
+                    fig.update_layout(title="🕸️ Aspect Network", template='plotly_white')
+                    return fig
+                
+                # Filter to top edges
+                if len(G.edges()) > 30:
+                    edges = sorted(G.edges(data=True), key=lambda x: x[2].get('weight', 1), reverse=True)[:30]
+                    G_filtered = nx.Graph()
+                    for u, v, data in edges:
+                        G_filtered.add_edge(u, v, weight=data.get('weight', 1))
+                else:
+                    G_filtered = G
+                
+                # Layout
+                pos = nx.spring_layout(G_filtered, k=1, iterations=50)
+                
+                # Create edges
+                edge_x = []
+                edge_y = []
+                edge_weights = []
+                
+                for edge in G_filtered.edges(data=True):
+                    x0, y0 = pos[edge[0]]
+                    x1, y1 = pos[edge[1]]
+                    edge_x.extend([x0, x1, None])
+                    edge_y.extend([y0, y1, None])
+                    edge_weights.append(edge[2].get('weight', 1))
+                
+                edge_trace = go.Scatter(
+                    x=edge_x, y=edge_y,
+                    line=dict(width=1, color='#888'),
+                    hoverinfo='none',
+                    mode='lines'
+                )
+                
+                # Create nodes
+                node_x = []
+                node_y = []
+                node_text = []
+                node_size = []
+                
+                for node in G_filtered.nodes():
+                    x, y = pos[node]
+                    node_x.append(x)
+                    node_y.append(y)
+                    node_text.append(str(node))
+                    node_size.append(G_filtered.degree(node) * 10 + 15)
+                
+                node_trace = go.Scatter(
+                    x=node_x, y=node_y,
+                    mode='markers+text',
+                    text=node_text,
+                    textposition="top center",
+                    marker=dict(
+                        size=node_size,
+                        color='#667eea',
+                        line=dict(width=2, color='white')
+                    ),
+                    hoverinfo='text',
+                    hovertext=node_text
+                )
+                
+                fig = go.Figure(data=[edge_trace, node_trace])
+                fig.update_layout(
+                    title="🕸️ Aspect Co-occurrence Network",
+                    showlegend=False,
+                    hovermode='closest',
+                    template='plotly_white',
+                    height=500,
+                    xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                    yaxis=dict(showgrid=False, zeroline=False, showticklabels=False)
+                )
+                return fig
+                
+            except Exception as e:
+                st.warning(f"Failed to load network from backend: {str(e)}")
+                # Fall through to manual construction
+        
+        # Fallback: Build network manually from DataFrame
         if 'aspects' not in df.columns:
             return go.Figure()
         
@@ -829,38 +923,73 @@ def create_aspect_network(df: pd.DataFrame) -> go.Figure:
                 else:
                     aspects = [str(aspects_value)]
                 
-                # Only add if we have multiple aspects (for co-occurrence)
-                if aspects and len(aspects) > 1:
-                    all_aspects.append([str(a) for a in aspects if a and str(a).strip()])
+                # Add all aspects (not just multiple)
+                if aspects:
+                    cleaned_aspects = [str(a) for a in aspects if a and str(a).strip()]
+                    if len(cleaned_aspects) > 1:
+                        # For co-occurrence network
+                        all_aspects.append(cleaned_aspects)
+                    elif len(cleaned_aspects) == 1:
+                        # Track single aspects too
+                        all_aspects.append(cleaned_aspects)
             except Exception:
                 continue
         
         if not all_aspects:
             fig = go.Figure()
             fig.add_annotation(
-                text="Not enough aspect co-occurrences for network",
+                text="No aspects found in the data",
                 xref="paper", yref="paper",
                 x=0.5, y=0.5, showarrow=False
             )
             fig.update_layout(title="🕸️ Aspect Network", template='plotly_white')
             return fig
         
-        # Build network
+        # Build network (with co-occurrences if available)
         G = nx.Graph()
         
+        # Add edges for co-occurrences
         for aspects in all_aspects:
-            for i in range(len(aspects)):
-                for j in range(i + 1, len(aspects)):
-                    if G.has_edge(aspects[i], aspects[j]):
-                        G[aspects[i]][aspects[j]]['weight'] += 1
-                    else:
-                        G.add_edge(aspects[i], aspects[j], weight=1)
+            if len(aspects) > 1:
+                for i in range(len(aspects)):
+                    for j in range(i + 1, len(aspects)):
+                        if G.has_edge(aspects[i], aspects[j]):
+                            G[aspects[i]][aspects[j]]['weight'] += 1
+                        else:
+                            G.add_edge(aspects[i], aspects[j], weight=1)
+            else:
+                # Add isolated node for single aspects
+                G.add_node(aspects[0])
         
-        # Get top edges
-        edges = sorted(G.edges(data=True), key=lambda x: x[2]['weight'], reverse=True)[:30]
-        G_filtered = nx.Graph()
-        for u, v, data in edges:
-            G_filtered.add_edge(u, v, weight=data['weight'])
+        if len(G.nodes()) == 0:
+            fig = go.Figure()
+            fig.add_annotation(
+                text="No aspects to display",
+                xref="paper", yref="paper",
+                x=0.5, y=0.5, showarrow=False
+            )
+            fig.update_layout(title="🕸️ Aspect Network", template='plotly_white')
+            return fig
+        
+        # If we have edges, filter to top ones
+        if len(G.edges()) > 0:
+            edges = sorted(G.edges(data=True), key=lambda x: x[2]['weight'], reverse=True)[:30]
+            G_filtered = nx.Graph()
+            for u, v, data in edges:
+                G_filtered.add_edge(u, v, weight=data['weight'])
+        else:
+            # No edges, just show top nodes
+            G_filtered = G
+            # Limit to top 20 most frequent aspects
+            aspect_counts = {}
+            for aspects in all_aspects:
+                for aspect in aspects:
+                    aspect_counts[aspect] = aspect_counts.get(aspect, 0) + 1
+            
+            top_aspects = sorted(aspect_counts.items(), key=lambda x: x[1], reverse=True)[:20]
+            G_filtered = nx.Graph()
+            for aspect, count in top_aspects:
+                G_filtered.add_node(aspect, count=count)
         
         # Layout
         pos = nx.spring_layout(G_filtered, k=1, iterations=50)
@@ -1125,12 +1254,21 @@ def show_home_page():
                         # Parse backend response
                         processed_df = parse_backend_response(result)
                         
+                        # Also extract aspect_network if available
+                        aspect_network = None
+                        if isinstance(result, dict):
+                            if "data" in result and isinstance(result["data"], dict):
+                                aspect_network = result["data"].get("aspect_network")
+                            elif "aspect_network" in result:
+                                aspect_network = result["aspect_network"]
+                        
                         if processed_df is not None and len(processed_df) > 0:
                             # Normalize column names
                             processed_df = normalize_backend_columns(processed_df)
                             
                             # Save to session state
                             st.session_state.processed_data = processed_df
+                            st.session_state.aspect_network = aspect_network  # Store network data
                             st.session_state.filename = uploaded_file.name
                             st.session_state.processing = False
                             
@@ -1295,7 +1433,9 @@ def show_analytics_page():
         st.plotly_chart(fig, use_container_width=True, key="language_dist_chart")
     
     with insight_col2:
-        fig = create_aspect_network(filtered_df)
+        # Get aspect network from session state if available
+        network_data = st.session_state.get('aspect_network', None)
+        fig = create_aspect_network(filtered_df, network_data)
         st.plotly_chart(fig, use_container_width=True, key="aspect_network_chart")
     
     # Intent Distribution Pie Chart
