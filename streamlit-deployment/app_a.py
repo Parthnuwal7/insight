@@ -1326,59 +1326,295 @@ def show_analytics_page():
     
     df = st.session_state.processed_data
     
+    from dashboard_components import (
+        create_enhanced_kpi_cards,
+        create_sentiment_pie_chart,
+        create_intent_aspect_heatmap,
+        create_sentiment_aspect_heatmap,
+        create_reviews_timeline,
+        create_priority_leaderboard,
+        create_aspect_cooccurrence_heatmap,
+        create_confidence_funnel,
+        get_all_unique_aspects,
+        extract_aspects_list
+    )
+    
     st.info(f"📊 Analyzing {len(df)} reviews from **{st.session_state.get('filename', 'uploaded file')}**")
     
-    # Show KPIs
-    create_kpi_cards(df)
+    # ========== TOP ROW: ENHANCED KPI CARDS ==========
+    create_enhanced_kpi_cards(df)
     
-    # Add filters
+    # ========== FILTER BAR (MULTI-SELECT + DATE RANGE) ==========
     st.markdown("---")
     st.markdown("### 🎛️ Filters")
     
-    filter_col1, filter_col2, filter_col3 = st.columns(3)
+    filter_col1, filter_col2, filter_col3, filter_col4 = st.columns(4)
     
     with filter_col1:
         if 'sentiment' in df.columns:
-            sentiments = ['All'] + list(df['sentiment'].unique())
-            selected_sentiment = st.selectbox("Filter by Sentiment", sentiments)
+            sentiments = list(df['sentiment'].unique())
+            selected_sentiments = st.multiselect(
+                "Sentiment",
+                options=sentiments,
+                default=sentiments,
+                help="Select one or more sentiments"
+            )
+        else:
+            selected_sentiments = []
     
     with filter_col2:
         if 'intent' in df.columns:
-            intents = ['All'] + list(df['intent'].unique())
-            selected_intent = st.selectbox("Filter by Intent", intents)
+            intents = list(df['intent'].unique())
+            selected_intents = st.multiselect(
+                "Intent",
+                options=intents,
+                default=intents,
+                help="Select one or more intents"
+            )
+        else:
+            selected_intents = []
     
     with filter_col3:
         if 'language' in df.columns:
-            languages = ['All'] + list(df['language'].unique())
-            selected_language = st.selectbox("Filter by Language", languages)
+            languages = list(df['language'].unique())
+            selected_languages = st.multiselect(
+                "Language",
+                options=languages,
+                default=languages,
+                help="Select one or more languages"
+            )
+        else:
+            selected_languages = []
+    
+    with filter_col4:
+        if 'aspects' in df.columns:
+            all_aspects = get_all_unique_aspects(df)
+            selected_aspects = st.multiselect(
+                "Aspects",
+                options=all_aspects,
+                default=[],
+                help="Select one or more aspects (leave empty for all)"
+            )
+        else:
+            selected_aspects = []
+    
+    # Date range filter
+    if 'date' in df.columns:
+        try:
+            df['date'] = pd.to_datetime(df['date'])
+            min_date = df['date'].min().date()
+            max_date = df['date'].max().date()
+            
+            date_col1, date_col2 = st.columns(2)
+            with date_col1:
+                start_date = st.date_input("From Date", value=min_date, min_value=min_date, max_value=max_date)
+            with date_col2:
+                end_date = st.date_input("To Date", value=max_date, min_value=min_date, max_value=max_date)
+        except:
+            start_date = None
+            end_date = None
+    else:
+        start_date = None
+        end_date = None
     
     # Apply filters
     filtered_df = df.copy()
-    if 'sentiment' in df.columns and selected_sentiment != 'All':
-        filtered_df = filtered_df[filtered_df['sentiment'] == selected_sentiment]
-    if 'intent' in df.columns and selected_intent != 'All':
-        filtered_df = filtered_df[filtered_df['intent'] == selected_intent]
-    if 'language' in df.columns and selected_language != 'All':
-        filtered_df = filtered_df[filtered_df['language'] == selected_language]
     
-    st.info(f"Showing {len(filtered_df)} of {len(df)} reviews")
+    if 'sentiment' in df.columns and selected_sentiments:
+        filtered_df = filtered_df[filtered_df['sentiment'].isin(selected_sentiments)]
     
-    # Visualizations
+    if 'intent' in df.columns and selected_intents:
+        filtered_df = filtered_df[filtered_df['intent'].isin(selected_intents)]
+    
+    if 'language' in df.columns and selected_languages:
+        filtered_df = filtered_df[filtered_df['language'].isin(selected_languages)]
+    
+    # Apply aspect filter
+    if selected_aspects and 'aspects' in filtered_df.columns:
+        def contains_any_aspect(aspects_value):
+            aspects = extract_aspects_list(aspects_value)
+            return any(asp in selected_aspects for asp in aspects)
+        
+        filtered_df = filtered_df[filtered_df['aspects'].apply(contains_any_aspect)]
+    
+    # Apply date filter
+    if start_date and end_date and 'date' in filtered_df.columns:
+        filtered_df = filtered_df[
+            (filtered_df['date'].dt.date >= start_date) &
+            (filtered_df['date'].dt.date <= end_date)
+        ]
+    
+    st.info(f"📊 Showing **{len(filtered_df)}** of **{len(df)}** reviews after filters")
+    
+    # Check if we have data to display
+    if len(filtered_df) == 0:
+        st.warning("⚠️ No data matches the selected filters. Please adjust your filter criteria.")
+        return
+    
+    # ========== ROW 1: SENTIMENT PIE + INTENT-ASPECT HEATMAP ==========
     st.markdown("---")
-    st.markdown("### 📊 Sentiment Analysis")
+    st.markdown("### � Overview")
     
-    col1, col2 = st.columns(2)
+    row1_col1, row1_col2 = st.columns(2)
     
-    with col1:
-        fig = create_sentiment_timeline(filtered_df)
-        st.plotly_chart(fig, use_container_width=True, key="sentiment_timeline_chart")
+    with row1_col1:
+        fig = create_sentiment_pie_chart(filtered_df)
+        st.plotly_chart(fig, use_container_width=True, key="sentiment_pie")
     
-    with col2:
-        if 'intent' in filtered_df.columns:
-            fig = create_intent_sentiment_chart(filtered_df)
-            st.plotly_chart(fig, use_container_width=True, key="intent_sentiment_chart")
+    with row1_col2:
+        fig = create_intent_aspect_heatmap(filtered_df)
+        st.plotly_chart(fig, use_container_width=True, key="intent_aspect_heatmap")
     
-    # Word Clouds Section
+    # ========== ROW 2: ASPECT-SENTIMENT HEATMAP + REVIEWS TIMELINE ==========
+    st.markdown("---")
+    st.markdown("### 📈 Sentiment Patterns")
+    
+    row2_col1, row2_col2 = st.columns(2)
+    
+    with row2_col1:
+        fig = create_sentiment_aspect_heatmap(filtered_df)
+        st.plotly_chart(fig, use_container_width=True, key="sentiment_aspect_heatmap")
+    
+    with row2_col2:
+        fig = create_reviews_timeline(filtered_df)
+        st.plotly_chart(fig, use_container_width=True, key="reviews_timeline")
+    
+    # ========== ROW 3: PRIORITY LEADERBOARD + ASPECT SENTIMENT TRENDS ==========
+    st.markdown("---")
+    st.markdown("### � Priority Insights")
+    
+    row3_col1, row3_col2 = st.columns(2)
+    
+    with row3_col1:
+        fig = create_priority_leaderboard(filtered_df)
+        st.plotly_chart(fig, use_container_width=True, key="priority_leaderboard")
+    
+    with row3_col2:
+        # Aspect sentiment trends over time (placeholder for now)
+        st.markdown("#### 📊 Aspect Sentiment Trends")
+        st.info("Coming soon: Time-series sentiment trends for top aspects")
+        # TODO: Implement aspect sentiment trends chart
+    
+    # ========== ROW 4: CO-OCCURRENCE HEATMAP + LLM INSIGHTS ==========
+    st.markdown("---")
+    st.markdown("### 🔗 Correlations & Insights")
+    
+    row4_col1, row4_col2 = st.columns(2)
+    
+    with row4_col1:
+        fig = create_aspect_cooccurrence_heatmap(filtered_df)
+        st.plotly_chart(fig, use_container_width=True, key="cooccurrence_heatmap")
+    
+    with row4_col2:
+        # LLM Insight Cards (placeholder)
+        st.markdown("#### � AI-Generated Insights")
+        st.info("**Coming soon:** Automated recommendations for priority aspects")
+        
+        # Placeholder insight cards
+        st.markdown("""
+        <div style='background-color: #f0f9ff; padding: 15px; border-radius: 8px; margin-bottom: 10px;'>
+        <h4 style='margin:0; color: #0369a1;'>🔍 Insight: Top Priority</h4>
+        <p style='margin:5px 0 0 0;'>Based on analysis, <strong>Design</strong> requires immediate attention with 65% negative sentiment.</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div style='background-color: #f0fdf4; padding: 15px; border-radius: 8px; margin-bottom: 10px;'>
+        <h4 style='margin:0; color: #15803d;'>✅ Insight: Strength Area</h4>
+        <p style='margin:5px 0 0 0;'><strong>Performance</strong> consistently receives positive feedback (78% positive).</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # TODO: Implement actual LLM insights with caching
+    
+    # # ========== DIAGNOSTIC SECTION (TEMPORARY - Remove after debugging) ==========
+    # from diagnostic_component import show_aspect_diagnostics
+    # show_aspect_diagnostics(filtered_df)
+    
+    # ========== ROW 5: DRILL-DOWN PANEL + CONFIDENCE FUNNEL ==========
+    st.markdown("---")
+    st.markdown("### 🔍 Deep Dive Analysis")
+    
+    row5_col1, row5_col2 = st.columns([2, 1])
+    
+    with row5_col1:
+        # Drill-down panel
+        st.markdown("#### � Review Details")
+        
+        with st.expander("🔍 Click to explore individual reviews", expanded=False):
+            # Add mini-filters for drill-down
+            drill_col1, drill_col2 = st.columns(2)
+            with drill_col1:
+                sort_by = st.selectbox("Sort by", ["Date (Newest)", "Date (Oldest)", "Confidence (High)", "Confidence (Low)"])
+            with drill_col2:
+                page_size = st.selectbox("Reviews per page", [10, 25, 50, 100], index=1)
+            
+            # Sort filtered data
+            drill_df = filtered_df.copy()
+            if sort_by == "Date (Newest)" and 'date' in drill_df.columns:
+                drill_df = drill_df.sort_values('date', ascending=False)
+            elif sort_by == "Date (Oldest)" and 'date' in drill_df.columns:
+                drill_df = drill_df.sort_values('date', ascending=True)
+            elif sort_by == "Confidence (High)" and 'confidence' in drill_df.columns:
+                drill_df = drill_df.sort_values('confidence', ascending=False)
+            elif sort_by == "Confidence (Low)" and 'confidence' in drill_df.columns:
+                drill_df = drill_df.sort_values('confidence', ascending=True)
+            
+            # Display paginated reviews
+            total_pages = (len(drill_df) - 1) // page_size + 1
+            page = st.number_input("Page", min_value=1, max_value=max(1, total_pages), value=1)
+            
+            start_idx = (page - 1) * page_size
+            end_idx = min(start_idx + page_size, len(drill_df))
+            
+            st.info(f"Showing reviews {start_idx + 1} to {end_idx} of {len(drill_df)}")
+            
+            # Display reviews
+            for idx, row in drill_df.iloc[start_idx:end_idx].iterrows():
+                review_text = row.get('review', 'N/A')
+                sentiment = row.get('sentiment', 'N/A')
+                intent = row.get('intent', 'N/A')
+                confidence = row.get('confidence', 0)
+                aspects = extract_aspects_list(row.get('aspects', []))
+                
+                # Color code by sentiment
+                if sentiment == 'Positive':
+                    bg_color = '#f0fdf4'
+                    border_color = '#22c55e'
+                elif sentiment == 'Negative':
+                    bg_color = '#fef2f2'
+                    border_color = '#ef4444'
+                else:
+                    bg_color = '#f0f9ff'
+                    border_color = '#3b82f6'
+                
+                st.markdown(f"""
+                <div style='background-color: {bg_color}; padding: 12px; border-left: 4px solid {border_color}; border-radius: 4px; margin-bottom: 10px;'>
+                <p style='margin:0;'><strong>Review:</strong> {review_text[:200]}{'...' if len(review_text) > 200 else ''}</p>
+                <p style='margin:5px 0 0 0; font-size: 0.9em;'>
+                <strong>Sentiment:</strong> {sentiment} | 
+                <strong>Intent:</strong> {intent} | 
+                <strong>Confidence:</strong> {confidence:.2%} | 
+                <strong>Aspects:</strong> {', '.join(aspects) if aspects else 'None'}
+                </p>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            # Export drill-down data
+            drill_csv = drill_df.to_csv(index=False)
+            st.download_button(
+                label="📥 Export Drill-Down Data",
+                data=drill_csv,
+                file_name=f"drilldown_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                mime="text/csv"
+            )
+    
+    with row5_col2:
+        # Confidence funnel
+        fig = create_confidence_funnel(filtered_df)
+        st.plotly_chart(fig, use_container_width=True, key="confidence_funnel")
+    
+    # ========== LEGACY SECTIONS (WORD CLOUDS & NETWORK) ==========
     st.markdown("---")
     st.markdown("### ☁️ Word Clouds")
     
@@ -1408,66 +1644,37 @@ def show_analytics_page():
         else:
             st.info("No negative reviews found")
     
-    # Aspect Analysis Section
+    # Aspect Network
     st.markdown("---")
-    st.markdown("### 🎯 Aspect Analysis")
+    st.markdown("### 🕸️ Aspect Network")
+    network_data = st.session_state.get('aspect_network', None)
+    fig = create_aspect_network(filtered_df, network_data)
+    st.plotly_chart(fig, use_container_width=True, key="aspect_network_chart")
     
-    aspect_col1, aspect_col2 = st.columns(2)
-    
-    with aspect_col1:
-        fig = create_top_aspects_chart(filtered_df)
-        st.plotly_chart(fig, use_container_width=True, key="top_aspects_chart")
-    
-    with aspect_col2:
-        fig = create_aspect_sentiment_heatmap(filtered_df)
-        st.plotly_chart(fig, use_container_width=True, key="aspect_heatmap_chart")
-    
-    # Additional Charts
+    # ========== FOOTER: EXPORT & UTILITIES ==========
     st.markdown("---")
-    st.markdown("### 📈 Additional Insights")
+    st.markdown("### � Export & Utilities")
     
-    insight_col1, insight_col2 = st.columns(2)
+    export_col1, export_col2, export_col3 = st.columns(3)
     
-    with insight_col1:
-        fig = create_language_distribution(filtered_df)
-        st.plotly_chart(fig, use_container_width=True, key="language_dist_chart")
-    
-    with insight_col2:
-        # Get aspect network from session state if available
-        network_data = st.session_state.get('aspect_network', None)
-        fig = create_aspect_network(filtered_df, network_data)
-        st.plotly_chart(fig, use_container_width=True, key="aspect_network_chart")
-    
-    # Intent Distribution Pie Chart
-    if 'intent' in filtered_df.columns and len(filtered_df) > 0:
-        st.markdown("---")
-        st.markdown("### 🎯 Intent Distribution")
-        intent_counts = filtered_df['intent'].value_counts()
-        fig = px.pie(
-            values=intent_counts.values,
-            names=intent_counts.index,
-            title="Complete Intent Breakdown",
-            color=intent_counts.index,
-            color_discrete_map=COLOR_SCHEMES['intent'],
-            hole=0.3
+    with export_col1:
+        # Full CSV export
+        csv = filtered_df.to_csv(index=False)
+        st.download_button(
+            label="📥 Download Full Dataset (CSV)",
+            data=csv,
+            file_name=f"sentiment_analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+            mime="text/csv",
+            use_container_width=True
         )
-        fig.update_traces(textposition='inside', textinfo='percent+label')
-        st.plotly_chart(fig, use_container_width=True, key="intent_pie_full_chart")
     
-    # Full data table with download
-    st.markdown("---")
-    st.markdown("### 📋 Detailed Results")
+    with export_col2:
+        # Summary report
+        st.button("📄 Generate PDF Report", disabled=True, use_container_width=True, help="Coming soon")
     
-    # Download button
-    csv = filtered_df.to_csv(index=False)
-    st.download_button(
-        label="📥 Download Filtered Data as CSV",
-        data=csv,
-        file_name=f"sentiment_analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
-        mime="text/csv"
-    )
-    
-    st.dataframe(filtered_df, use_container_width=True)
+    with export_col3:
+        # Alert setup
+        st.button("🔔 Setup Alerts", disabled=True, use_container_width=True, help="Coming soon: Get notified when priority aspects spike")
 
 def main():
     """Main application"""
