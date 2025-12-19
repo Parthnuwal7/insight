@@ -20,6 +20,21 @@ from io import BytesIO
 import numpy as np
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
+# Import telemetry helpers
+try:
+    from frontend_helpers import initialize_telemetry, log_event, submit_analysis_job, get_job_status
+except ImportError:
+    # Fallback if frontend_helpers not available
+    def initialize_telemetry(*args, **kwargs): pass
+    def log_event(*args, **kwargs): pass
+    def submit_analysis_job(*args, **kwargs): return None
+    def get_job_status(*args, **kwargs): return None
 
 # Install streamlit-option-menu if not available
 try:
@@ -38,6 +53,15 @@ st.set_page_config(
 
 # Configuration
 HF_SPACES_API_URL = "https://parthnuwal7-absa.hf.space"
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
+OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
+LLM_MODEL = "nvidia/nemotron-3-nano-30b-a3b:free"
+
+# Initialize telemetry (session tracking, dashboard view event)
+try:
+    initialize_telemetry(HF_SPACES_API_URL)
+except:
+    pass  # Silently fail if backend not available
 
 # Enhanced CSS styling for professional dashboard
 def apply_custom_css():
@@ -1136,69 +1160,409 @@ def create_top_aspects_chart(df: pd.DataFrame) -> go.Figure:
         st.warning(f"Could not generate top aspects chart: {str(e)}")
         return go.Figure()
 
-def show_home_page():
-    """Display the home page with file upload and processing"""
-    st.markdown('<div class="dashboard-header"><h1>🎯 Abstract Sentiment Analysis Dashboard</h1><p>AI-Powered Review Analytics with PyABSA</p></div>', unsafe_allow_html=True)
+# ========== ADMIN DASHBOARD FUNCTIONS ==========
+
+def check_admin_auth():
+    """Check if admin is authenticated."""
+    if "admin_token" not in st.session_state:
+        st.session_state.admin_token = None
     
-    st.markdown("### 📤 Upload Reviews Data")
+    if not st.session_state.admin_token:
+        st.warning("⚠️ Please enter admin token to access analytics")
+        token = st.text_input("Admin Token", type="password", key="token_input")
+        if st.button("Login"):
+            st.session_state.admin_token = token
+            st.rerun()
+        return False
     
-    uploaded_file = st.file_uploader(
-        "Choose a CSV file with columns: id, reviews_title, review, date, user_id",
-        type=['csv']
+    return True
+
+
+def get_admin_headers():
+    """Get authorization headers for admin endpoints."""
+    return {
+        "Authorization": f"Bearer {st.session_state.admin_token}"
+    }
+
+
+def fetch_metrics_summary(api_url: str):
+    """Fetch metrics summary from admin endpoint."""
+    try:
+        response = requests.get(
+            f"{api_url}/admin/metrics/summary",
+            headers=get_admin_headers(),
+            timeout=10
+        )
+        
+        if response.status_code == 401:
+            st.error("❌ Invalid admin token. Please check and try again.")
+            st.session_state.admin_token = None
+            return None
+        
+        response.raise_for_status()
+        return response.json()["data"]
+    
+    except Exception as e:
+        st.error(f"Failed to fetch summary: {str(e)}")
+        return None
+
+
+def fetch_events_timeline(api_url: str, days: int = 7):
+    """Fetch events timeline."""
+    try:
+        response = requests.get(
+            f"{api_url}/admin/metrics/events?days={days}",
+            headers=get_admin_headers(),
+            timeout=10
+        )
+        response.raise_for_status()
+        return response.json()["data"]
+    
+    except Exception as e:
+        st.error(f"Failed to fetch timeline: {str(e)}")
+        return None
+
+
+def fetch_funnel_analysis(api_url: str, days: int = 7):
+    """Fetch funnel analysis."""
+    try:
+        response = requests.get(
+            f"{api_url}/admin/metrics/funnel?days={days}",
+            headers=get_admin_headers(),
+            timeout=10
+        )
+        response.raise_for_status()
+        return response.json()["data"]
+    
+    except Exception as e:
+        st.error(f"Failed to fetch funnel: {str(e)}")
+        return None
+
+
+def fetch_rate_limit_stats(api_url: str, days: int = 7):
+    """Fetch rate limit statistics."""
+    try:
+        response = requests.get(
+            f"{api_url}/admin/metrics/rate-limits?days={days}",
+            headers=get_admin_headers(),
+            timeout=10
+        )
+        response.raise_for_status()
+        return response.json()["data"]
+    
+    except Exception as e:
+        st.error(f"Failed to fetch rate limit stats: {str(e)}")
+        return None
+
+
+def show_admin_page():
+    """Display the admin analytics page."""
+    st.markdown("## 🔒 Admin Analytics Dashboard")
+    
+    # Check authentication
+    if not check_admin_auth():
+        return
+    
+    # Logout button
+    if st.button("Logout", key="admin_logout"):
+        st.session_state.admin_token = None
+        st.rerun()
+    
+    # Time range selector in sidebar
+    st.sidebar.markdown("### ⚙️ Admin Settings")
+    days = st.sidebar.slider(
+        "Days to analyze",
+        min_value=1,
+        max_value=30,
+        value=7,
+        help="Number of days to include in analysis"
     )
     
-    if uploaded_file is not None:
-        try:
-            df = pd.read_csv(uploaded_file)
+    # Refresh button
+    if st.sidebar.button("🔄 Refresh Data"):
+        st.rerun()
+    
+    st.divider()
+    
+    # === METRICS SUMMARY ===
+    st.markdown("### 📊 Metrics Summary")
+    
+    summary = fetch_metrics_summary(HF_SPACES_API_URL)
+    
+    if summary:
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            st.metric("Unique Devices", summary["unique_devices"])
+        
+        with col2:
+            st.metric("Unique Users", summary["unique_users"])
+        
+        with col3:
+            total_events = sum(summary["events_by_type"].values())
+            st.metric("Total Events", total_events)
+        
+        # Events by type
+        st.markdown("#### Events by Type")
+        
+        events_df = pd.DataFrame([
+            {"Event Type": k, "Count": v}
+            for k, v in summary["events_by_type"].items()
+        ])
+        
+        if not events_df.empty:
+            fig = px.bar(
+                events_df,
+                x="Event Type",
+                y="Count",
+                color="Event Type",
+                title="Event Distribution"
+            )
+            st.plotly_chart(fig, width='stretch', key="admin_events_bar")
+    
+    st.divider()
+    
+    # === EVENTS TIMELINE ===
+    st.markdown("### 📈 Events Timeline")
+    
+    timeline_data = fetch_events_timeline(HF_SPACES_API_URL, days)
+    
+    if timeline_data and timeline_data["timeline"]:
+        timeline_df = pd.DataFrame(timeline_data["timeline"])
+        
+        fig = px.line(
+            timeline_df,
+            x="date",
+            y="count",
+            color="event_type",
+            title=f"Events Over Last {days} Days",
+            labels={"count": "Event Count", "date": "Date", "event_type": "Event Type"}
+        )
+        st.plotly_chart(fig, width='stretch', key="admin_timeline")
+    else:
+        st.info("No timeline data available")
+    
+    st.divider()
+    
+    # === FUNNEL ANALYSIS ===
+    st.markdown("### 🔀 Conversion Funnel")
+    
+    funnel_data = fetch_funnel_analysis(HF_SPACES_API_URL, days)
+    
+    if funnel_data:
+        stages = funnel_data["funnel_stages"]
+        conversions = funnel_data["conversion_rates"]
+        
+        # Funnel chart
+        funnel_stages = ["DASHBOARD_VIEW", "ANALYSIS_REQUEST", "TASK_QUEUED", "TASK_COMPLETED"]
+        funnel_values = [stages.get(stage, 0) for stage in funnel_stages]
+        
+        fig = go.Figure(go.Funnel(
+            y=funnel_stages,
+            x=funnel_values,
+            textinfo="value+percent initial"
+        ))
+        
+        fig.update_layout(title=f"User Journey Funnel (Last {days} Days)")
+        st.plotly_chart(fig, width='stretch', key="admin_funnel")
+        
+        # Conversion metrics
+        st.markdown("#### Conversion Rates")
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.metric("View → Request", f"{conversions['view_to_request']:.1f}%")
+            st.metric("Request → Queued", f"{conversions['request_to_queued']:.1f}%")
+        
+        with col2:
+            st.metric("Queued → Completed", f"{conversions['queued_to_completed']:.1f}%")
+            st.metric("Overall Completion", f"{conversions['overall_completion']:.1f}%")
+    
+    st.divider()
+    
+    # === RATE LIMIT STATS ===
+    st.markdown("### 🚦 Rate Limiting Statistics")
+    
+    rate_limit_data = fetch_rate_limit_stats(HF_SPACES_API_URL, days)
+    
+    if rate_limit_data:
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.metric("Total Rate Limit Hits", rate_limit_data["total_hits"])
+        
+        with col2:
+            top_devices = len(rate_limit_data["top_devices"])
+            st.metric("Unique Devices Hit", top_devices)
+        
+        # Top offenders
+        if rate_limit_data["top_devices"]:
+            st.markdown("#### Top Rate Limited Devices")
             
-            # Validate required columns
-            required_cols = ['id', 'reviews_title', 'review', 'date', 'user_id']
-            missing_cols = [col for col in required_cols if col not in df.columns]
+            devices_df = pd.DataFrame(rate_limit_data["top_devices"])
+            st.dataframe(devices_df, width='stretch')
+        
+        # Timeline
+        if rate_limit_data["timeline"]:
+            st.markdown("#### Rate Limit Hits Over Time")
             
-            if missing_cols:
-                st.error(f"❌ Missing required columns: {', '.join(missing_cols)}")
-                st.info("Required columns: id, reviews_title, review, date, user_id")
+            timeline_df = pd.DataFrame(rate_limit_data["timeline"])
+            
+            fig = px.bar(
+                timeline_df,
+                x="date",
+                y="count",
+                title="Daily Rate Limit Hits",
+                labels={"count": "Hits", "date": "Date"}
+            )
+            st.plotly_chart(fig, width='stretch', key="admin_rate_limits")
+
+
+def show_home_page():
+    """Display the home page with file upload and processing"""
+    st.markdown('<div class="dashboard-header"><h1>🎯 Aspect-Based Sentiment Analysis</h1><p>AI-Powered Multi-Aspect Review Analytics</p></div>', unsafe_allow_html=True)
+    
+    # Data source selection
+    st.markdown("### 📊 Choose Data Source")
+    
+    data_source = st.radio(
+        "Select how you want to provide data:",
+        options=["📁 Upload Your Own Data", "🎲 Try Sample Datasets"],
+        horizontal=True,
+        label_visibility="collapsed"
+    )
+    
+    uploaded_file = None
+    df = None
+    
+    if data_source == "📁 Upload Your Own Data":
+        st.markdown("#### 📤 Upload Your CSV File")
+        uploaded_file = st.file_uploader(
+            "Choose a CSV file with columns: id, reviews_title, review (optional: date, user_id)",
+            type=['csv'],
+            key="file_uploader"
+        )
+        
+        if uploaded_file is not None:
+            try:
+                df = pd.read_csv(uploaded_file)
+                
+                # Validate minimum required columns
+                if 'review' not in df.columns:
+                    st.error("❌ Missing required column: 'review'")
+                    st.info("Your CSV must have at least a 'review' column with review text")
+                    return
+                
+                # Add missing optional columns with defaults
+                if 'id' not in df.columns:
+                    df['id'] = range(1, len(df) + 1)
+                if 'reviews_title' not in df.columns:
+                    df['reviews_title'] = 'Review ' + df['id'].astype(str)
+                if 'date' not in df.columns:
+                    df['date'] = datetime.now().strftime('%Y-%m-%d')
+                if 'user_id' not in df.columns:
+                    df['user_id'] = 'user_' + df['id'].astype(str)
+                
+                st.success(f"✅ Loaded {len(df)} reviews successfully!")
+                
+            except Exception as e:
+                st.error(f"❌ Error reading file: {str(e)}")
                 return
-            
-            st.success(f"✅ Loaded {len(df)} reviews successfully!")
-            
-            # Show data preview
-            with st.expander("📊 Data Preview", expanded=False):
-                st.dataframe(df.head(), use_container_width=True)
-            
-            # Initialize session state for processing control
-            if 'processing' not in st.session_state:
-                st.session_state.processing = False
-            if 'current_task_id' not in st.session_state:
-                st.session_state.current_task_id = None
-            
-            # Create columns for Process and Stop buttons
-            col1, col2 = st.columns([3, 1])
-            
-            with col1:
-                process_btn = st.button(
-                    "🚀 Process Reviews with AI", 
-                    type="primary",
-                    disabled=st.session_state.processing,
-                    use_container_width=True
-                )
-            
-            with col2:
-                stop_btn = st.button(
-                    "🛑 Stop",
-                    type="secondary",
-                    disabled=not st.session_state.processing,
-                    use_container_width=True
-                )
-            
-            # Handle stop button
-            if stop_btn:
-                if cancel_current_task():
-                    st.rerun()
-            
-            # Process data
-            if process_btn:
+    
+    else:  # Sample datasets
+        st.markdown("#### 🎲 Select a Sample Dataset")
+        
+        sample_choice = st.selectbox(
+            "Choose a dataset to explore:",
+            options=[
+                "E-Commerce Product Reviews (22 reviews)",
+                "Restaurant & Dining Reviews (15 reviews)",
+                "Mobile App Reviews (30 reviews)"
+            ],
+            help="Sample datasets demonstrate different review types and analysis scenarios"
+        )
+        
+        # Dataset descriptions
+        if "E-Commerce" in sample_choice:
+            st.info("""
+            **📦 E-Commerce Product Reviews**
+            - Mix of positive, negative, and neutral reviews
+            - Aspects: Quality, Delivery, Price, Customer Service, Packaging
+            - Includes mixed sentiment examples (good quality but slow delivery)
+            - Contains Hindi reviews for multilingual testing
+            """)
+            sample_file = "test_data_ecommerce.csv"
+        elif "Restaurant" in sample_choice:
+            st.info("""
+            **🍽️ Restaurant & Dining Reviews**
+            - Variety of dining experiences
+            - Aspects: Food Quality, Service, Ambiance, Portions, Price
+            - Range from food safety complaints to 5-star experiences
+            - Includes Hindi reviews
+            """)
+            sample_file = "test_data_restaurant.csv"
+        else:  # App reviews
+            st.info("""
+            **📱 Mobile App Reviews**
+            - Software and app user feedback
+            - Aspects: Performance, UI/UX, Features, Battery, Privacy, Support
+            - Mix of technical issues and feature praise
+            - Includes Hindi reviews and update-related feedback
+            """)
+            sample_file = "test_data_app_reviews.csv"
+        
+        # Load sample data
+        try:
+            sample_path = os.path.join(os.path.dirname(__file__), sample_file)
+            if os.path.exists(sample_path):
+                df = pd.read_csv(sample_path)
+                
+                # Add missing optional columns with defaults
+                if 'date' not in df.columns:
+                    df['date'] = datetime.now().strftime('%Y-%m-%d')
+                if 'user_id' not in df.columns:
+                    df['user_id'] = 'user_' + df['id'].astype(str)
+                
+                st.success(f"✅ Loaded {len(df)} sample reviews!")
+            else:
+                st.warning(f"⚠️ Sample file not found: {sample_file}")
+                st.info("Please upload your own data instead.")
+                return
+        except Exception as e:
+            st.error(f"❌ Error loading sample data: {str(e)}")
+            return
+    
+    # Continue with processing if data is loaded
+    if df is not None:
+        # Show data preview
+        with st.expander("📊 Data Preview", expanded=False):
+            st.dataframe(df.head(), width='stretch')
+        
+        # Initialize session state for processing control
+        if 'processing' not in st.session_state:
+            st.session_state.processing = False
+        if 'current_task_id' not in st.session_state:
+            st.session_state.current_task_id = None
+        
+        # Process button
+        process_btn = st.button(
+            "🚀 Process Reviews with AI", 
+            type="primary",
+            disabled=st.session_state.processing,
+            use_container_width=True
+        )
+        
+        # Process data
+        if process_btn:
+            try:
                 st.session_state.processing = True
+                
+                # Store filename for later reference
+                if data_source == "📁 Upload Your Own Data":
+                    st.session_state.filename = uploaded_file.name if uploaded_file else "uploaded_data.csv"
+                else:
+                    st.session_state.filename = sample_file
                 
                 # Create progress tracking containers
                 progress_placeholder = st.empty()
@@ -1269,55 +1633,75 @@ def show_home_page():
                             # Save to session state
                             st.session_state.processed_data = processed_df
                             st.session_state.aspect_network = aspect_network  # Store network data
-                            st.session_state.filename = uploaded_file.name
+                            
+                            # Extract and store aspect-level data if available
+                            if isinstance(result, dict):
+                                if "data" in result and isinstance(result["data"], dict):
+                                    # Store aspect-level data
+                                    aspect_level = result["data"].get("aspect_level_data")
+                                    if aspect_level:
+                                        st.session_state.aspect_level_data = pd.DataFrame(aspect_level)
+                                    
+                                    # Store mixed sentiment reviews
+                                    mixed_sentiment = result["data"].get("mixed_sentiment_reviews")
+                                    if mixed_sentiment:
+                                        st.session_state.mixed_sentiment_reviews = pd.DataFrame(mixed_sentiment)
+                                    
+                                    # Store summary statistics
+                                    summary = result["data"].get("summary", {})
+                                    if summary:
+                                        st.session_state.analysis_summary = summary
+                            
                             st.session_state.processing = False
                             
                             # Save session
                             session_manager = SessionManager()
-                            session_id = session_manager.save_session(processed_df, uploaded_file.name)
+                            filename = st.session_state.get('filename', 'data.csv')
+                            session_id = session_manager.save_session(processed_df, filename)
                             
                             st.success("✅ Analysis completed! Check the Analytics tab for detailed insights.")
                             
-                            # Show quick stats
+                            # Show enhanced stats if available
                             st.markdown("### 📊 Quick Stats")
                             create_kpi_cards(processed_df)
+                            
+                            # Show aspect-level stats if available
+                            if 'analysis_summary' in st.session_state:
+                                summary = st.session_state.analysis_summary
+                                st.markdown("#### 🔍 Aspect-Level Statistics")
+                                
+                                stat_col1, stat_col2, stat_col3 = st.columns(3)
+                                with stat_col1:
+                                    total_aspects = summary.get('total_aspects', 0)
+                                    st.metric("Total Aspect Mentions", total_aspects)
+                                with stat_col2:
+                                    mixed_count = summary.get('mixed_sentiment_count', 0)
+                                    st.metric("Mixed Sentiment Reviews", mixed_count)
+                                with stat_col3:
+                                    mixed_pct = summary.get('mixed_sentiment_pct', 0)
+                                    st.metric("Mixed Sentiment %", f"{mixed_pct:.1f}%")
                             
                             # Show sample results
                             with st.expander("🔍 Sample Analysis Results", expanded=True):
                                 display_cols = ['review', 'sentiment', 'aspects', 'intent', 'language']
                                 available_cols = [col for col in display_cols if col in processed_df.columns]
                                 if available_cols:
-                                    st.dataframe(processed_df.head(5)[available_cols], use_container_width=True)
+                                    st.dataframe(processed_df.head(5)[available_cols], width='stretch')
                                 else:
-                                    st.dataframe(processed_df.head(5), use_container_width=True)
+                                    st.dataframe(processed_df.head(5), width='stretch')
                         else:
                             st.error("❌ Failed to process data. Check debug sections above for details.")
                             st.session_state.processing = False
-                        
-        except Exception as e:
-            st.error(f"❌ Error processing file: {str(e)}")
-            import traceback
-            with st.expander("🔍 Debug: Error Details", expanded=True):
-                st.code(traceback.format_exc())
-    
-    else:
-        # Show sample data format
-        st.markdown("### 📋 Sample Data Format")
-        sample_data = {
-            'id': [1, 2, 3],
-            'reviews_title': ['Great Product', 'Slow Service', 'Need Help'],
-            'review': [
-                'Great product! Love the quality and design.',
-                'Delivery was slow but the item is good.',
-                'How do I verify my account? Need assistance.'
-            ],
-            'date': ['2024-01-15', '2024-01-16', '2024-01-17'],
-            'user_id': ['user123', 'user456', 'user789']
-        }
-        st.dataframe(pd.DataFrame(sample_data), use_container_width=True)
+            
+            except Exception as e:
+                st.error(f"❌ Error processing file: {str(e)}")
+                import traceback
+                with st.expander("🔍 Debug: Error Details", expanded=True):
+                    st.code(traceback.format_exc())
+
 
 def show_analytics_page():
-    """Display the analytics page with advanced visualizations"""
+    """Display the analytics page with advanced visualizations in tabs"""
     st.markdown("## 📈 Advanced Analytics Dashboard")
     
     if 'processed_data' not in st.session_state:
@@ -1325,6 +1709,10 @@ def show_analytics_page():
         return
     
     df = st.session_state.processed_data
+    
+    # Get additional data if available
+    aspect_level_df = st.session_state.get('aspect_level_data', pd.DataFrame())
+    mixed_sentiment_df = st.session_state.get('mixed_sentiment_reviews', pd.DataFrame())
     
     from dashboard_components import (
         create_enhanced_kpi_cards,
@@ -1344,8 +1732,38 @@ def show_analytics_page():
     # ========== TOP ROW: ENHANCED KPI CARDS ==========
     create_enhanced_kpi_cards(df)
     
-    # ========== FILTER BAR (MULTI-SELECT + DATE RANGE) ==========
+    # ========== TABS FOR DIFFERENT ANALYSIS VIEWS ==========
     st.markdown("---")
+    tab1, tab2, tab3 = st.tabs(["📊 Overview", "🔗 Multi-Aspect Analysis", "🔍 Deep Dive"])
+    
+    # ========== TAB 1: OVERVIEW ==========
+    with tab1:
+        show_overview_tab(df)
+    
+    # ========== TAB 2: MULTI-ASPECT ANALYSIS ==========
+    with tab2:
+        show_multi_aspect_tab(df, aspect_level_df, mixed_sentiment_df)
+    
+    # ========== TAB 3: DEEP DIVE ==========
+    with tab3:
+        show_deep_dive_tab(df)
+
+
+def show_overview_tab(df):
+    """Overview tab with existing univariate charts"""
+    from dashboard_components import (
+        create_sentiment_pie_chart,
+        create_intent_aspect_heatmap,
+        create_sentiment_aspect_heatmap,
+        create_reviews_timeline,
+        create_priority_leaderboard,
+        create_aspect_cooccurrence_heatmap,
+        create_confidence_funnel,
+        get_all_unique_aspects,
+        extract_aspects_list
+    )
+    
+    # ========== FILTER BAR (TAB-SPECIFIC) ==========
     st.markdown("### 🎛️ Filters")
     
     filter_col1, filter_col2, filter_col3, filter_col4 = st.columns(4)
@@ -1459,11 +1877,11 @@ def show_analytics_page():
     
     with row1_col1:
         fig = create_sentiment_pie_chart(filtered_df)
-        st.plotly_chart(fig, use_container_width=True, key="sentiment_pie")
+        st.plotly_chart(fig, width='stretch', key="sentiment_pie")
     
     with row1_col2:
         fig = create_intent_aspect_heatmap(filtered_df)
-        st.plotly_chart(fig, use_container_width=True, key="intent_aspect_heatmap")
+        st.plotly_chart(fig, width='stretch', key="intent_aspect_heatmap")
     
     # ========== ROW 2: ASPECT-SENTIMENT HEATMAP + REVIEWS TIMELINE ==========
     st.markdown("---")
@@ -1473,11 +1891,11 @@ def show_analytics_page():
     
     with row2_col1:
         fig = create_sentiment_aspect_heatmap(filtered_df)
-        st.plotly_chart(fig, use_container_width=True, key="sentiment_aspect_heatmap")
+        st.plotly_chart(fig, width='stretch', key="sentiment_aspect_heatmap")
     
     with row2_col2:
         fig = create_reviews_timeline(filtered_df)
-        st.plotly_chart(fig, use_container_width=True, key="reviews_timeline")
+        st.plotly_chart(fig, width='stretch', key="reviews_timeline")
     
     # ========== ROW 3: PRIORITY LEADERBOARD + ASPECT SENTIMENT TRENDS ==========
     st.markdown("---")
@@ -1487,7 +1905,7 @@ def show_analytics_page():
     
     with row3_col1:
         fig = create_priority_leaderboard(filtered_df)
-        st.plotly_chart(fig, use_container_width=True, key="priority_leaderboard")
+        st.plotly_chart(fig, width='stretch', key="priority_leaderboard")
     
     with row3_col2:
         # Aspect sentiment trends over time (placeholder for now)
@@ -1503,7 +1921,7 @@ def show_analytics_page():
     
     with row4_col1:
         fig = create_aspect_cooccurrence_heatmap(filtered_df)
-        st.plotly_chart(fig, use_container_width=True, key="cooccurrence_heatmap")
+        st.plotly_chart(fig, width='stretch', key="cooccurrence_heatmap")
     
     with row4_col2:
         # LLM Insight Cards (placeholder)
@@ -1612,7 +2030,7 @@ def show_analytics_page():
     with row5_col2:
         # Confidence funnel
         fig = create_confidence_funnel(filtered_df)
-        st.plotly_chart(fig, use_container_width=True, key="confidence_funnel")
+        st.plotly_chart(fig, width='stretch', key="confidence_funnel")
     
     # ========== LEGACY SECTIONS (WORD CLOUDS & NETWORK) ==========
     st.markdown("---")
@@ -1624,7 +2042,7 @@ def show_analytics_page():
         st.markdown("#### 😊 Positive Reviews")
         positive_wc = create_wordcloud(filtered_df, 'positive')
         if positive_wc:
-            st.image(f"data:image/png;base64,{positive_wc}", use_container_width=True)
+            st.image(f"data:image/png;base64,{positive_wc}", width='stretch')
         else:
             st.info("No positive reviews found")
     
@@ -1632,7 +2050,7 @@ def show_analytics_page():
         st.markdown("#### 😐 Neutral Reviews")
         neutral_wc = create_wordcloud(filtered_df, 'neutral')
         if neutral_wc:
-            st.image(f"data:image/png;base64,{neutral_wc}", use_container_width=True)
+            st.image(f"data:image/png;base64,{neutral_wc}", width='stretch')
         else:
             st.info("No neutral reviews found")
     
@@ -1640,16 +2058,9 @@ def show_analytics_page():
         st.markdown("#### 😞 Negative Reviews")
         negative_wc = create_wordcloud(filtered_df, 'negative')
         if negative_wc:
-            st.image(f"data:image/png;base64,{negative_wc}", use_container_width=True)
+            st.image(f"data:image/png;base64,{negative_wc}", width='stretch')
         else:
             st.info("No negative reviews found")
-    
-    # Aspect Network
-    st.markdown("---")
-    st.markdown("### 🕸️ Aspect Network")
-    network_data = st.session_state.get('aspect_network', None)
-    fig = create_aspect_network(filtered_df, network_data)
-    st.plotly_chart(fig, use_container_width=True, key="aspect_network_chart")
     
     # ========== FOOTER: EXPORT & UTILITIES ==========
     st.markdown("---")
@@ -1665,16 +2076,751 @@ def show_analytics_page():
             data=csv,
             file_name=f"sentiment_analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
             mime="text/csv",
-            use_container_width=True
+            width='stretch'
         )
     
     with export_col2:
         # Summary report
-        st.button("📄 Generate PDF Report", disabled=True, use_container_width=True, help="Coming soon")
+        st.button("📄 Generate PDF Report", disabled=True, width='stretch', help="Coming soon")
     
     with export_col3:
         # Alert setup
-        st.button("🔔 Setup Alerts", disabled=True, use_container_width=True, help="Coming soon: Get notified when priority aspects spike")
+        st.button("🔔 Setup Alerts", disabled=True, width='stretch', help="Coming soon: Get notified when priority aspects spike")
+
+
+def show_multi_aspect_tab(df, aspect_level_df, mixed_sentiment_df):
+    """Multi-aspect analysis tab with relationship patterns and RAG insights"""
+    from dashboard_components import extract_aspects_list
+    
+    st.markdown("### 🔗 Multi-Aspect Relationship Analysis")
+    st.info("This tab shows how different aspects relate to each other and provides AI-generated insights about aspect patterns.")
+    
+    # Check if we have aspect-level data
+    if aspect_level_df.empty:
+        st.warning("⚠️ Aspect-level data not available. This may be an older analysis. Please re-process your data to enable multi-aspect analysis.")
+        return
+    
+    # ========== TAB 2 FILTERS (INDEPENDENT FROM OVERVIEW) ==========
+    st.markdown("#### 🎛️ Multi-Aspect Filters")
+    
+    ma_col1, ma_col2, ma_col3 = st.columns(3)
+    
+    with ma_col1:
+        # Sentiment filter for aspect-level data
+        if 'aspect_sentiment' in aspect_level_df.columns:
+            ma_sentiments = list(aspect_level_df['aspect_sentiment'].unique())
+            ma_selected_sentiments = st.multiselect(
+                "Aspect Sentiment",
+                options=ma_sentiments,
+                default=ma_sentiments,
+                help="Filter by sentiment at aspect level",
+                key="ma_sentiment_filter"
+            )
+        else:
+            ma_selected_sentiments = []
+    
+    with ma_col2:
+        # Aspect filter
+        if 'aspect' in aspect_level_df.columns:
+            ma_aspects = list(aspect_level_df['aspect'].unique())
+            ma_selected_aspects = st.multiselect(
+                "Aspects",
+                options=ma_aspects,
+                default=ma_aspects[:10] if len(ma_aspects) > 10 else ma_aspects,
+                help="Select aspects to analyze (showing top 10 by default)",
+                key="ma_aspect_filter"
+            )
+        else:
+            ma_selected_aspects = []
+    
+    with ma_col3:
+        # Overall sentiment filter
+        if 'overall_sentiment' in aspect_level_df.columns:
+            ma_overall_sentiments = list(aspect_level_df['overall_sentiment'].unique())
+            ma_selected_overall = st.multiselect(
+                "Overall Review Sentiment",
+                options=ma_overall_sentiments,
+                default=ma_overall_sentiments,
+                help="Filter by overall review sentiment",
+                key="ma_overall_filter"
+            )
+        else:
+            ma_selected_overall = []
+    
+    # Apply filters to aspect-level data
+    ma_filtered_df = aspect_level_df.copy()
+    
+    if ma_selected_sentiments and 'aspect_sentiment' in ma_filtered_df.columns:
+        ma_filtered_df = ma_filtered_df[ma_filtered_df['aspect_sentiment'].isin(ma_selected_sentiments)]
+    
+    if ma_selected_aspects and 'aspect' in ma_filtered_df.columns:
+        ma_filtered_df = ma_filtered_df[ma_filtered_df['aspect'].isin(ma_selected_aspects)]
+    
+    if ma_selected_overall and 'overall_sentiment' in ma_filtered_df.columns:
+        ma_filtered_df = ma_filtered_df[ma_filtered_df['overall_sentiment'].isin(ma_selected_overall)]
+    
+    st.info(f"📊 Analyzing **{len(ma_filtered_df)}** aspect mentions from **{ma_filtered_df['review_id'].nunique() if 'review_id' in ma_filtered_df.columns else 0}** reviews")
+    
+    if len(ma_filtered_df) == 0:
+        st.warning("⚠️ No data matches the selected filters. Please adjust your criteria.")
+        return
+    
+    # ========== MIXED SENTIMENT HIGHLIGHT ==========
+    st.markdown("---")
+    st.markdown("### ⚠️ Mixed Sentiment Reviews")
+    
+    if not mixed_sentiment_df.empty:
+        mixed_count = len(mixed_sentiment_df)
+        total_reviews = df['review_id'].nunique() if 'review_id' in df.columns else len(df)
+        mixed_pct = (mixed_count / total_reviews * 100) if total_reviews > 0 else 0
+        
+        # Mixed sentiment KPI card
+        st.markdown(f"""
+        <div style='background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); 
+                    padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);'>
+        <h3 style='margin:0; color: white; font-size: 1.2em;'>🔀 Mixed Sentiment Reviews</h3>
+        <p style='margin: 8px 0 0 0; color: white; font-size: 2em; font-weight: bold;'>{mixed_count}</p>
+        <p style='margin: 5px 0 0 0; color: rgba(255,255,255,0.9); font-size: 0.95em;'>{mixed_pct:.1f}% of reviews have conflicting aspect sentiments</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Show examples of mixed sentiment reviews
+        with st.expander("🔍 View Mixed Sentiment Review Examples", expanded=False):
+            st.markdown("These reviews mention multiple aspects with different sentiments (e.g., positive Quality but negative Delivery):")
+            
+            for idx, row in mixed_sentiment_df.head(5).iterrows():
+                review_text = row.get('review', 'N/A')
+                aspects_str = row.get('aspects', '')
+                aspects = extract_aspects_list(aspects_str)
+                
+                st.markdown(f"""
+                <div style='background-color: #fef3c7; padding: 12px; border-left: 4px solid #f59e0b; 
+                            border-radius: 4px; margin-bottom: 10px;'>
+                <p style='margin:0;'><strong>Review:</strong> {review_text[:250]}{'...' if len(review_text) > 250 else ''}</p>
+                <p style='margin:5px 0 0 0; font-size: 0.9em;'>
+                <strong>Aspects Mentioned:</strong> {', '.join(aspects[:5]) if aspects else 'None'}
+                </p>
+                </div>
+                """, unsafe_allow_html=True)
+    else:
+        st.info("No mixed sentiment reviews detected in current dataset.")
+    
+    # ========== ASPECT-SENTIMENT MATRIX ==========
+    st.markdown("---")
+    st.markdown("### 📊 Aspect-Sentiment Distribution Matrix")
+    
+    if 'aspect' in ma_filtered_df.columns and 'aspect_sentiment' in ma_filtered_df.columns:
+        # Create pivot table for aspect x sentiment
+        aspect_sentiment_matrix = pd.crosstab(
+            ma_filtered_df['aspect'],
+            ma_filtered_df['aspect_sentiment'],
+            normalize='index'
+        ) * 100  # Convert to percentage
+        
+        # Create heatmap
+        fig = go.Figure(data=go.Heatmap(
+            z=aspect_sentiment_matrix.values,
+            x=aspect_sentiment_matrix.columns,
+            y=aspect_sentiment_matrix.index,
+            colorscale='RdYlGn',
+            text=aspect_sentiment_matrix.values.round(1),
+            texttemplate='%{text}%',
+            textfont={"size": 10},
+            colorbar=dict(title="Percentage")
+        ))
+        
+        fig.update_layout(
+            title="Aspect-Level Sentiment Distribution (%)",
+            xaxis_title="Sentiment",
+            yaxis_title="Aspect",
+            height=max(400, len(aspect_sentiment_matrix) * 25),
+            template="plotly_white"
+        )
+        
+        st.plotly_chart(fig, use_container_width=True, key="aspect_sentiment_matrix")
+    
+    # ========== ASPECT CO-OCCURRENCE WITH SENTIMENT BREAKDOWN ==========
+    st.markdown("---")
+    st.markdown("### 🔗 Aspect Co-Occurrence Patterns")
+    
+    # Build co-occurrence matrix with sentiment breakdown
+    if 'review_id' in ma_filtered_df.columns and 'aspect' in ma_filtered_df.columns:
+        # Get aspects per review
+        review_aspects = ma_filtered_df.groupby('review_id')['aspect'].apply(list).to_dict()
+        
+        # Get all unique aspects
+        all_aspects = sorted(ma_filtered_df['aspect'].unique())
+        
+        # Build co-occurrence matrix
+        cooccurrence = pd.DataFrame(0, index=all_aspects, columns=all_aspects)
+        
+        for aspects_list in review_aspects.values():
+            for i, asp1 in enumerate(aspects_list):
+                for asp2 in aspects_list[i+1:]:
+                    if asp1 in all_aspects and asp2 in all_aspects:
+                        cooccurrence.loc[asp1, asp2] += 1
+                        cooccurrence.loc[asp2, asp1] += 1
+        
+        # Show top co-occurring pairs
+        cooccur_pairs = []
+        for i in range(len(all_aspects)):
+            for j in range(i+1, len(all_aspects)):
+                count = cooccurrence.iloc[i, j]
+                if count > 0:
+                    cooccur_pairs.append({
+                        'Aspect 1': all_aspects[i],
+                        'Aspect 2': all_aspects[j],
+                        'Co-occurrences': int(count)
+                    })
+        
+        cooccur_df = pd.DataFrame(cooccur_pairs).sort_values('Co-occurrences', ascending=False)
+        
+        if len(cooccur_df) > 0:
+            st.markdown("#### Top Aspect Pairs Mentioned Together")
+            
+            # Show top 10 pairs as bar chart
+            top_pairs = cooccur_df.head(10).copy()
+            top_pairs['Pair'] = top_pairs['Aspect 1'] + ' + ' + top_pairs['Aspect 2']
+            
+            fig = go.Figure(data=[
+                go.Bar(
+                    x=top_pairs['Co-occurrences'],
+                    y=top_pairs['Pair'],
+                    orientation='h',
+                    marker=dict(
+                        color=top_pairs['Co-occurrences'],
+                        colorscale='Blues',
+                        showscale=False
+                    ),
+                    text=top_pairs['Co-occurrences'],
+                    textposition='auto'
+                )
+            ])
+            
+            fig.update_layout(
+                title="Most Frequently Co-Occurring Aspect Pairs",
+                xaxis_title="Number of Reviews",
+                yaxis_title="Aspect Pair",
+                height=400,
+                template="plotly_white"
+            )
+            
+            st.plotly_chart(fig, use_container_width=True, key="cooccurrence_bar")
+        else:
+            st.info("No aspect co-occurrences found in filtered data.")
+    
+    # ========== AI INSIGHTS AND RECOMMENDATIONS ==========
+    st.markdown("---")
+    st.markdown("### 🤖 AI-Powered Insights & Recommendations")
+    
+    # Generate LLM-powered insights
+    with st.spinner("🧠 Generating AI insights..."):
+        llm_insights = generate_llm_insights(ma_filtered_df)
+    
+    if llm_insights:
+        # Display AI-generated insights in a highlighted box
+        st.markdown(f"""
+        <div style='background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                    padding: 25px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);'>
+        <h3 style='margin:0 0 15px 0; color: white; font-size: 1.3em;'>🤖 AI Analysis</h3>
+        <div style='background-color: rgba(255,255,255,0.95); padding: 20px; border-radius: 8px; color: #1f2937;'>
+        {llm_insights.replace(chr(10), '<br>')}
+        </div>
+        </div>
+        """, unsafe_allow_html=True)
+    else:
+        st.info("💡 AI insights are currently unavailable. Showing pattern-based insights instead.")
+        
+        # Fallback to rule-based insights
+        insights = generate_rag_insights(ma_filtered_df)
+        
+        for insight in insights:
+            st.markdown(f"""
+            <div style='background-color: {insight['bg_color']}; padding: 15px; border-radius: 8px; margin-bottom: 15px;
+                        border-left: 4px solid {insight['border_color']};'>
+            <h4 style='margin:0; color: {insight['text_color']};'>{insight['icon']} {insight['title']}</h4>
+            <p style='margin:8px 0 0 0; color: #1f2937; font-size: 1.05em;'>{insight['message']}</p>
+            </div>
+            """, unsafe_allow_html=True)
+    
+    # ========== ASPECT-LEVEL DATA EXPORT ==========
+    st.markdown("---")
+    st.markdown("### 📥 Export Aspect-Level Data")
+    
+    export_col1, export_col2 = st.columns(2)
+    
+    with export_col1:
+        # Export filtered aspect-level data
+        csv = ma_filtered_df.to_csv(index=False)
+        st.download_button(
+            label="📥 Download Aspect-Level Data (CSV)",
+            data=csv,
+            file_name=f"aspect_level_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+            mime="text/csv",
+            use_container_width=True
+        )
+    
+    with export_col2:
+        # Export mixed sentiment reviews
+        if not mixed_sentiment_df.empty:
+            mixed_csv = mixed_sentiment_df.to_csv(index=False)
+            st.download_button(
+                label="📥 Download Mixed Sentiment Reviews (CSV)",
+                data=mixed_csv,
+                file_name=f"mixed_sentiment_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                mime="text/csv",
+                use_container_width=True
+            )
+
+
+def generate_llm_insights(aspect_level_df: pd.DataFrame) -> str:
+    """Generate AI-powered insights using OpenRouter LLM"""
+    
+    if aspect_level_df.empty or not OPENROUTER_API_KEY:
+        return ""
+    
+    try:
+        # Prepare context data from aspect-level analysis
+        context_data = prepare_analysis_context(aspect_level_df)
+        
+        # Create prompt for LLM
+        prompt = f"""You are an expert business analyst reviewing customer feedback data. Based on the aspect-level sentiment analysis below, provide actionable insights and recommendations.
+
+ANALYSIS DATA:
+{context_data}
+
+Please provide:
+1. **Key Findings** (2-3 most important patterns)
+2. **Strengths** (aspects performing well)
+3. **Areas for Improvement** (aspects needing attention)
+4. **Actionable Recommendations** (specific steps to take)
+
+Keep your response concise, focused, and business-oriented. Use markdown formatting for clarity."""
+
+        # Call OpenRouter API
+        headers = {
+            "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+            "Content-Type": "application/json",
+            "HTTP-Referer": "https://streamlit.io",
+            "X-Title": "ABSA Insights Dashboard"
+        }
+        
+        payload = {
+            "model": LLM_MODEL,
+            "messages": [
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            "temperature": 0.7,
+            "max_tokens": 800
+        }
+        
+        response = requests.post(
+            OPENROUTER_API_URL,
+            headers=headers,
+            json=payload,
+            timeout=30
+        )
+        
+        if response.status_code == 200:
+            result = response.json()
+            if 'choices' in result and len(result['choices']) > 0:
+                return result['choices'][0]['message']['content']
+        else:
+            st.error(f"OpenRouter API Error: {response.status_code} - {response.text}")
+            return ""
+            
+    except Exception as e:
+        st.error(f"Error generating LLM insights: {str(e)}")
+        return ""
+
+
+def prepare_analysis_context(aspect_level_df: pd.DataFrame) -> str:
+    """Prepare structured context for LLM from aspect-level data"""
+    
+    context_parts = []
+    
+    # 1. Overall Statistics
+    total_aspects = len(aspect_level_df)
+    total_reviews = aspect_level_df['review_id'].nunique() if 'review_id' in aspect_level_df.columns else len(aspect_level_df)
+    
+    context_parts.append(f"**Total Reviews Analyzed:** {total_reviews}")
+    context_parts.append(f"**Total Aspect Mentions:** {total_aspects}")
+    context_parts.append("")
+    
+    # 2. Aspect-Level Sentiment Distribution
+    if 'aspect' in aspect_level_df.columns and 'aspect_sentiment' in aspect_level_df.columns:
+        aspect_sentiments = aspect_level_df.groupby(['aspect', 'aspect_sentiment']).size().unstack(fill_value=0)
+        
+        # Calculate percentages
+        aspect_sentiments_pct = aspect_sentiments.div(aspect_sentiments.sum(axis=1), axis=0) * 100
+        
+        # Get top 8 aspects by mention count
+        top_aspects = aspect_level_df['aspect'].value_counts().head(8)
+        
+        context_parts.append("**Top Aspects by Sentiment:**")
+        for aspect in top_aspects.index:
+            if aspect in aspect_sentiments_pct.index:
+                row = aspect_sentiments_pct.loc[aspect]
+                pos = row.get('Positive', 0)
+                neg = row.get('Negative', 0)
+                neu = row.get('Neutral', 0)
+                total = top_aspects[aspect]
+                
+                context_parts.append(f"- **{aspect}** ({total} mentions): {pos:.0f}% Positive, {neg:.0f}% Negative, {neu:.0f}% Neutral")
+        
+        context_parts.append("")
+    
+    # 3. Co-occurrence Patterns (top 5 pairs)
+    if 'review_id' in aspect_level_df.columns and 'aspect' in aspect_level_df.columns:
+        review_aspects = aspect_level_df.groupby('review_id')['aspect'].apply(list).to_dict()
+        
+        cooccur_counts = {}
+        for aspects_list in review_aspects.values():
+            unique_aspects = list(set(aspects_list))
+            for i in range(len(unique_aspects)):
+                for j in range(i+1, len(unique_aspects)):
+                    pair = tuple(sorted([unique_aspects[i], unique_aspects[j]]))
+                    cooccur_counts[pair] = cooccur_counts.get(pair, 0) + 1
+        
+        if cooccur_counts:
+            top_pairs = sorted(cooccur_counts.items(), key=lambda x: x[1], reverse=True)[:5]
+            
+            context_parts.append("**Frequently Co-Mentioned Aspects:**")
+            for (asp1, asp2), count in top_pairs:
+                context_parts.append(f"- {asp1} + {asp2}: {count} reviews")
+            
+            context_parts.append("")
+    
+    # 4. Mixed Sentiment Cases
+    if 'review_id' in aspect_level_df.columns and 'aspect_sentiment' in aspect_level_df.columns:
+        review_sentiments = aspect_level_df.groupby('review_id')['aspect_sentiment'].apply(list)
+        mixed_count = sum(1 for sentiments in review_sentiments if 'Positive' in sentiments and 'Negative' in sentiments)
+        
+        if mixed_count > 0:
+            mixed_pct = (mixed_count / total_reviews * 100) if total_reviews > 0 else 0
+            context_parts.append(f"**Mixed Sentiment Reviews:** {mixed_count} ({mixed_pct:.1f}%) - reviews with both positive and negative aspects")
+            context_parts.append("")
+    
+    return "\n".join(context_parts)
+
+
+def show_deep_dive_tab(df):
+    """Deep dive tab for detailed aspect exploration"""
+    from dashboard_components import extract_aspects_list
+    
+    st.markdown("### 🔍 Deep Dive: Aspect-Level Exploration")
+    st.info("Drill down into specific aspects to see all reviews mentioning them with detailed sentiment analysis.")
+    
+    # ========== TAB 3 FILTERS (INDEPENDENT FROM OTHER TABS) ==========
+    st.markdown("#### 🎛️ Deep Dive Filters")
+    
+    dd_col1, dd_col2, dd_col3 = st.columns(3)
+    
+    with dd_col1:
+        # Aspect selector
+        if 'aspects' in df.columns:
+            all_aspects = []
+            for aspects_val in df['aspects'].dropna():
+                all_aspects.extend(extract_aspects_list(aspects_val))
+            unique_aspects = sorted(set(all_aspects))
+            
+            dd_selected_aspect = st.selectbox(
+                "Select Aspect to Analyze",
+                options=['All'] + unique_aspects,
+                help="Choose an aspect to see all reviews mentioning it",
+                key="dd_aspect_selector"
+            )
+        else:
+            dd_selected_aspect = 'All'
+    
+    with dd_col2:
+        # Sentiment filter for deep dive
+        if 'sentiment' in df.columns:
+            dd_sentiments = list(df['sentiment'].unique())
+            dd_selected_sentiments = st.multiselect(
+                "Review Sentiment",
+                options=dd_sentiments,
+                default=dd_sentiments,
+                help="Filter by overall review sentiment",
+                key="dd_sentiment_filter"
+            )
+        else:
+            dd_selected_sentiments = []
+    
+    with dd_col3:
+        # Sort order
+        dd_sort_by = st.selectbox(
+            "Sort Reviews By",
+            options=["Date (Newest)", "Date (Oldest)", "Confidence (High)", "Confidence (Low)"],
+            key="dd_sort_selector"
+        )
+    
+    # Apply filters
+    dd_filtered_df = df.copy()
+    
+    if dd_selected_sentiments and 'sentiment' in dd_filtered_df.columns:
+        dd_filtered_df = dd_filtered_df[dd_filtered_df['sentiment'].isin(dd_selected_sentiments)]
+    
+    # Filter by selected aspect
+    if dd_selected_aspect != 'All' and 'aspects' in dd_filtered_df.columns:
+        def contains_aspect(aspects_value):
+            aspects = extract_aspects_list(aspects_value)
+            return dd_selected_aspect in aspects
+        
+        dd_filtered_df = dd_filtered_df[dd_filtered_df['aspects'].apply(contains_aspect)]
+    
+    # Apply sorting
+    if dd_sort_by == "Date (Newest)" and 'date' in dd_filtered_df.columns:
+        dd_filtered_df = dd_filtered_df.sort_values('date', ascending=False)
+    elif dd_sort_by == "Date (Oldest)" and 'date' in dd_filtered_df.columns:
+        dd_filtered_df = dd_filtered_df.sort_values('date', ascending=True)
+    elif dd_sort_by == "Confidence (High)" and 'confidence' in dd_filtered_df.columns:
+        dd_filtered_df = dd_filtered_df.sort_values('confidence', ascending=False)
+    elif dd_sort_by == "Confidence (Low)" and 'confidence' in dd_filtered_df.columns:
+        dd_filtered_df = dd_filtered_df.sort_values('confidence', ascending=True)
+    
+    st.info(f"📊 Found **{len(dd_filtered_df)}** reviews" + (f" mentioning **{dd_selected_aspect}**" if dd_selected_aspect != 'All' else ""))
+    
+    if len(dd_filtered_df) == 0:
+        st.warning("⚠️ No reviews match the selected criteria. Try adjusting your filters.")
+        return
+    
+    # ========== ASPECT STATISTICS PANEL ==========
+    if dd_selected_aspect != 'All':
+        st.markdown("---")
+        st.markdown(f"### 📊 Statistics for: **{dd_selected_aspect}**")
+        
+        stat_col1, stat_col2, stat_col3, stat_col4 = st.columns(4)
+        
+        with stat_col1:
+            st.metric("Total Mentions", len(dd_filtered_df))
+        
+        with stat_col2:
+            if 'sentiment' in dd_filtered_df.columns:
+                positive_pct = (dd_filtered_df['sentiment'] == 'Positive').sum() / len(dd_filtered_df) * 100
+                st.metric("Positive %", f"{positive_pct:.1f}%")
+        
+        with stat_col3:
+            if 'sentiment' in dd_filtered_df.columns:
+                negative_pct = (dd_filtered_df['sentiment'] == 'Negative').sum() / len(dd_filtered_df) * 100
+                st.metric("Negative %", f"{negative_pct:.1f}%")
+        
+        with stat_col4:
+            if 'confidence' in dd_filtered_df.columns:
+                avg_confidence = dd_filtered_df['confidence'].mean()
+                st.metric("Avg Confidence", f"{avg_confidence:.1%}")
+    
+    # ========== PAGINATED REVIEW DISPLAY ==========
+    st.markdown("---")
+    st.markdown("### 📝 Review Details")
+    
+    page_size = st.selectbox("Reviews per page", [10, 25, 50, 100], index=1, key="dd_page_size")
+    
+    total_pages = (len(dd_filtered_df) - 1) // page_size + 1
+    page = st.number_input("Page", min_value=1, max_value=max(1, total_pages), value=1, key="dd_page_number")
+    
+    start_idx = (page - 1) * page_size
+    end_idx = min(start_idx + page_size, len(dd_filtered_df))
+    
+    st.info(f"Showing reviews {start_idx + 1} to {end_idx} of {len(dd_filtered_df)}")
+    
+    # Display reviews
+    for idx, row in dd_filtered_df.iloc[start_idx:end_idx].iterrows():
+        review_text = row.get('review', 'N/A')
+        sentiment = row.get('sentiment', 'N/A')
+        intent = row.get('intent', 'N/A')
+        confidence = row.get('confidence', 0)
+        aspects = extract_aspects_list(row.get('aspects', []))
+        date = row.get('date', 'N/A')
+        
+        # Color code by sentiment
+        if sentiment == 'Positive':
+            bg_color = '#f0fdf4'
+            border_color = '#22c55e'
+        elif sentiment == 'Negative':
+            bg_color = '#fef2f2'
+            border_color = '#ef4444'
+        else:
+            bg_color = '#f0f9ff'
+            border_color = '#3b82f6'
+        
+        # Highlight selected aspect
+        display_text = review_text
+        if dd_selected_aspect != 'All' and dd_selected_aspect in review_text:
+            display_text = review_text.replace(
+                dd_selected_aspect,
+                f"<mark style='background-color: #fef08a; padding: 2px 4px; border-radius: 3px;'>{dd_selected_aspect}</mark>"
+            )
+        
+        st.markdown(f"""
+        <div style='background-color: {bg_color}; padding: 15px; border-left: 4px solid {border_color}; 
+                    border-radius: 4px; margin-bottom: 12px;'>
+        <p style='margin:0; font-size: 1.05em;'>{display_text}</p>
+        <hr style='margin: 10px 0; border: none; border-top: 1px solid #e5e7eb;'>
+        <p style='margin:0; font-size: 0.9em; color: #4b5563;'>
+        <strong>Sentiment:</strong> {sentiment} | 
+        <strong>Intent:</strong> {intent} | 
+        <strong>Confidence:</strong> {confidence:.2%} | 
+        <strong>Date:</strong> {date}
+        </p>
+        <p style='margin:5px 0 0 0; font-size: 0.9em; color: #4b5563;'>
+        <strong>All Aspects:</strong> {', '.join(aspects) if aspects else 'None detected'}
+        </p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # ========== EXPORT DEEP DIVE DATA ==========
+    st.markdown("---")
+    csv = dd_filtered_df.to_csv(index=False)
+    st.download_button(
+        label="📥 Export Deep Dive Results (CSV)",
+        data=csv,
+        file_name=f"deep_dive_{dd_selected_aspect}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+        mime="text/csv",
+        use_container_width=True
+    )
+
+
+def generate_rag_insights(aspect_level_df):
+    """Generate RAG-style insights from aspect-level data"""
+    insights = []
+    
+    if aspect_level_df.empty or 'aspect' not in aspect_level_df.columns:
+        return [{
+            'icon': 'ℹ️',
+            'title': 'Insufficient Data',
+            'message': 'Not enough aspect-level data to generate insights.',
+            'bg_color': '#f0f9ff',
+            'border_color': '#3b82f6',
+            'text_color': '#1e40af'
+        }]
+    
+    # Insight 1: Aspect co-occurrence patterns with sentiment
+    if 'review_id' in aspect_level_df.columns and 'aspect_sentiment' in aspect_level_df.columns:
+        # Find aspect pairs and their sentiment patterns
+        review_groups = aspect_level_df.groupby('review_id')
+        
+        cooccur_sentiments = {}
+        for review_id, group in review_groups:
+            if len(group) > 1:
+                aspects = group['aspect'].tolist()
+                sentiments = group['aspect_sentiment'].tolist()
+                
+                for i in range(len(aspects)):
+                    for j in range(i+1, len(aspects)):
+                        pair = tuple(sorted([aspects[i], aspects[j]]))
+                        if pair not in cooccur_sentiments:
+                            cooccur_sentiments[pair] = {'positive': 0, 'negative': 0, 'neutral': 0}
+                        
+                        # Check if both are positive, both negative, or mixed
+                        if sentiments[i] == 'Positive' and sentiments[j] == 'Positive':
+                            cooccur_sentiments[pair]['positive'] += 1
+                        elif sentiments[i] == 'Negative' and sentiments[j] == 'Negative':
+                            cooccur_sentiments[pair]['negative'] += 1
+                        else:
+                            cooccur_sentiments[pair]['neutral'] += 1
+        
+        # Find most interesting pattern
+        if cooccur_sentiments:
+            # Find pair with highest positive correlation
+            best_pair = max(cooccur_sentiments.items(), key=lambda x: x[1]['positive'])
+            total = sum(best_pair[1].values())
+            positive_pct = (best_pair[1]['positive'] / total * 100) if total > 0 else 0
+            
+            if positive_pct >= 70:
+                insights.append({
+                    'icon': '✅',
+                    'title': 'Strong Positive Correlation',
+                    'message': f"When **{best_pair[0][0]}** and **{best_pair[0][1]}** are mentioned together, they're both positive {positive_pct:.0f}% of the time ({best_pair[1]['positive']} out of {total} occurrences).",
+                    'bg_color': '#f0fdf4',
+                    'border_color': '#22c55e',
+                    'text_color': '#15803d'
+                })
+            
+            # Find pair with conflicting sentiments
+            mixed_pair = max(cooccur_sentiments.items(), key=lambda x: x[1]['neutral'])
+            mixed_total = sum(mixed_pair[1].values())
+            mixed_pct = (mixed_pair[1]['neutral'] / mixed_total * 100) if mixed_total > 0 else 0
+            
+            if mixed_pct >= 50 and mixed_total >= 3:
+                insights.append({
+                    'icon': '⚠️',
+                    'title': 'Mixed Sentiment Pattern',
+                    'message': f"**{mixed_pair[0][0]}** and **{mixed_pair[0][1]}** often have conflicting sentiments when mentioned together ({mixed_pct:.0f}% of {mixed_total} cases).",
+                    'bg_color': '#fef3c7',
+                    'border_color': '#f59e0b',
+                    'text_color': '#92400e'
+                })
+    
+    # Insight 2: Aspect sentiment dominance
+    aspect_sentiments = aspect_level_df.groupby(['aspect', 'aspect_sentiment']).size().reset_index(name='count')
+    
+    for aspect in aspect_level_df['aspect'].unique()[:5]:  # Top 5 aspects
+        aspect_data = aspect_sentiments[aspect_sentiments['aspect'] == aspect]
+        total = aspect_data['count'].sum()
+        
+        if total >= 5:  # Only if we have enough data
+            positive_count = aspect_data[aspect_data['aspect_sentiment'] == 'Positive']['count'].sum()
+            negative_count = aspect_data[aspect_data['aspect_sentiment'] == 'Negative']['count'].sum()
+            
+            positive_pct = (positive_count / total * 100) if total > 0 else 0
+            negative_pct = (negative_count / total * 100) if total > 0 else 0
+            
+            if positive_pct >= 75:
+                insights.append({
+                    'icon': '🌟',
+                    'title': f'Strength: {aspect}',
+                    'message': f"**{aspect}** consistently receives positive feedback ({positive_pct:.0f}% positive across {total} mentions).",
+                    'bg_color': '#f0fdf4',
+                    'border_color': '#22c55e',
+                    'text_color': '#15803d'
+                })
+            elif negative_pct >= 60:
+                insights.append({
+                    'icon': '🔴',
+                    'title': f'Priority: {aspect}',
+                    'message': f"**{aspect}** needs attention - {negative_pct:.0f}% negative sentiment across {total} mentions.",
+                    'bg_color': '#fef2f2',
+                    'border_color': '#ef4444',
+                    'text_color': '#991b1b'
+                })
+    
+    # Insight 3: Overall sentiment vs aspect sentiment discrepancy
+    if 'overall_sentiment' in aspect_level_df.columns and 'aspect_sentiment' in aspect_level_df.columns:
+        # Find cases where overall is positive but aspect is negative (and vice versa)
+        discrepancy = aspect_level_df[
+            ((aspect_level_df['overall_sentiment'] == 'Positive') & (aspect_level_df['aspect_sentiment'] == 'Negative')) |
+            ((aspect_level_df['overall_sentiment'] == 'Negative') & (aspect_level_df['aspect_sentiment'] == 'Positive'))
+        ]
+        
+        if len(discrepancy) > 0:
+            discrepancy_pct = (len(discrepancy) / len(aspect_level_df) * 100)
+            
+            insights.append({
+                'icon': '🔍',
+                'title': 'Sentiment Nuance Detected',
+                'message': f"{len(discrepancy)} aspect mentions ({discrepancy_pct:.1f}%) have sentiment different from overall review sentiment, indicating nuanced feedback.",
+                'bg_color': '#ede9fe',
+                'border_color': '#8b5cf6',
+                'text_color': '#6b21a8'
+            })
+    
+    # If no insights generated, add a default one
+    if not insights:
+        insights.append({
+            'icon': '📊',
+            'title': 'Analysis Complete',
+            'message': f"Analyzed {len(aspect_level_df)} aspect mentions across {aspect_level_df['review_id'].nunique() if 'review_id' in aspect_level_df.columns else 0} reviews. Use the visualizations above to explore patterns.",
+            'bg_color': '#f0f9ff',
+            'border_color': '#3b82f6',
+            'text_color': '#1e40af'
+        })
+    
+    return insights[:6]  # Limit to 6 insights
+
 
 def main():
     """Main application"""
@@ -1682,44 +2828,42 @@ def main():
     
     # Sidebar navigation
     with st.sidebar:
-        st.image("https://via.placeholder.com/150x50/667eea/ffffff?text=ABSA+AI", use_container_width=True)
+        st.image("https://via.placeholder.com/150x50/667eea/ffffff?text=ABSA+AI", width='stretch')
         
         selected = option_menu(
             menu_title="Navigation",
-            options=["Home", "Analytics", "Documentation"],
-            icons=["house", "bar-chart", "book"],
+            options=["Home", "Analytics", "Admin"],
+            icons=["house", "bar-chart", "lock"],
             menu_icon="cast",
             default_index=0,
         )
         
         st.markdown("---")
-        st.markdown("### ℹ️ About")
-        st.info("AI-powered sentiment analysis using PyABSA and M2M100 translation. Processes reviews from backend API with real ML models.")
+        st.markdown("### ℹ️ About ABSA Insights")
+        st.markdown("""
+        **Powered by:**
+        - 🤖 PyABSA for aspect extraction
+        - 🌐 IndicTrans2 for translation
+        - 🧠 Nvidia Nemotron for AI insights
+        - 📊 Real-time analytics
+        
+        **Features:**
+        - Multi-aspect sentiment analysis
+        - Mixed sentiment detection
+        - AI-powered recommendations
+        - Multilingual support (Hindi + English)
+        """)
+        
+        st.markdown("---")
+        st.caption("Built with ❤️ using Streamlit")
     
     # Page routing
     if selected == "Home":
         show_home_page()
     elif selected == "Analytics":
         show_analytics_page()
-    elif selected == "Documentation":
-        st.markdown("## 📚 Documentation")
-        st.markdown("""
-        ### Features
-        - **Real PyABSA Processing**: Uses actual ML backend for sentiment analysis
-        - **Aspect Extraction**: Identifies specific aspects in reviews
-        - **Multilingual Support**: Hindi-to-English translation
-        - **Intent Classification**: Categorizes review intent
-        
-        ### Backend API
-        - **Endpoint**: `{HF_SPACES_API_URL}/process-reviews`
-        - **Method**: POST
-        - **Response**: JSON with processed sentiment data
-        
-        ### Column Mapping
-        - `overall_sentiment` → `sentiment`
-        - `detected_language` → `language`
-        - Handles various response formats automatically
-        """)
+    elif selected == "Admin":
+        show_admin_page()
 
 if __name__ == "__main__":
     main()

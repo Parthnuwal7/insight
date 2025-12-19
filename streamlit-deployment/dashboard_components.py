@@ -147,46 +147,96 @@ def calculate_kpi_metrics(df: pd.DataFrame) -> Dict:
     return metrics
 
 def create_enhanced_kpi_cards(df: pd.DataFrame):
-    """Create KPI cards with sparklines and click interactions"""
+    """Create KPI cards with percentages in bottom right corner"""
     metrics = calculate_kpi_metrics(df)
     
-    cols = st.columns(5)
+    # Extract aspect-specific metrics
+    aspect_data = []
+    for idx, row in df.iterrows():
+        aspects = extract_aspects_list(row.get('aspects', []))
+        sentiment = row.get('sentiment', 'Neutral')
+        for aspect in aspects:
+            aspect_data.append({'aspect': aspect, 'sentiment': sentiment})
+    
+    # Calculate top complaint aspect (most mentioned in negative reviews)
+    top_complaint = "N/A"
+    dominant_aspect = "N/A"
+    if aspect_data:
+        aspect_df = pd.DataFrame(aspect_data)
+        negative_aspects = aspect_df[aspect_df['sentiment'] == 'Negative']['aspect'].value_counts()
+        if len(negative_aspects) > 0:
+            top_complaint = negative_aspects.index[0]
+        
+        # Dominant aspect overall
+        all_aspects = aspect_df['aspect'].value_counts()
+        if len(all_aspects) > 0:
+            dominant_aspect = all_aspects.index[0]
+    
+    cols = st.columns(6)
     
     with cols[0]:
-        st.metric(
-            label="📝 Total Reviews",
-            value=f"{metrics['total_reviews']:,}",
-            delta=None
-        )
+        st.markdown(f"""
+        <div style='background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                    padding: 20px; border-radius: 10px; color: white;'>
+            <div style='font-size: 14px; opacity: 0.9;'>📝 Total Reviews</div>
+            <div style='font-size: 32px; font-weight: bold; margin-top: 5px;'>{metrics['total_reviews']:,}</div>
+        </div>
+        """, unsafe_allow_html=True)
     
     with cols[1]:
-        st.metric(
-            label="😊 Positive",
-            value=f"{metrics['pct_positive']:.1f}%",
-            delta=None
-        )
+        positive_count = df[df['sentiment'] == 'Positive'].shape[0] if 'sentiment' in df.columns else 0
+        positive_pct = (positive_count / len(df) * 100) if len(df) > 0 else 0
+        st.markdown(f"""
+        <div style='background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); 
+                    padding: 20px; border-radius: 10px; color: white; position: relative;'>
+            <div style='font-size: 14px; opacity: 0.9;'>😊 Positive Reviews</div>
+            <div style='font-size: 32px; font-weight: bold; margin-top: 5px;'>{positive_count:,}</div>
+            <div style='position: absolute; bottom: 10px; right: 15px; font-size: 12px; opacity: 0.8;'>
+                {positive_pct:.1f}% of total
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
     
     with cols[2]:
-        st.metric(
-            label="😞 Negative",
-            value=f"{metrics['pct_negative']:.1f}%",
-            delta=None
-        )
+        negative_count = df[df['sentiment'] == 'Negative'].shape[0] if 'sentiment' in df.columns else 0
+        negative_pct = (negative_count / len(df) * 100) if len(df) > 0 else 0
+        st.markdown(f"""
+        <div style='background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%); 
+                    padding: 20px; border-radius: 10px; color: white; position: relative;'>
+            <div style='font-size: 14px; opacity: 0.9;'>😞 Negative Reviews</div>
+            <div style='font-size: 32px; font-weight: bold; margin-top: 5px;'>{negative_count:,}</div>
+            <div style='position: absolute; bottom: 10px; right: 15px; font-size: 12px; opacity: 0.8;'>
+                {negative_pct:.1f}% of total
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
     
     with cols[3]:
-        st.metric(
-            label="🔴 Top Complaint",
-            value=metrics['top_negative_aspect'],
-            delta=None,
-            help="Most mentioned aspect in negative reviews"
-        )
+        st.markdown(f"""
+        <div style='background: linear-gradient(135deg, #f857a6 0%, #ff5858 100%); 
+                    padding: 20px; border-radius: 10px; color: white;'>
+            <div style='font-size: 14px; opacity: 0.9;'>🔴 Top Complaint</div>
+            <div style='font-size: 24px; font-weight: bold; margin-top: 5px;'>{top_complaint}</div>
+        </div>
+        """, unsafe_allow_html=True)
     
     with cols[4]:
-        st.metric(
-            label="🎯 Dominant Intent",
-            value=metrics['dominant_intent'].title(),
-            delta=None
-        )
+        st.markdown(f"""
+        <div style='background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); 
+                    padding: 20px; border-radius: 10px; color: white;'>
+            <div style='font-size: 14px; opacity: 0.9;'>🎯 Dominant Intent</div>
+            <div style='font-size: 24px; font-weight: bold; margin-top: 5px;'>{metrics['dominant_intent'].title()}</div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with cols[5]:
+        st.markdown(f"""
+        <div style='background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); 
+                    padding: 20px; border-radius: 10px; color: white;'>
+            <div style='font-size: 14px; opacity: 0.9;'>⭐ Dominant Aspect</div>
+            <div style='font-size: 24px; font-weight: bold; margin-top: 5px;'>{dominant_aspect}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
 def create_sentiment_pie_chart(df: pd.DataFrame) -> go.Figure:
     """ROW 1.1: Sentiment distribution donut chart"""
