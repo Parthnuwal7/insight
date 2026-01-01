@@ -1,261 +1,291 @@
-# � Enhanced Sentiment Analysis Dashboard
+# 🔍 Insights — Aspect-Based Sentiment Analysis Platform
 
-A production-ready Streamlit application for **Abstract Sentiment Analysis of Product Reviews** with advanced NLP capabilities, multilingual support, and enterprise-level analytics including network analysis, Sankey diagrams, AI summaries, and comprehensive business intelligence features.
+<div align="center">
+
+![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
+![HuggingFace](https://img.shields.io/badge/HuggingFace-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black)
+![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
+
+**A production-grade NLP system for extracting actionable insights from product reviews using Aspect-Based Sentiment Analysis (ABSA), multilingual translation, and AI-powered summarization.**
+
+[Live Demo](https://insights123.streamlit.app/) · [API Docs](#api-endpoints) · [Architecture](#system-architecture)
+
+</div>
+
+---
+
+## 🎯 Project Overview
+
+**Insights** is an end-to-end sentiment analysis platform that processes customer reviews to extract granular, aspect-level insights. Unlike traditional sentiment analysis that provides a single polarity score, this system identifies *what* customers are talking about (aspects) and *how* they feel about each aspect individually.
+
+### Key Differentiators
+
+| Feature | Traditional Sentiment | **Insights Platform** |
+|---------|----------------------|----------------------|
+| Granularity | Single score per review | Per-aspect sentiment |
+| Languages | English only | Hindi + English (auto-translation) |
+| Output | Positive/Negative label | Aspects, Sentiments, Intents, AI Summaries |
+| Deployment | Local scripts | Cloud-native (Streamlit Cloud + HF Spaces) |
+| Scalability | Synchronous | Async job queue with Redis |
+
+---
+
+## 🏗️ System Architecture
+
+![System Architecture](insights_arc.png)
+
+### Architecture Layers
+
+| Layer | Technology | Responsibility |
+|-------|------------|----------------|
+| **User Experience** | Streamlit Cloud | Interactive dashboard, visualizations, admin panel |
+| **Processing Layer** | FastAPI on HuggingFace Spaces | REST API, rate limiting, async job orchestration |
+| **ABSA Pipeline** | PyABSA + HuggingFace Transformers | 7-stage NLP processing pipeline |
+| **Backend Services** | Redis, MongoDB | Caching, rate limiting, telemetry, analytics |
+| **ML Services** | HuggingFace API, Google Gemini | Translation, sentiment models, AI summaries |
+
+---
+
+## ⚙️ Processing Pipeline
+
+Each review passes through a **7-stage NLP pipeline**:
+
+```
+┌─────────────┐   ┌──────────────────┐   ┌─────────────────┐   ┌──────────────────┐
+│ 1. Validate │ → │ 2. Detect Lang   │ → │ 3. Translate    │ → │ 4. Extract       │
+│    CSV      │   │    (hi/en)       │   │    (AI4Bharat)  │   │    Aspects       │
+└─────────────┘   └──────────────────┘   └─────────────────┘   └──────────────────┘
+                                                                        ↓
+┌─────────────┐   ┌──────────────────┐   ┌─────────────────┐   ┌──────────────────┐
+│ 7. Generate │ ← │ 6. Classify      │ ← │ 5. Analyze      │ ← │    (PyABSA)      │
+│  AI Summary │   │    Intent        │   │    Sentiment    │   │                  │
+└─────────────┘   └──────────────────┘   └─────────────────┘   └──────────────────┘
+```
+
+| Stage | Implementation | Output |
+|-------|----------------|--------|
+| **Validation** | Custom `DataValidator` class | Clean DataFrame with validated schema |
+| **Language Detection** | `langdetect` library | Language tag (`hi`, `en`) per review |
+| **Translation** | AI4Bharat via HuggingFace API | English text for all reviews |
+| **Aspect Extraction** | PyABSA multilingual model | Product aspects (battery, price, quality, etc.) |
+| **Sentiment Analysis** | PyABSA ATEPC task | Per-aspect sentiment (Positive/Negative/Neutral) |
+| **Intent Classification** | Rule-based classifier | Intent labels (Complaint, Praise, Question, etc.) |
+| **AI Summary** | Google Gemini API | Macro & micro-level business insights |
+
+---
+
+## 🔧 Backend Services
+
+### Redis — Performance & Rate Limiting
+```python
+# Rate limiting: 100 requests/minute per IP
+# Session caching for faster dashboard loads
+# Async task queue for long-running ABSA jobs
+```
+- **Rate Limiting**: Protects API from abuse (100 req/min)
+- **Session Cache**: Reduces redundant processing
+- **Task Queue**: Enables async job submission with status tracking
+
+### MongoDB — Telemetry & Analytics
+```python
+# Stores: session logs, user events, API analytics
+# Enables: usage dashboards, error tracking, geo-analytics
+```
+- **Telemetry Logging**: Track sessions, events, errors
+- **User Analytics**: Usage patterns and popular features
+- **IP Geolocation**: Geographic distribution of users
+
+---
 
 ## 🌟 Features
 
-- **🌍 Multi-language Support**: Automatic Hindi-to-English translation using Facebook M2M100
-- **🎯 Aspect-Based Sentiment Analysis**: Extract aspects and their sentiments using pyABSA
-- **🧠 Intent Classification**: Classify review intents (complaint, praise, question, etc.)
-- **📈 Interactive Visualizations**: Timeline charts, heatmaps, word clouds, correlation analysis
-- **🔍 Advanced Filtering**: Filter by sentiment, intent, language, aspects, and date range
-- **💾 Dashboard History**: Save and reload dashboard configurations
-- **🧪 Test Data Generation**: Generate synthetic datasets for testing
-- **📚 Comprehensive Documentation**: Built-in help and guidance
+### Dashboard Capabilities
+- **📊 KPI Metrics**: Total reviews, sentiment distribution, aspect coverage
+- **📈 Timeline Analysis**: Sentiment trends over time with anomaly detection
+- **🔥 Heatmaps**: Aspect-sentiment correlation matrices
+- **🌐 Network Graphs**: Aspect co-occurrence visualization
+- **📊 Sankey Diagrams**: Intent → Aspect → Sentiment flow
+- **☁️ Word Clouds**: Sentiment-filtered text visualization
+- **🎯 Impact Simulation**: What-if analysis for aspect improvements
+
+### Advanced Analytics
+- **Dual Ranking Tables**: Areas of improvement vs. strength anchors
+- **Priority Scoring**: Weighted impact scores for business prioritization
+- **AI Summaries**: Gemini-powered macro and micro insights
+- **Export Engine**: PDF reports and CSV data exports
+
+---
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-
-- Python 3.8 or higher
+- Python 3.8+
 - 4GB+ RAM (for ML models)
-- Internet connection (for initial model downloads)
+- Redis & MongoDB (optional, for full features)
 
-### Installation
+### Local Development
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd insights
-   ```
+```bash
+# Clone repository
+git clone https://github.com/your-username/insights.git
+cd insights
 
-2. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
+# Install dependencies
+pip install -r requirements.txt
 
-3. **Run the application**
-   ```bash
-   streamlit run app.py
-   ```
+# Run Streamlit dashboard
+streamlit run streamlit-deployment/app_a.py
 
-4. **Access the dashboard**
-   - Open your browser to `http://localhost:8501`
-   - Start by uploading a CSV file or generating test data
-
-## 📋 Data Format
-
-Your CSV file must contain these columns:
-
-| Column | Description | Example |
-|--------|-------------|---------|
-| `id` | Unique review identifier | review_001 |
-| `reviews_title` | Review title | "Great Product" |
-| `review` | Full review text | "This product is amazing..." |
-| `date` | Review date | 2024-01-15 |
-| `user_id` | User identifier | user_123 |
-
-## 🏗️ Architecture
-
-### Project Structure
-```
-insights/
-├── app.py                     # Main Streamlit application
-├── requirements.txt           # Python dependencies
-├── src/
-│   ├── components/
-│   │   ├── visualizations.py  # Chart and plot generation
-│   │   └── __init__.py
-│   ├── utils/
-│   │   ├── data_processor.py  # Main processing pipeline
-│   │   ├── data_management.py # Storage and utilities
-│   │   └── __init__.py
-│   └── __init__.py
-├── data/
-│   ├── uploads/               # User uploaded files
-│   ├── processed/             # Processed data cache
-│   └── history/               # Dashboard histories
-└── .github/
-    └── copilot-instructions.md # AI agent guidance
+# Or run FastAPI backend
+cd ABSA && uvicorn app:app --reload --port 7860
 ```
 
-### Data Processing Pipeline
+### Environment Variables
 
-1. **Validation**: CSV format and content validation
-2. **Language Detection**: Automatic language identification
-3. **Translation**: Hindi-to-English using M2M100
-4. **Intent Classification**: Rule-based intent detection
-5. **ABSA**: Aspect extraction and sentiment analysis using pyABSA
-6. **Visualization**: Interactive dashboard generation
+```env
+# Required
+HF_TOKEN=your_huggingface_token
 
-## 🔧 Core Components
-
-### Data Processor (`src/utils/data_processor.py`)
-- **DataValidator**: Validates CSV format and content
-- **TranslationService**: M2M100-based Hindi translation
-- **ABSAProcessor**: pyABSA integration for aspect extraction
-- **IntentClassifier**: Rule-based intent classification
-- **DataProcessor**: Main pipeline coordinator
-
-### Visualization Engine (`src/components/visualizations.py`)
-- **Timeline Charts**: Sentiment trends over time
-- **Distribution Charts**: Sentiment, intent, language breakdowns
-- **Heatmaps**: Aspect-sentiment correlations
-- **Word Clouds**: Visual text representation
-- **Correlation Matrix**: Feature relationship analysis
-
-### Data Management (`src/utils/data_management.py`)
-- **DataManager**: File storage and history tracking
-- **TestDataGenerator**: Synthetic dataset creation
-- **SessionManager**: State management across pages
-- **ConfigManager**: Application configuration
-
-## 📊 Dashboard Features
-
-### Main Analytics
-- **Summary Metrics**: Key statistics and counts
-- **Timeline Analysis**: Sentiment trends over time
-- **Distribution Charts**: Breakdown by sentiment, intent, language
-- **Aspect Analysis**: Most frequent aspects and their sentiments
-- **Word Clouds**: Visual representation by sentiment
-- **Correlation Analysis**: Feature relationships
-
-### Advanced Filtering
-- **Date Range**: Filter by specific time periods
-- **Sentiment**: Focus on positive, negative, or neutral reviews
-- **Intent**: Filter by complaint, praise, question, etc.
-- **Language**: Filter by detected languages
-- **Aspects**: Focus on specific product aspects
-
-### Sample Analysis
-- **Debug View**: Detailed processing results for individual reviews
-- **Processing Logs**: Step-by-step analysis breakdown
-- **Confidence Scores**: Model prediction confidence
-
-## 🛠️ Technical Details
-
-### Model Integration
-
-**pyABSA Configuration**:
-```python
-from pyabsa import ATEPCCheckpointManager
-
-aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(
-    checkpoint='multilingual',
-    auto_device=True,
-    task_code='ATEPC'
-)
+# Optional (for full features)
+MONGODB_URI=mongodb+srv://...
+REDIS_URL=redis://...
+GEMINI_API_KEY=your_gemini_key
 ```
-
-**M2M100 Translation**:
-```python
-from transformers import M2M100ForConditionalGeneration, M2M100Tokenizer
-
-model_name = "facebook/m2m100_418M"
-tokenizer = M2M100Tokenizer.from_pretrained(model_name)
-model = M2M100ForConditionalGeneration.from_pretrained(model_name)
-```
-
-### Performance Optimizations
-- **Model Caching**: `@st.cache_resource` for expensive model loading
-- **Batch Processing**: Efficient handling of multiple reviews
-- **Progress Indicators**: User feedback during processing
-- **Error Handling**: Graceful degradation and user guidance
-
-### Data Persistence
-- **Session State**: Maintains data across page navigation
-- **File Storage**: Processed data and dashboard configurations
-- **History Tracking**: Save and reload dashboard states
-
-## 🎯 Usage Examples
-
-### Basic Workflow
-1. **Upload Data**: Use the file uploader on the Home page
-2. **Process**: Click "Start Processing" to run the analysis pipeline
-3. **Analyze**: Navigate to Analytics page for detailed insights
-4. **Filter**: Use sidebar filters to focus on specific data
-5. **Save**: Save dashboard configuration to history
-
-### Generate Test Data
-1. Go to Home page
-2. Select number of reviews and complexity
-3. Click "Generate Test Dataset"
-4. Download or process the generated data immediately
-
-### Advanced Analysis
-1. Apply multiple filters for targeted insights
-2. Use correlation matrix to identify relationships
-3. Examine word clouds for content themes
-4. Review sample analysis for debugging
-
-## 🔍 Troubleshooting
-
-### Common Issues
-
-**Model Loading Errors**:
-- Ensure sufficient RAM (4GB+)
-- Check internet connection for downloads
-- Restart application if models fail to load
-
-**File Upload Problems**:
-- Verify CSV format and column names
-- Check file size limits (100MB max)
-- Ensure proper date formatting
-
-**Processing Failures**:
-- Check for empty review entries
-- Verify data quality and format
-- Monitor system resources during processing
-
-### Performance Tips
-- Start with smaller datasets for testing
-- Use filters to reduce processing load
-- Clear browser cache if experiencing issues
-- Monitor memory usage with large datasets
-
-## 🤝 Contributing
-
-### Development Setup
-1. Fork the repository
-2. Create a virtual environment
-3. Install development dependencies
-4. Make changes and test thoroughly
-5. Submit pull request with detailed description
-
-### Code Style
-- Follow PEP 8 guidelines
-- Use type hints where appropriate
-- Include docstrings for functions and classes
-- Add error handling and logging
-
-## 📈 Future Enhancements
-
-- **Real-time Processing**: Live data ingestion and analysis
-- **Custom Models**: Train domain-specific sentiment models
-- **API Integration**: REST API for programmatic access
-- **Advanced Visualizations**: 3D plots and interactive maps
-- **Multi-language Support**: Additional translation pairs
-- **Export Features**: PDF reports and data export options
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🙏 Acknowledgments
-
-- **pyABSA**: Aspect-based sentiment analysis framework
-- **Hugging Face**: Transformers and model hosting
-- **Streamlit**: Web application framework
-- **Plotly**: Interactive visualization library
-
-## 📞 Support
-
-For issues and questions:
-- Check the troubleshooting section
-- Review error messages for guidance
-- Ensure all dependencies are properly installed
-- Check system requirements and resources
 
 ---
 
-**Built with ❤️ for comprehensive sentiment analysis**
+## 📡 API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `GET /` | GET | Health check |
+| `POST /process` | POST | Sync ABSA processing |
+| `POST /submit_job` | POST | Async job submission |
+| `GET /job/{job_id}` | GET | Job status polling |
+| `POST /cancel/{task_id}` | POST | Cancel running task |
+| `POST /log_session` | POST | Log user session |
+| `POST /log_event` | POST | Log telemetry event |
+
+### Example Request
+
+```bash
+curl -X POST "https://your-hf-space.hf.space/process" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "data": [
+      {"id": 1, "review": "Battery life is amazing!", "reviews_title": "Great", "date": "2024-01-15", "user_id": "u1"}
+    ],
+    "user_id": "demo_user"
+  }'
+```
+
+---
+
+## 🛠️ Tech Stack
+
+| Category | Technologies |
+|----------|-------------|
+| **Frontend** | Streamlit, Plotly, WordCloud |
+| **Backend** | FastAPI, Uvicorn, Pydantic |
+| **ML/NLP** | PyABSA, HuggingFace Transformers, AI4Bharat |
+| **AI** | Google Gemini API |
+| **Database** | MongoDB Atlas, Redis Cloud |
+| **Deployment** | Streamlit Cloud, HuggingFace Spaces, Docker |
+| **DevOps** | GitHub Actions, Docker |
+
+---
+
+## 📂 Project Structure
+
+```
+insights/
+├── ABSA/                          # Backend API (HuggingFace Spaces)
+│   ├── app.py                     # FastAPI application
+│   ├── admin_dashboard.py         # Admin endpoints
+│   └── src/
+│       ├── utils/
+│       │   ├── data_processor.py  # 7-stage ABSA pipeline
+│       │   ├── task_manager.py    # Async job management
+│       │   ├── redis_service.py   # Rate limiting & caching
+│       │   └── mongodb_service.py # Telemetry logging
+│       └── components/
+│           └── visualizations.py  # Chart generation
+│
+├── streamlit-deployment/          # Frontend (Streamlit Cloud)
+│   ├── app_a.py                   # Main dashboard
+│   ├── dashboard_components.py    # Reusable UI components
+│   └── frontend_helpers.py        # API client utilities
+│
+└── README.md
+```
+
+---
+
+## 📊 Sample Output
+
+### Input Review
+> "Battery bahut achi hai lekin camera quality thodi kam hai. Price is reasonable."
+
+### Pipeline Output
+```json
+{
+  "original_text": "Battery bahut achi hai lekin camera quality thodi kam hai...",
+  "translated_text": "Battery is very good but camera quality is a bit low...",
+  "language": "hi",
+  "aspects": [
+    {"aspect": "battery", "sentiment": "Positive", "confidence": 0.92},
+    {"aspect": "camera quality", "sentiment": "Negative", "confidence": 0.87},
+    {"aspect": "price", "sentiment": "Positive", "confidence": 0.89}
+  ],
+  "intent": "MIXED_FEEDBACK",
+  "overall_sentiment": "Positive"
+}
+```
+
+---
+
+## 📈 Performance
+
+| Metric | Value |
+|--------|-------|
+| Avg. processing time | ~2s per review |
+| Supported languages | Hindi, English |
+| Max batch size | 100 reviews |
+| Rate limit | 100 req/min |
+| Uptime (HF Spaces) | 99.5%+ |
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+- **[PyABSA](https://github.com/yangheng95/PyABSA)** — Aspect-based sentiment analysis framework
+- **[HuggingFace](https://huggingface.co/)** — Transformers and model hosting
+- **[Streamlit](https://streamlit.io/)** — Web application framework
+- **[Plotly](https://plotly.com/)** — Interactive visualization library
+
+---
+
+<div align="center">
+
+**Built with ❤️ for actionable customer insights**
+
+</div>
