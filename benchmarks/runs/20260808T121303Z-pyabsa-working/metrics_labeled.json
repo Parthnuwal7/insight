@@ -1,0 +1,1072 @@
+{
+  "overall": {
+    "precision": 0.7949,
+    "recall": 0.6458,
+    "f1": 0.7126,
+    "tp": 62,
+    "fp": 16,
+    "fn": 34,
+    "sentiment_accuracy": 0.8387,
+    "sentiment_n": 62,
+    "coverage_ratio": 0.812,
+    "predicted_aspects": 78,
+    "gold_aspects": 96
+  },
+  "by_route": {
+    "pyabsa": {
+      "precision": 0.8529,
+      "recall": 0.7073,
+      "f1": 0.7733,
+      "tp": 58,
+      "fp": 10,
+      "fn": 24,
+      "reviews": 38,
+      "sentiment_accuracy": 0.8621,
+      "sentiment_n": 58
+    },
+    "pyabsa_empty_to_fallback": {
+      "precision": 0.4,
+      "recall": 0.2857,
+      "f1": 0.3333,
+      "tp": 4,
+      "fp": 6,
+      "fn": 10,
+      "reviews": 8,
+      "sentiment_accuracy": 0.5,
+      "sentiment_n": 4
+    }
+  },
+  "by_probe_category": {
+    "comparative": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "tp": 0,
+      "fp": 1,
+      "fn": 1,
+      "reviews": 1,
+      "sentiment_accuracy": null,
+      "sentiment_n": 0
+    },
+    "hindi": {
+      "precision": 0.75,
+      "recall": 0.4286,
+      "f1": 0.5455,
+      "tp": 3,
+      "fp": 1,
+      "fn": 4,
+      "reviews": 3,
+      "sentiment_accuracy": 0.6667,
+      "sentiment_n": 3
+    },
+    "hinglish": {
+      "precision": 1.0,
+      "recall": 0.8333,
+      "f1": 0.9091,
+      "tp": 5,
+      "fp": 0,
+      "fn": 1,
+      "reviews": 3,
+      "sentiment_accuracy": 0.6,
+      "sentiment_n": 5
+    },
+    "implicit_aspect": {
+      "precision": 0.2,
+      "recall": 0.3333,
+      "f1": 0.25,
+      "tp": 1,
+      "fp": 4,
+      "fn": 2,
+      "reviews": 3,
+      "sentiment_accuracy": 0.0,
+      "sentiment_n": 1
+    },
+    "mixed_sentiment": {
+      "precision": 0.85,
+      "recall": 0.6538,
+      "f1": 0.7391,
+      "tp": 17,
+      "fp": 3,
+      "fn": 9,
+      "reviews": 11,
+      "sentiment_accuracy": 1.0,
+      "sentiment_n": 17
+    },
+    "multi_aspect": {
+      "precision": 0.9286,
+      "recall": 0.7222,
+      "f1": 0.8125,
+      "tp": 13,
+      "fp": 1,
+      "fn": 5,
+      "reviews": 6,
+      "sentiment_accuracy": 1.0,
+      "sentiment_n": 13
+    },
+    "negation": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "tp": 6,
+      "fp": 0,
+      "fn": 0,
+      "reviews": 3,
+      "sentiment_accuracy": 0.5,
+      "sentiment_n": 6
+    },
+    "out_of_taxonomy": {
+      "precision": 0.75,
+      "recall": 0.5217,
+      "f1": 0.6154,
+      "tp": 12,
+      "fp": 4,
+      "fn": 11,
+      "reviews": 11,
+      "sentiment_accuracy": 0.9167,
+      "sentiment_n": 12
+    },
+    "sarcasm": {
+      "precision": 0.6,
+      "recall": 0.75,
+      "f1": 0.6667,
+      "tp": 3,
+      "fp": 2,
+      "fn": 1,
+      "reviews": 3,
+      "sentiment_accuracy": 0.3333,
+      "sentiment_n": 3
+    },
+    "single_aspect_control": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "reviews": 2,
+      "sentiment_accuracy": 1.0,
+      "sentiment_n": 2
+    }
+  },
+  "sentiment_confusion": {
+    "gold=Negative|pred=Negative": 32,
+    "gold=Negative|pred=Positive": 3,
+    "gold=Neutral|pred=Neutral": 2,
+    "gold=Positive|pred=Negative": 5,
+    "gold=Positive|pred=Neutral": 2,
+    "gold=Positive|pred=Positive": 18
+  },
+  "per_review": [
+    {
+      "review_id": 10,
+      "probe_category": "out_of_taxonomy",
+      "route": "pyabsa_empty_to_fallback",
+      "review": "Product stopped working after a month. Tried to return but process is complicated.",
+      "predicted": [
+        "General:Positive"
+      ],
+      "gold": [
+        "product:Negative",
+        "return process:Negative"
+      ],
+      "f1": 0.0,
+      "aspect_tp": 0,
+      "aspect_fp": 1,
+      "aspect_fn": 2,
+      "sentiment_correct": 0,
+      "sentiment_of_matched": 0
+    },
+    {
+      "review_id": 23,
+      "probe_category": "hindi",
+      "route": "pyabsa_empty_to_fallback",
+      "review": "यह ऐप बहुत उपयोगी है। इंटरफेस साफ और उपयोग में आसान है।",
+      "predicted": [
+        "Usability:Neutral"
+      ],
+      "gold": [
+        "app:Positive",
+        "interface:Positive"
+      ],
+      "f1": 0.0,
+      "aspect_tp": 0,
+      "aspect_fp": 1,
+      "aspect_fn": 2,
+      "sentiment_correct": 0,
+      "sentiment_of_matched": 0
+    },
+    {
+      "review_id": 25,
+      "probe_category": "out_of_taxonomy",
+      "route": "pyabsa_empty_to_fallback",
+      "review": "Privacy concerns - app requests too many unnecessary permissions. Sketchy.",
+      "predicted": [
+        "App Performance:Neutral"
+      ],
+      "gold": [
+        "privacy:Negative",
+        "permissions:Negative"
+      ],
+      "f1": 0.0,
+      "aspect_tp": 0,
+      "aspect_fp": 1,
+      "aspect_fn": 2,
+      "sentiment_correct": 0,
+      "sentiment_of_matched": 0
+    },
+    {
+      "review_id": 29,
+      "probe_category": "comparative",
+      "route": "pyabsa_empty_to_fallback",
+      "review": "Used to be great but recent updates made it worse. Bring back the old version!",
+      "predicted": [
+        "General:Positive"
+      ],
+      "gold": [
+        "recent updates:Negative"
+      ],
+      "f1": 0.0,
+      "aspect_tp": 0,
+      "aspect_fp": 1,
+      "aspect_fn": 1,
+      "sentiment_correct": 0,
+      "sentiment_of_matched": 0
+    },
+    {
+      "review_id": 31,
+      "probe_category": "out_of_taxonomy",
+      "route": "pyabsa_empty_to_fallback",
+      "review": "Export function doesn't work. Tried multiple formats, all fail. Major bug.",
+      "predicted": [
+        "Performance:Negative",
+        "Features:Negative"
+      ],
+      "gold": [
+        "export function:Negative"
+      ],
+      "f1": 0.0,
+      "aspect_tp": 0,
+      "aspect_fp": 2,
+      "aspect_fn": 1,
+      "sentiment_correct": 0,
+      "sentiment_of_matched": 0
+    },
+    {
+      "review_id": 42,
+      "probe_category": "implicit_aspect",
+      "route": "pyabsa",
+      "review": "Three days in and I'm already looking for the charger twice a day.",
+      "predicted": [
+        "charger:Negative"
+      ],
+      "gold": [
+        "battery life:Negative"
+      ],
+      "f1": 0.0,
+      "aspect_tp": 0,
+      "aspect_fp": 1,
+      "aspect_fn": 1,
+      "sentiment_correct": 0,
+      "sentiment_of_matched": 0
+    },
+    {
+      "review_id": 43,
+      "probe_category": "implicit_aspect",
+      "route": "pyabsa",
+      "review": "I had to ask twice for water and once for the bill.",
+      "predicted": [
+        "water:Negative",
+        "bill:Neutral"
+      ],
+      "gold": [
+        "service:Negative"
+      ],
+      "f1": 0.0,
+      "aspect_tp": 0,
+      "aspect_fp": 2,
+      "aspect_fn": 1,
+      "sentiment_correct": 0,
+      "sentiment_of_matched": 0
+    },
+    {
+      "review_id": 2,
+      "probe_category": "multi_aspect",
+      "route": "pyabsa",
+      "review": "Terrible experience. Product arrived damaged and customer service was unhelpful. Very disappointed.",
+      "predicted": [
+        "customer service:Negative"
+      ],
+      "gold": [
+        "experience:Negative",
+        "product:Negative",
+        "customer service:Negative"
+      ],
+      "f1": 0.5,
+      "aspect_tp": 1,
+      "aspect_fp": 0,
+      "aspect_fn": 2,
+      "sentiment_correct": 1,
+      "sentiment_of_matched": 1
+    },
+    {
+      "review_id": 8,
+      "probe_category": "mixed_sentiment",
+      "route": "pyabsa",
+      "review": "Delivery was delayed by 2 weeks. Product is fine but the wait was frustrating.",
+      "predicted": [
+        "Delivery:Negative",
+        "wait:Negative"
+      ],
+      "gold": [
+        "delivery:Negative",
+        "product:Positive"
+      ],
+      "f1": 0.5,
+      "aspect_tp": 1,
+      "aspect_fp": 1,
+      "aspect_fn": 1,
+      "sentiment_correct": 1,
+      "sentiment_of_matched": 1
+    },
+    {
+      "review_id": 13,
+      "probe_category": "multi_aspect",
+      "route": "pyabsa",
+      "review": "Food was cold when served. Waited 45 minutes for our order. Very disappointing.",
+      "predicted": [
+        "Food:Negative",
+        "served:Negative"
+      ],
+      "gold": [
+        "food:Negative",
+        "wait time:Negative"
+      ],
+      "f1": 0.5,
+      "aspect_tp": 1,
+      "aspect_fp": 1,
+      "aspect_fn": 1,
+      "sentiment_correct": 1,
+      "sentiment_of_matched": 1
+    },
+    {
+      "review_id": 26,
+      "probe_category": "mixed_sentiment",
+      "route": "pyabsa",
+      "review": "Feature-rich but overwhelming for beginners. Needs better onboarding tutorial.",
+      "predicted": [
+        "Feature:Positive",
+        "tutorial:Negative"
+      ],
+      "gold": [
+        "features:Positive",
+        "onboarding tutorial:Negative"
+      ],
+      "f1": 0.5,
+      "aspect_tp": 1,
+      "aspect_fp": 1,
+      "aspect_fn": 1,
+      "sentiment_correct": 1,
+      "sentiment_of_matched": 1
+    },
+    {
+      "review_id": 36,
+      "probe_category": "sarcasm",
+      "route": "pyabsa",
+      "review": "Brilliant. Waited three weeks for a cable that arrived snapped in half. Outstanding work.",
+      "predicted": [
+        "cable:Negative",
+        "work:Positive"
+      ],
+      "gold": [
+        "delivery:Negative",
+        "cable:Negative"
+      ],
+      "f1": 0.5,
+      "aspect_tp": 1,
+      "aspect_fp": 1,
+      "aspect_fn": 1,
+      "sentiment_correct": 1,
+      "sentiment_of_matched": 1
+    },
+    {
+      "review_id": 5,
+      "probe_category": "mixed_sentiment",
+      "route": "pyabsa",
+      "review": "Product quality is excellent but delivery took forever. Would buy again if shipping improves.",
+      "predicted": [
+        "delivery:Negative"
+      ],
+      "gold": [
+        "product quality:Positive",
+        "delivery:Negative"
+      ],
+      "f1": 0.6667,
+      "aspect_tp": 1,
+      "aspect_fp": 0,
+      "aspect_fn": 1,
+      "sentiment_correct": 1,
+      "sentiment_of_matched": 1
+    },
+    {
+      "review_id": 7,
+      "probe_category": "out_of_taxonomy",
+      "route": "pyabsa",
+      "review": "Misleading description. Product looks nothing like the pictures. Very disappointed.",
+      "predicted": [
+        "description:Negative"
+      ],
+      "gold": [
+        "description:Negative",
+        "product:Negative"
+      ],
+      "f1": 0.6667,
+      "aspect_tp": 1,
+      "aspect_fp": 0,
+      "aspect_fn": 1,
+      "sentiment_correct": 1,
+      "sentiment_of_matched": 1
+    },
+    {
+      "review_id": 11,
+      "probe_category": "mixed_sentiment",
+      "route": "pyabsa",
+      "review": "Good product but packaging was poor. Item arrived safely but could have been damaged.",
+      "predicted": [
+        "packaging:Negative"
+      ],
+      "gold": [
+        "product:Positive",
+        "packaging:Negative"
+      ],
+      "f1": 0.6667,
+      "aspect_tp": 1,
+      "aspect_fp": 0,
+      "aspect_fn": 1,
+      "sentiment_correct": 1,
+      "sentiment_of_matched": 1
+    },
+    {
+      "review_id": 14,
+      "probe_category": "mixed_sentiment",
+      "route": "pyabsa",
+      "review": "Great taste but portions are too small for the price. Atmosphere is nice though.",
+      "predicted": [
+        "portions:Negative",
+        "price:Neutral",
+        "Atmosphere:Positive"
+      ],
+      "gold": [
+        "taste:Positive",
+        "portions:Negative",
+        "atmosphere:Positive"
+      ],
+      "f1": 0.6667,
+      "aspect_tp": 2,
+      "aspect_fp": 1,
+      "aspect_fn": 1,
+      "sentiment_correct": 2,
+      "sentiment_of_matched": 2
+    },
+    {
+      "review_id": 15,
+      "probe_category": "hindi",
+      "route": "pyabsa_empty_to_fallback",
+      "review": "भोजन बहुत स्वादिष्ट था। सेवा भी उत्कृष्ट थी। मैं फिर से आऊंगा।",
+      "predicted": [
+        "Service:Neutral"
+      ],
+      "gold": [
+        "food:Positive",
+        "service:Positive"
+      ],
+      "f1": 0.6667,
+      "aspect_tp": 1,
+      "aspect_fp": 0,
+      "aspect_fn": 1,
+      "sentiment_correct": 0,
+      "sentiment_of_matched": 1
+    },
+    {
+      "review_id": 16,
+      "probe_category": "out_of_taxonomy",
+      "route": "pyabsa",
+      "review": "Food poisoning after eating here. Never going back. Health department should inspect.",
+      "predicted": [
+        "Food:Negative"
+      ],
+      "gold": [
+        "food:Negative",
+        "restaurant:Negative"
+      ],
+      "f1": 0.6667,
+      "aspect_tp": 1,
+      "aspect_fp": 0,
+      "aspect_fn": 1,
+      "sentiment_correct": 1,
+      "sentiment_of_matched": 1
+    },
+    {
+      "review_id": 22,
+      "probe_category": "mixed_sentiment",
+      "route": "pyabsa",
+      "review": "Great features but battery drain is excessive. Fix the battery issue and it's 5 stars.",
+      "predicted": [
+        "battery drain:Negative"
+      ],
+      "gold": [
+        "features:Positive",
+        "battery drain:Negative"
+      ],
+      "f1": 0.6667,
+      "aspect_tp": 1,
+      "aspect_fp": 0,
+      "aspect_fn": 1,
+      "sentiment_correct": 1,
+      "sentiment_of_matched": 1
+    },
+    {
+      "review_id": 24,
+      "probe_category": "out_of_taxonomy",
+      "route": "pyabsa",
+      "review": "Too many ads! Can't use the app without constant interruptions. Very annoying.",
+      "predicted": [
+        "ads:Negative"
+      ],
+      "gold": [
+        "ads:Negative",
+        "app:Negative"
+      ],
+      "f1": 0.6667,
+      "aspect_tp": 1,
+      "aspect_fp": 0,
+      "aspect_fn": 1,
+      "sentiment_correct": 1,
+      "sentiment_of_matched": 1
+    },
+    {
+      "review_id": 27,
+      "probe_category": "mixed_sentiment",
+      "route": "pyabsa",
+      "review": "App is good but notifications are broken. Doesn't alert when it should.",
+      "predicted": [
+        "notifications:Negative"
+      ],
+      "gold": [
+        "app:Positive",
+        "notifications:Negative"
+      ],
+      "f1": 0.6667,
+      "aspect_tp": 1,
+      "aspect_fp": 0,
+      "aspect_fn": 1,
+      "sentiment_correct": 1,
+      "sentiment_of_matched": 1
+    },
+    {
+      "review_id": 32,
+      "probe_category": "out_of_taxonomy",
+      "route": "pyabsa",
+      "review": "Cloud backup failed and lost weeks of work. No local backup option. Disaster.",
+      "predicted": [
+        "Cloud backup:Negative"
+      ],
+      "gold": [
+        "cloud backup:Negative",
+        "local backup option:Negative"
+      ],
+      "f1": 0.6667,
+      "aspect_tp": 1,
+      "aspect_fp": 0,
+      "aspect_fn": 1,
+      "sentiment_correct": 1,
+      "sentiment_of_matched": 1
+    },
+    {
+      "review_id": 38,
+      "probe_category": "sarcasm",
+      "route": "pyabsa",
+      "review": "The battery life is fantastic if you enjoy charging twice before lunch.",
+      "predicted": [
+        "battery life:Positive",
+        "lunch:Neutral"
+      ],
+      "gold": [
+        "battery life:Negative"
+      ],
+      "f1": 0.6667,
+      "aspect_tp": 1,
+      "aspect_fp": 1,
+      "aspect_fn": 0,
+      "sentiment_correct": 0,
+      "sentiment_of_matched": 1
+    },
+    {
+      "review_id": 41,
+      "probe_category": "hinglish",
+      "route": "pyabsa",
+      "review": "Service staff ka behaviour bahut kharab tha, khana theek tha.",
+      "predicted": [
+        "Service staff:Negative"
+      ],
+      "gold": [
+        "service staff:Negative",
+        "food:Neutral"
+      ],
+      "f1": 0.6667,
+      "aspect_tp": 1,
+      "aspect_fp": 0,
+      "aspect_fn": 1,
+      "sentiment_correct": 1,
+      "sentiment_of_matched": 1
+    },
+    {
+      "review_id": 44,
+      "probe_category": "implicit_aspect",
+      "route": "pyabsa",
+      "review": "Everyone in the room could hear my private call through the speaker.",
+      "predicted": [
+        "room:Neutral",
+        "speaker:Positive"
+      ],
+      "gold": [
+        "speaker:Negative"
+      ],
+      "f1": 0.6667,
+      "aspect_tp": 1,
+      "aspect_fp": 1,
+      "aspect_fn": 0,
+      "sentiment_correct": 0,
+      "sentiment_of_matched": 1
+    },
+    {
+      "review_id": 1,
+      "probe_category": "multi_aspect",
+      "route": "pyabsa",
+      "review": "Absolutely love this product! The quality is outstanding and delivery was super fast. Worth every penny.",
+      "predicted": [
+        "quality:Positive",
+        "delivery:Positive"
+      ],
+      "gold": [
+        "product:Positive",
+        "quality:Positive",
+        "delivery:Positive"
+      ],
+      "f1": 0.8,
+      "aspect_tp": 2,
+      "aspect_fp": 0,
+      "aspect_fn": 1,
+      "sentiment_correct": 2,
+      "sentiment_of_matched": 2
+    },
+    {
+      "review_id": 3,
+      "probe_category": "mixed_sentiment",
+      "route": "pyabsa",
+      "review": "Good product overall but the price is too high for what you get. Quality is decent though.",
+      "predicted": [
+        "price:Negative",
+        "Quality:Positive"
+      ],
+      "gold": [
+        "product:Positive",
+        "price:Negative",
+        "quality:Positive"
+      ],
+      "f1": 0.8,
+      "aspect_tp": 2,
+      "aspect_fp": 0,
+      "aspect_fn": 1,
+      "sentiment_correct": 2,
+      "sentiment_of_matched": 2
+    },
+    {
+      "review_id": 4,
+      "probe_category": "hindi",
+      "route": "pyabsa_empty_to_fallback",
+      "review": "यह उत्पाद बहुत अच्छा है। गुणवत्ता शानदार है और डिलीवरी भी तेज़ थी।",
+      "predicted": [
+        "Quality:Positive",
+        "Delivery:Positive"
+      ],
+      "gold": [
+        "product:Positive",
+        "quality:Positive",
+        "delivery:Positive"
+      ],
+      "f1": 0.8,
+      "aspect_tp": 2,
+      "aspect_fp": 0,
+      "aspect_fn": 1,
+      "sentiment_correct": 2,
+      "sentiment_of_matched": 2
+    },
+    {
+      "review_id": 9,
+      "probe_category": "mixed_sentiment",
+      "route": "pyabsa",
+      "review": "Customer service needs improvement. Product is okay but support is terrible.",
+      "predicted": [
+        "Customer service:Negative",
+        "support:Negative"
+      ],
+      "gold": [
+        "customer service:Negative",
+        "product:Neutral",
+        "support:Negative"
+      ],
+      "f1": 0.8,
+      "aspect_tp": 2,
+      "aspect_fp": 0,
+      "aspect_fn": 1,
+      "sentiment_correct": 2,
+      "sentiment_of_matched": 2
+    },
+    {
+      "review_id": 19,
+      "probe_category": "out_of_taxonomy",
+      "route": "pyabsa",
+      "review": "Vegetarian options are limited. Food taste is good but needs more variety.",
+      "predicted": [
+        "Vegetarian:Negative",
+        "Food:Positive"
+      ],
+      "gold": [
+        "vegetarian options:Negative",
+        "food taste:Positive",
+        "variety:Negative"
+      ],
+      "f1": 0.8,
+      "aspect_tp": 2,
+      "aspect_fp": 0,
+      "aspect_fn": 1,
+      "sentiment_correct": 2,
+      "sentiment_of_matched": 2
+    },
+    {
+      "review_id": 21,
+      "probe_category": "multi_aspect",
+      "route": "pyabsa",
+      "review": "This app is amazing! User interface is intuitive and performance is super fast. Best productivity app!",
+      "predicted": [
+        "User interface:Positive",
+        "performance:Positive"
+      ],
+      "gold": [
+        "app:Positive",
+        "user interface:Positive",
+        "performance:Positive"
+      ],
+      "f1": 0.8,
+      "aspect_tp": 2,
+      "aspect_fp": 0,
+      "aspect_fn": 1,
+      "sentiment_correct": 2,
+      "sentiment_of_matched": 2
+    },
+    {
+      "review_id": 30,
+      "probe_category": "out_of_taxonomy",
+      "route": "pyabsa",
+      "review": "Glitchy animations and UI lag on older devices. Optimization needed for compatibility.",
+      "predicted": [
+        "animations:Negative",
+        "UI:Negative"
+      ],
+      "gold": [
+        "animations:Negative",
+        "ui:Negative",
+        "optimization:Negative"
+      ],
+      "f1": 0.8,
+      "aspect_tp": 2,
+      "aspect_fp": 0,
+      "aspect_fn": 1,
+      "sentiment_correct": 2,
+      "sentiment_of_matched": 2
+    },
+    {
+      "review_id": 6,
+      "probe_category": "mixed_sentiment",
+      "route": "pyabsa",
+      "review": "The design is beautiful but functionality is lacking. Looks great but doesn't perform well.",
+      "predicted": [
+        "design:Positive",
+        "functionality:Negative"
+      ],
+      "gold": [
+        "design:Positive",
+        "functionality:Negative"
+      ],
+      "f1": 1.0,
+      "aspect_tp": 2,
+      "aspect_fp": 0,
+      "aspect_fn": 0,
+      "sentiment_correct": 2,
+      "sentiment_of_matched": 2
+    },
+    {
+      "review_id": 12,
+      "probe_category": "multi_aspect",
+      "route": "pyabsa",
+      "review": "Fantastic dining experience! Food quality was exceptional and service was prompt. Ambiance was perfect.",
+      "predicted": [
+        "dining:Positive",
+        "Food quality:Positive",
+        "service:Positive",
+        "Ambiance:Positive"
+      ],
+      "gold": [
+        "dining experience:Positive",
+        "food quality:Positive",
+        "service:Positive",
+        "ambiance:Positive"
+      ],
+      "f1": 1.0,
+      "aspect_tp": 4,
+      "aspect_fp": 0,
+      "aspect_fn": 0,
+      "sentiment_correct": 4,
+      "sentiment_of_matched": 4
+    },
+    {
+      "review_id": 17,
+      "probe_category": "multi_aspect",
+      "route": "pyabsa",
+      "review": "Terrible service. Waiter was rude and forgot half our order. Food was mediocre.",
+      "predicted": [
+        "service:Negative",
+        "Waiter:Negative",
+        "Food:Negative"
+      ],
+      "gold": [
+        "service:Negative",
+        "waiter:Negative",
+        "food:Negative"
+      ],
+      "f1": 1.0,
+      "aspect_tp": 3,
+      "aspect_fp": 0,
+      "aspect_fn": 0,
+      "sentiment_correct": 3,
+      "sentiment_of_matched": 3
+    },
+    {
+      "review_id": 18,
+      "probe_category": "mixed_sentiment",
+      "route": "pyabsa",
+      "review": "Cozy atmosphere and delicious desserts! Main course was okay but desserts were outstanding.",
+      "predicted": [
+        "atmosphere:Positive",
+        "desserts:Positive",
+        "Main course:Neutral"
+      ],
+      "gold": [
+        "atmosphere:Positive",
+        "desserts:Positive",
+        "main course:Neutral"
+      ],
+      "f1": 1.0,
+      "aspect_tp": 3,
+      "aspect_fp": 0,
+      "aspect_fn": 0,
+      "sentiment_correct": 3,
+      "sentiment_of_matched": 3
+    },
+    {
+      "review_id": 20,
+      "probe_category": "out_of_taxonomy",
+      "route": "pyabsa",
+      "review": "Noise level is too high. Food is great but hard to have a conversation.",
+      "predicted": [
+        "Noise:Negative",
+        "Food:Negative"
+      ],
+      "gold": [
+        "noise level:Negative",
+        "food:Positive"
+      ],
+      "f1": 1.0,
+      "aspect_tp": 2,
+      "aspect_fp": 0,
+      "aspect_fn": 0,
+      "sentiment_correct": 1,
+      "sentiment_of_matched": 2
+    },
+    {
+      "review_id": 28,
+      "probe_category": "out_of_taxonomy",
+      "route": "pyabsa",
+      "review": "Search function is terrible. Can't find anything easily. Navigation is confusing.",
+      "predicted": [
+        "Search function:Negative",
+        "Navigation:Negative"
+      ],
+      "gold": [
+        "search function:Negative",
+        "navigation:Negative"
+      ],
+      "f1": 1.0,
+      "aspect_tp": 2,
+      "aspect_fp": 0,
+      "aspect_fn": 0,
+      "sentiment_correct": 2,
+      "sentiment_of_matched": 2
+    },
+    {
+      "review_id": 33,
+      "probe_category": "negation",
+      "route": "pyabsa",
+      "review": "The battery does not drain quickly at all, and the screen isn't dim even outdoors.",
+      "predicted": [
+        "battery:Negative",
+        "screen:Negative"
+      ],
+      "gold": [
+        "battery:Positive",
+        "screen:Positive"
+      ],
+      "f1": 1.0,
+      "aspect_tp": 2,
+      "aspect_fp": 0,
+      "aspect_fn": 0,
+      "sentiment_correct": 0,
+      "sentiment_of_matched": 2
+    },
+    {
+      "review_id": 34,
+      "probe_category": "negation",
+      "route": "pyabsa",
+      "review": "I wouldn't say the delivery was slow, but I can't call the packaging acceptable either.",
+      "predicted": [
+        "delivery:Neutral",
+        "packaging:Negative"
+      ],
+      "gold": [
+        "delivery:Positive",
+        "packaging:Negative"
+      ],
+      "f1": 1.0,
+      "aspect_tp": 2,
+      "aspect_fp": 0,
+      "aspect_fn": 0,
+      "sentiment_correct": 1,
+      "sentiment_of_matched": 2
+    },
+    {
+      "review_id": 35,
+      "probe_category": "negation",
+      "route": "pyabsa",
+      "review": "Not a single problem with the sound quality, though I can't recommend the build.",
+      "predicted": [
+        "sound quality:Positive",
+        "build:Negative"
+      ],
+      "gold": [
+        "sound quality:Positive",
+        "build:Negative"
+      ],
+      "f1": 1.0,
+      "aspect_tp": 2,
+      "aspect_fp": 0,
+      "aspect_fn": 0,
+      "sentiment_correct": 2,
+      "sentiment_of_matched": 2
+    },
+    {
+      "review_id": 37,
+      "probe_category": "sarcasm",
+      "route": "pyabsa_empty_to_fallback",
+      "review": "Love how the app logs me out every ten minutes. Really adds excitement to my day.",
+      "predicted": [
+        "App Performance:Positive"
+      ],
+      "gold": [
+        "app:Negative"
+      ],
+      "f1": 1.0,
+      "aspect_tp": 1,
+      "aspect_fp": 0,
+      "aspect_fn": 0,
+      "sentiment_correct": 0,
+      "sentiment_of_matched": 1
+    },
+    {
+      "review_id": 39,
+      "probe_category": "hinglish",
+      "route": "pyabsa",
+      "review": "Delivery bohot slow thi lekin product ki quality ekdum mast hai.",
+      "predicted": [
+        "Delivery:Negative",
+        "quality:Negative"
+      ],
+      "gold": [
+        "delivery:Negative",
+        "product quality:Positive"
+      ],
+      "f1": 1.0,
+      "aspect_tp": 2,
+      "aspect_fp": 0,
+      "aspect_fn": 0,
+      "sentiment_correct": 1,
+      "sentiment_of_matched": 2
+    },
+    {
+      "review_id": 40,
+      "probe_category": "hinglish",
+      "route": "pyabsa",
+      "review": "Camera thoda average hai but battery backup zabardast hai, paisa vasool.",
+      "predicted": [
+        "Camera:Neutral",
+        "battery backup:Negative"
+      ],
+      "gold": [
+        "camera:Neutral",
+        "battery backup:Positive"
+      ],
+      "f1": 1.0,
+      "aspect_tp": 2,
+      "aspect_fp": 0,
+      "aspect_fn": 0,
+      "sentiment_correct": 1,
+      "sentiment_of_matched": 2
+    },
+    {
+      "review_id": 45,
+      "probe_category": "single_aspect_control",
+      "route": "pyabsa",
+      "review": "The screen is bright and sharp.",
+      "predicted": [
+        "screen:Positive"
+      ],
+      "gold": [
+        "screen:Positive"
+      ],
+      "f1": 1.0,
+      "aspect_tp": 1,
+      "aspect_fp": 0,
+      "aspect_fn": 0,
+      "sentiment_correct": 1,
+      "sentiment_of_matched": 1
+    },
+    {
+      "review_id": 46,
+      "probe_category": "single_aspect_control",
+      "route": "pyabsa",
+      "review": "Delivery was late.",
+      "predicted": [
+        "Delivery:Negative"
+      ],
+      "gold": [
+        "delivery:Negative"
+      ],
+      "f1": 1.0,
+      "aspect_tp": 1,
+      "aspect_fp": 0,
+      "aspect_fn": 0,
+      "sentiment_correct": 1,
+      "sentiment_of_matched": 1
+    }
+  ],
+  "reviews_missing_judgment": []
+}

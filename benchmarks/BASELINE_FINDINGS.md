@@ -167,7 +167,112 @@ Rows 1–3 are ops and data-hygiene work that would measurably improve every
 dashboard number without touching the model. Rows 4–5 are the genuine ML case,
 and they are the ones that justify considering an LLM-based extractor.
 
-**Still unmeasured:** aspect precision/recall/F1 and sentiment accuracy. Those
-need the judge labels. Run the packet in
-`runs/20260808T121303Z-pyabsa-working/judge_packet.md` and score it to fill in
-the rest.
+---
+
+## 6. Scored results (judge labels applied)
+
+All 46 reviews judged, none missing. Full detail in `runs/20260808T121303Z-pyabsa-working/triage.md`.
+
+| Metric | Value |
+|---|---:|
+| Aspect F1 (fuzzy) | **0.713** |
+| Aspect precision | 0.795 |
+| Aspect recall | 0.646 |
+| Sentiment accuracy (matched aspects) | **0.839** |
+| Coverage | 78 predicted / 96 gold (0.81) |
+
+**Recall is the weak axis, not precision.** The pipeline misses roughly a third
+of the aspects reviewers actually evaluate (34 false negatives vs 16 false
+positives). When it does name an aspect it is usually right; it simply does not
+name enough of them.
+
+### The fallback rows are measurably much worse
+
+| Route | Reviews | Aspect F1 | Precision | Recall | Sentiment acc |
+|---|---:|---:|---:|---:|---:|
+| `pyabsa` | 38 | **0.773** | 0.853 | 0.707 | **0.862** |
+| `pyabsa_empty_to_fallback` | 8 | **0.333** | 0.400 | 0.286 | **0.500** |
+
+Fallback rows score less than half the F1 and their sentiment is a coin flip.
+Holding everything else fixed, if those 8 reviews performed at the `pyabsa` rate
+the overall F1 would rise from **0.713 to 0.773** — a 6-point gain from deleting
+one silent code path, with no model change.
+
+### The fallback does not merely miss — it inverts
+
+Two of the F1-zero reviews were labelled **Positive** by the keyword scorer when
+the gold is unambiguously negative:
+
+> *"Product stopped working after a month. Tried to return but process is complicated."*
+> → `General: Positive`
+
+> *"Used to be great but recent updates made it worse. Bring back the old version!"*
+> → `General: Positive`
+
+Both are explained by the wordlists in `_get_rule_based_sentiment`:
+
+- `'working'` is in `positive_words`, so **"stopped working" scores positive**.
+- `'worse'` is absent from `negative_words` (only `'worst'` is present), so
+  *"made it worse"* contributes nothing and *"great"* wins.
+
+Substring matching against a hand-written wordlist produces confidently wrong
+polarity on plainly negative text.
+
+### Sentiment error is asymmetric — the model leans negative
+
+| Gold | n | Errors | Error rate |
+|---|---:|---:|---:|
+| Positive | 25 | 7 | **28.0%** |
+| Negative | 35 | 3 | 8.6% |
+| Neutral | 2 | 0 | 0.0% |
+
+Positives are misread more than three times as often as negatives (5 flipped to
+Negative, 2 to Neutral). This has direct business consequence: the *Areas of
+Improvement* table is systematically inflated and *Strength Anchors* is
+systematically understated. The dashboard's core recommendation is biased
+pessimistic.
+
+### Extraction vs polarity: the split the metrics were built to expose
+
+| Category | n | Aspect F1 | Sentiment acc | Diagnosis |
+|---|---:|---:|---:|---|
+| `negation` | 3 | **1.000** | **0.500** | Finds every aspect, reads polarity wrong |
+| `sarcasm` | 3 | 0.667 | **0.333** | Mostly finds aspects, polarity badly wrong |
+| `hinglish` | 3 | **0.909** | 0.600 | Extraction excellent, polarity mediocre |
+| `mixed_sentiment` | 11 | 0.739 | **1.000** | Polarity perfect, misses aspects |
+| `multi_aspect` | 6 | 0.812 | **1.000** | Polarity perfect, misses aspects |
+| `out_of_taxonomy` | 11 | 0.615 | 0.917 | Recall 0.52 — misses over half |
+| `hindi` | 3 | 0.545 | 0.667 | Devanagari genuinely weak |
+| `implicit_aspect` | 3 | **0.250** | **0.000** | Fails completely |
+| `comparative` | 1 | 0.000 | n/a | n=1, no signal |
+| `single_aspect_control` | 2 | 1.000 | 1.000 | Controls pass |
+
+These are two different failures needing two different fixes:
+
+- **Polarity failures** (`negation`, `sarcasm`) have *perfect or near-perfect
+  extraction*. A canonicalisation layer or better aspect model would not touch
+  them. They need a polarity model that handles scope and intent.
+- **Recall failures** (`mixed_sentiment`, `multi_aspect`, `out_of_taxonomy`) have
+  *perfect polarity*. The model judges correctly whatever it finds; it just
+  finds too little.
+
+**`implicit_aspect` fails on both axes** (F1 0.25, sentiment 0.00) and is the
+clearest argument for an LLM-based extractor. The pipeline reports the literal
+noun rather than the thing being evaluated:
+
+> *"I had to ask twice for water and once for the bill."*
+> → `water: Negative`, `bill: Neutral`. Gold: `service: Negative`.
+
+**Devanagari underperforms romanized Hindi.** `hindi` scores F1 0.545 / recall
+0.429 while `hinglish` scores 0.909. Two of three Devanagari reviews took the
+empty-to-fallback route. With translation inert, the multilingual checkpoint
+handles romanized Hindi unaided but struggles with Devanagari script — so fixing
+translation matters more for Devanagari than for code-mix.
+
+### What the numbers say about sequencing
+
+Roughly 6 F1 points are recoverable with **no ML work at all** (removing the
+silent fallback), plus the wordlist inversions and the case-only fragmentation.
+The remaining gap — recall on multi-aspect reviews, implicit aspects, negation
+and sarcasm polarity — is the genuine ML case and is where an LLM-based
+extractor would earn its cost.
