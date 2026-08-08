@@ -1,0 +1,92 @@
+{
+  "totals": {
+    "reviews_in": 46,
+    "aspect_rows_out": 75,
+    "pyabsa_model_loaded": false
+  },
+  "routes": {
+    "counts": {
+      "model_unavailable_fallback": 46
+    },
+    "percent": {
+      "model_unavailable_fallback": 100.0
+    },
+    "fallback_review_rate_pct": 100.0,
+    "fallback_aspect_row_rate_pct": 100.0
+  },
+  "fragmentation": {
+    "all_rows": {
+      "distinct_surface_forms": 13,
+      "distinct_concepts": 12,
+      "fragmentation_ratio": 1.08
+    },
+    "pyabsa_rows_only": {
+      "distinct_surface_forms": 0,
+      "distinct_concepts": 0,
+      "fragmentation_ratio": 0.0
+    },
+    "fragmented_concepts": [
+      {
+        "concept": "performance",
+        "surface_forms": [
+          "App Performance",
+          "Performance"
+        ],
+        "n_forms": 2
+      }
+    ]
+  },
+  "translation": {
+    "by_detected_language": {
+      "en": {
+        "reviews": 42,
+        "translate_attempted": 0,
+        "api_called": 0,
+        "text_changed": 0
+      },
+      "hi": {
+        "reviews": 3,
+        "translate_attempted": 3,
+        "api_called": 3,
+        "text_changed": 0
+      },
+      "id": {
+        "reviews": 1,
+        "translate_attempted": 0,
+        "api_called": 0,
+        "text_changed": 0
+      }
+    },
+    "expected_non_english_reviews": 6,
+    "of_those_text_actually_changed": 0,
+    "translation_effective_rate_pct": 0.0
+  },
+  "confidence": {
+    "n": 75,
+    "mean": 0.7,
+    "median": 0.7,
+    "min": 0.7,
+    "max": 0.7,
+    "exactly_0.7_count": 75,
+    "exactly_0.7_pct": 100.0
+  },
+  "coverage": {
+    "aspects_per_review_mean": 1.63,
+    "aspects_per_review_median": 1.0,
+    "aspects_per_review_max": 4,
+    "reviews_with_zero_aspects": 0,
+    "reviews_labelled_general_only": 8,
+    "reviews_labelled_general_only_pct": 17.4,
+    "aspect_rows_inside_fallback_taxonomy": 75,
+    "aspect_rows_inside_fallback_taxonomy_pct": 100.0
+  },
+  "heuristic_provenance_check": {
+    "note": "Can a consumer detect fallback rows from the API payload alone?",
+    "true_positive": 46,
+    "false_positive": 0,
+    "false_negative": 0,
+    "true_negative": 0,
+    "precision_pct": 100.0,
+    "recall_pct": 100.0
+  }
+}

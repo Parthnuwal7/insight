@@ -1,0 +1,79 @@
+review_id,aspect,sentiment,confidence,route,probe_category,review
+1,quality,Positive,0.9986,pyabsa,multi_aspect,Absolutely love this product! The quality is outstanding and delivery was super fast. Worth every penny.
+1,delivery,Positive,0.9986,pyabsa,multi_aspect,Absolutely love this product! The quality is outstanding and delivery was super fast. Worth every penny.
+2,customer service,Negative,0.9972,pyabsa,multi_aspect,Terrible experience. Product arrived damaged and customer service was unhelpful. Very disappointed.
+3,price,Negative,0.9904,pyabsa,mixed_sentiment,Good product overall but the price is too high for what you get. Quality is decent though.
+3,Quality,Positive,0.7959,pyabsa,mixed_sentiment,Good product overall but the price is too high for what you get. Quality is decent though.
+4,Quality,Positive,0.7,pyabsa_empty_to_fallback,hindi,यह उत्पाद बहुत अच्छा है। गुणवत्ता शानदार है और डिलीवरी भी तेज़ थी।
+4,Delivery,Positive,0.7,pyabsa_empty_to_fallback,hindi,यह उत्पाद बहुत अच्छा है। गुणवत्ता शानदार है और डिलीवरी भी तेज़ थी।
+5,delivery,Negative,0.9586,pyabsa,mixed_sentiment,Product quality is excellent but delivery took forever. Would buy again if shipping improves.
+6,design,Positive,0.9731,pyabsa,mixed_sentiment,The design is beautiful but functionality is lacking. Looks great but doesn't perform well.
+6,functionality,Negative,0.9704,pyabsa,mixed_sentiment,The design is beautiful but functionality is lacking. Looks great but doesn't perform well.
+7,description,Negative,0.9965,pyabsa,out_of_taxonomy,Misleading description. Product looks nothing like the pictures. Very disappointed.
+8,Delivery,Negative,0.9952,pyabsa,mixed_sentiment,Delivery was delayed by 2 weeks. Product is fine but the wait was frustrating.
+8,wait,Negative,0.992,pyabsa,mixed_sentiment,Delivery was delayed by 2 weeks. Product is fine but the wait was frustrating.
+9,Customer service,Negative,0.902,pyabsa,mixed_sentiment,Customer service needs improvement. Product is okay but support is terrible.
+9,support,Negative,0.9839,pyabsa,mixed_sentiment,Customer service needs improvement. Product is okay but support is terrible.
+10,General,Positive,0.7,pyabsa_empty_to_fallback,out_of_taxonomy,Product stopped working after a month. Tried to return but process is complicated.
+11,packaging,Negative,0.9642,pyabsa,mixed_sentiment,Good product but packaging was poor. Item arrived safely but could have been damaged.
+12,dining,Positive,0.998,pyabsa,multi_aspect,Fantastic dining experience! Food quality was exceptional and service was prompt. Ambiance was perfect.
+12,Food quality,Positive,0.9983,pyabsa,multi_aspect,Fantastic dining experience! Food quality was exceptional and service was prompt. Ambiance was perfect.
+12,service,Positive,0.9981,pyabsa,multi_aspect,Fantastic dining experience! Food quality was exceptional and service was prompt. Ambiance was perfect.
+12,Ambiance,Positive,0.9983,pyabsa,multi_aspect,Fantastic dining experience! Food quality was exceptional and service was prompt. Ambiance was perfect.
+13,Food,Negative,0.9644,pyabsa,multi_aspect,Food was cold when served. Waited 45 minutes for our order. Very disappointing.
+13,served,Negative,0.701,pyabsa,multi_aspect,Food was cold when served. Waited 45 minutes for our order. Very disappointing.
+14,portions,Negative,0.9914,pyabsa,mixed_sentiment,Great taste but portions are too small for the price. Atmosphere is nice though.
+14,price,Neutral,0.7228,pyabsa,mixed_sentiment,Great taste but portions are too small for the price. Atmosphere is nice though.
+14,Atmosphere,Positive,0.4997,pyabsa,mixed_sentiment,Great taste but portions are too small for the price. Atmosphere is nice though.
+15,Service,Neutral,0.7,pyabsa_empty_to_fallback,hindi,भोजन बहुत स्वादिष्ट था। सेवा भी उत्कृष्ट थी। मैं फिर से आऊंगा।
+16,Food,Negative,0.9962,pyabsa,out_of_taxonomy,Food poisoning after eating here. Never going back. Health department should inspect.
+17,service,Negative,0.996,pyabsa,multi_aspect,Terrible service. Waiter was rude and forgot half our order. Food was mediocre.
+17,Waiter,Negative,0.9963,pyabsa,multi_aspect,Terrible service. Waiter was rude and forgot half our order. Food was mediocre.
+17,Food,Negative,0.9068,pyabsa,multi_aspect,Terrible service. Waiter was rude and forgot half our order. Food was mediocre.
+18,atmosphere,Positive,0.9946,pyabsa,mixed_sentiment,Cozy atmosphere and delicious desserts! Main course was okay but desserts were outstanding.
+18,desserts,Positive,0.5228,pyabsa,mixed_sentiment,Cozy atmosphere and delicious desserts! Main course was okay but desserts were outstanding.
+18,Main course,Neutral,0.7992,pyabsa,mixed_sentiment,Cozy atmosphere and delicious desserts! Main course was okay but desserts were outstanding.
+19,Vegetarian,Negative,0.9885,pyabsa,out_of_taxonomy,Vegetarian options are limited. Food taste is good but needs more variety.
+19,Food,Positive,0.824,pyabsa,out_of_taxonomy,Vegetarian options are limited. Food taste is good but needs more variety.
+20,Noise,Negative,0.9915,pyabsa,out_of_taxonomy,Noise level is too high. Food is great but hard to have a conversation.
+20,Food,Negative,0.5889,pyabsa,out_of_taxonomy,Noise level is too high. Food is great but hard to have a conversation.
+21,User interface,Positive,0.9983,pyabsa,multi_aspect,This app is amazing! User interface is intuitive and performance is super fast. Best productivity app!
+21,performance,Positive,0.9985,pyabsa,multi_aspect,This app is amazing! User interface is intuitive and performance is super fast. Best productivity app!
+22,battery drain,Negative,0.9873,pyabsa,mixed_sentiment,Great features but battery drain is excessive. Fix the battery issue and it's 5 stars.
+23,Usability,Neutral,0.7,pyabsa_empty_to_fallback,hindi,यह ऐप बहुत उपयोगी है। इंटरफेस साफ और उपयोग में आसान है।
+24,ads,Negative,0.9954,pyabsa,out_of_taxonomy,Too many ads! Can't use the app without constant interruptions. Very annoying.
+25,App Performance,Neutral,0.7,pyabsa_empty_to_fallback,out_of_taxonomy,Privacy concerns - app requests too many unnecessary permissions. Sketchy.
+26,Feature,Positive,0.9804,pyabsa,mixed_sentiment,Feature-rich but overwhelming for beginners. Needs better onboarding tutorial.
+26,tutorial,Negative,0.8948,pyabsa,mixed_sentiment,Feature-rich but overwhelming for beginners. Needs better onboarding tutorial.
+27,notifications,Negative,0.9935,pyabsa,mixed_sentiment,App is good but notifications are broken. Doesn't alert when it should.
+28,Search function,Negative,0.9956,pyabsa,out_of_taxonomy,Search function is terrible. Can't find anything easily. Navigation is confusing.
+28,Navigation,Negative,0.9965,pyabsa,out_of_taxonomy,Search function is terrible. Can't find anything easily. Navigation is confusing.
+29,General,Positive,0.7,pyabsa_empty_to_fallback,comparative,Used to be great but recent updates made it worse. Bring back the old version!
+30,animations,Negative,0.997,pyabsa,out_of_taxonomy,Glitchy animations and UI lag on older devices. Optimization needed for compatibility.
+30,UI,Negative,0.9969,pyabsa,out_of_taxonomy,Glitchy animations and UI lag on older devices. Optimization needed for compatibility.
+31,Performance,Negative,0.7,pyabsa_empty_to_fallback,out_of_taxonomy,"Export function doesn't work. Tried multiple formats, all fail. Major bug."
+31,Features,Negative,0.7,pyabsa_empty_to_fallback,out_of_taxonomy,"Export function doesn't work. Tried multiple formats, all fail. Major bug."
+32,Cloud backup,Negative,0.9969,pyabsa,out_of_taxonomy,Cloud backup failed and lost weeks of work. No local backup option. Disaster.
+33,battery,Negative,0.9846,pyabsa,negation,"The battery does not drain quickly at all, and the screen isn't dim even outdoors."
+33,screen,Negative,0.9933,pyabsa,negation,"The battery does not drain quickly at all, and the screen isn't dim even outdoors."
+34,delivery,Neutral,0.5823,pyabsa,negation,"I wouldn't say the delivery was slow, but I can't call the packaging acceptable either."
+34,packaging,Negative,0.916,pyabsa,negation,"I wouldn't say the delivery was slow, but I can't call the packaging acceptable either."
+35,sound quality,Positive,0.9107,pyabsa,negation,"Not a single problem with the sound quality, though I can't recommend the build."
+35,build,Negative,0.9855,pyabsa,negation,"Not a single problem with the sound quality, though I can't recommend the build."
+36,cable,Negative,0.9181,pyabsa,sarcasm,Brilliant. Waited three weeks for a cable that arrived snapped in half. Outstanding work.
+36,work,Positive,0.8929,pyabsa,sarcasm,Brilliant. Waited three weeks for a cable that arrived snapped in half. Outstanding work.
+37,App Performance,Positive,0.7,pyabsa_empty_to_fallback,sarcasm,Love how the app logs me out every ten minutes. Really adds excitement to my day.
+38,battery life,Positive,0.9956,pyabsa,sarcasm,The battery life is fantastic if you enjoy charging twice before lunch.
+38,lunch,Neutral,0.9888,pyabsa,sarcasm,The battery life is fantastic if you enjoy charging twice before lunch.
+39,Delivery,Negative,0.9942,pyabsa,hinglish,Delivery bohot slow thi lekin product ki quality ekdum mast hai.
+39,quality,Negative,0.945,pyabsa,hinglish,Delivery bohot slow thi lekin product ki quality ekdum mast hai.
+40,Camera,Neutral,0.9662,pyabsa,hinglish,"Camera thoda average hai but battery backup zabardast hai, paisa vasool."
+40,battery backup,Negative,0.9576,pyabsa,hinglish,"Camera thoda average hai but battery backup zabardast hai, paisa vasool."
+41,Service staff,Negative,0.9903,pyabsa,hinglish,"Service staff ka behaviour bahut kharab tha, khana theek tha."
+42,charger,Negative,0.7076,pyabsa,implicit_aspect,Three days in and I'm already looking for the charger twice a day.
+43,water,Negative,0.8079,pyabsa,implicit_aspect,I had to ask twice for water and once for the bill.
+43,bill,Neutral,0.4991,pyabsa,implicit_aspect,I had to ask twice for water and once for the bill.
+44,room,Neutral,0.945,pyabsa,implicit_aspect,Everyone in the room could hear my private call through the speaker.
+44,speaker,Positive,0.9143,pyabsa,implicit_aspect,Everyone in the room could hear my private call through the speaker.
+45,screen,Positive,0.9986,pyabsa,single_aspect_control,The screen is bright and sharp.
+46,Delivery,Negative,0.9951,pyabsa,single_aspect_control,Delivery was late.

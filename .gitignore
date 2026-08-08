@@ -122,11 +122,19 @@ celerybeat.pid
 # Environments
 .env
 .venv
+.venv-bench/
 env/
 venv/
 ENV/
 env.bak/
 venv.bak/
+
+# Benchmark: keep run artifacts (they are the baseline record), ignore scratch
+benchmarks/**/__pycache__/
+
+# PyABSA downloads its ~810MB ATEPC checkpoint here on first run
+checkpoints/
+checkpoints.json
 
 # Spyder project settings
 .spyderproject

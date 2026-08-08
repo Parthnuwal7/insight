@@ -1,0 +1,24 @@
+{
+  "run_id": "20260807T202423Z-baseline",
+  "created_utc": "2026-08-07T20:24:33.333210+00:00",
+  "git_sha": "841c1fe",
+  "eval_set": "benchmarks\\eval_set\\eval_reviews_v1.csv",
+  "eval_set_sha256": "cc877094c84cf4af",
+  "n_reviews_in": 46,
+  "n_reviews_processed": 46,
+  "rows_dropped_by_clean_data": 0,
+  "pyabsa_model_loaded": false,
+  "hf_token_present": false,
+  "init_seconds": 8.2,
+  "process_seconds": 0.5,
+  "versions": {
+    "python": "3.11.9",
+    "torch": "2.1.2+cpu",
+    "transformers": "4.36.2",
+    "pyabsa": "MISSING",
+    "pandas": "2.0.3",
+    "numpy": "1.25.2",
+    "langdetect": "unknown",
+    "networkx": "3.6.1"
+  }
+}
