@@ -362,3 +362,81 @@ instead of splitting below the weight-2 threshold.
 
 The remaining gap is unchanged and is the real ML work: recall on multi-aspect
 reviews, implicit aspects, and negation/sarcasm polarity.
+
+---
+
+## 8. After fixing translation
+
+Run `20260809T201004Z-translation-fixed`. `HF_TOKEN` was supplied, which exposed
+three further faults — the token alone changed nothing.
+
+**a. The endpoint no longer exists.** `_call_hf_translation_api` hardcoded
+`https://api-inference.huggingface.co/models/{model}`. That host has been retired
+and fails at DNS resolution. The bare `except` caught the `ConnectionError` and
+logged it at DEBUG, so translation had been dead regardless of credentials.
+Tellingly, `__init__` already set `base_url` to `router.huggingface.co` — the
+correct current host — and nothing used it. A migration was started and never
+finished.
+
+**b. The model was wrong in two ways.** `ai4bharat/indictrans2-en-indic-1.3B`
+translates English *into* Indic languages; it was being used for Hindi→English.
+It is also not served: both IndicTrans2 directions return
+`"Model not supported by provider hf-inference"`. The call could never have
+succeeded. Replaced with `Helsinki-NLP/opus-mt-hi-en`, which is the right
+direction and is served.
+
+**c. Multi-sentence input was truncated.** opus-mt translates only the first
+sentence and drops the rest:
+
+> `"यह उत्पाद बहुत अच्छा है। गुणवत्ता शानदार है और डिलीवरी भी तेज़ थी।"`
+> → `"This product is very good."`
+
+The quality and delivery clauses vanished — two aspects the extractor then had
+no chance of seeing. Translation is now sentence-by-sentence with a cache.
+
+### Results
+
+| Metric | Baseline | Cheap fixes | **+ translation** |
+|---|---:|---:|---:|
+| Aspect F1 | 0.713 | 0.707 | **0.746** |
+| Precision | 0.795 | 0.853 | **0.863** |
+| Recall | 0.646 | 0.604 | **0.656** |
+| Sentiment accuracy | 0.839 | 0.862 | **0.873** |
+| Keyword rows | 12.8% | 0% | **0%** |
+| Reviews yielding nothing | 0 | 8 | **5** |
+
+The Hindi regression is resolved and overtakes the original baseline:
+
+| | Baseline | Cheap fixes | + translation |
+|---|---:|---:|---:|
+| `hindi` F1 | 0.545 | 0.000 | **0.833** |
+| `hindi` sentiment | 0.667 | n/a | **1.000** |
+
+This also confirms the earlier read: Devanagari was never handled by ABSA, only
+by Devanagari keywords in the fallback. With real translation it now routes
+through the model and scores better than it ever did.
+
+Sentiment bias is reduced but not gone — Positive error 28.0% → **22.2%**,
+Negative 8.6% → **5.9%**. The pipeline still reads complaints more reliably than
+compliments, so *Areas of Improvement* remains somewhat inflated relative to
+*Strength Anchors*.
+
+### What is still broken
+
+| Problem | Evidence | Fixable without ML? |
+|---|---|---|
+| Reports literal nouns, not opinion targets | `implicit_aspect` F1 0.250, sentiment 0.000 | No |
+| Sarcasm | F1 0.500, sentiment 0.500 | No |
+| Negation polarity | extraction F1 1.000, sentiment 0.500 | No |
+| Recall on aspects outside common vocabulary | `out_of_taxonomy` recall 0.522 | No |
+| 5 reviews still yield nothing | privacy, export, return process, comparative, sarcasm | No |
+| Hinglish polarity | extraction 0.909, sentiment 0.600 | Partly — `langdetect` tags Hinglish as English, so it is never translated |
+
+Every remaining item is model capability. The ops and data-hygiene work is done.
+
+### Harness caveat
+
+`api_called` now under-reports in `metrics_unlabeled.json`: the recorder keys on
+the text passed to `_call_hf_translation_api`, which is a sentence since the
+sentence-splitting change, while `translate_to_english` receives the whole
+review. `text_changed` is still accurate and is the metric that matters.
