@@ -269,10 +269,96 @@ empty-to-fallback route. With translation inert, the multilingual checkpoint
 handles romanized Hindi unaided but struggles with Devanagari script — so fixing
 translation matters more for Devanagari than for code-mix.
 
-### What the numbers say about sequencing
+### What the numbers say about sequencing (superseded by §7 — see below)
 
 Roughly 6 F1 points are recoverable with **no ML work at all** (removing the
 silent fallback), plus the wordlist inversions and the case-only fragmentation.
 The remaining gap — recall on multi-aspect reviews, implicit aspects, negation
 and sarcasm polarity — is the genuine ML case and is where an LLM-based
 extractor would earn its cost.
+
+---
+
+## 7. After the cheap fixes — measured, not predicted
+
+Run `20260808T220751Z-cheap-fixes`, same eval set, same judge labels.
+
+**I predicted F1 would rise from 0.713 to 0.773. It did not.** That estimate
+assumed the 8 fallback reviews would start producing ABSA-quality aspects.
+They don't — they now produce *no* aspects, so recall fell instead.
+
+| Metric | Before | After | Change |
+|---|---:|---:|:--|
+| Aspect F1 | 0.713 | 0.707 | −0.006 |
+| **Precision** | 0.795 | **0.853** | **+0.058** |
+| Recall | 0.646 | 0.604 | −0.042 |
+| **Sentiment accuracy** | 0.839 | **0.862** | **+0.023** |
+| Keyword rows in output | 12.8% | **0%** | — |
+| Rows with fake `0.7` confidence | 10 | **0** | — |
+
+The fixes **removed wrong data rather than adding right data**. Every aspect the
+system now reports is more likely to be correct, and its polarity more likely to
+be right. Nothing was done to make it find more.
+
+### F1 is the wrong scoreboard for this change
+
+F1 penalises a missing aspect and a wrong aspect equally. For this product they
+are not equal: a wrong aspect becomes a phantom row in *Areas of Improvement*
+that somebody acts on, while a missing one is a gap. Precision up 5.8 points and
+sentiment up 2.3 points is the trade that matters, and it is invisible in F1.
+
+### Regression: Devanagari now returns nothing
+
+All 8 reviews that now return zero aspects, by category:
+
+| Category | n | Note |
+|---|---:|---|
+| `hindi` | 3 | **All Devanagari reviews in the set** |
+| `out_of_taxonomy` | 3 | Return process, privacy, export — no keyword bucket |
+| `comparative` | 1 | |
+| `sarcasm` | 1 | |
+
+`hindi` went from F1 0.545 to **0.000**. PyABSA finds no aspects in Devanagari,
+and translation is inert because `HF_TOKEN` is unset — so Hindi reviews now
+produce no output at all.
+
+This is not a fluke of removing the fallback: the keyword taxonomy contains
+Devanagari terms (`गुणवत्ता`, `डिलीवरी`, `सेवा`), so it was genuinely carrying
+Hindi coverage. Removing it exposed that **Hindi was only ever working by
+accident, through keyword matching, not through ABSA.**
+
+Two ways forward, and this is a product call:
+
+1. **Set `HF_TOKEN` and fix translation.** Hindi becomes English before
+   extraction, and the multilingual model handles it. This is the real fix, and
+   it also explains why romanized Hinglish scores 0.909 while Devanagari scores
+   0.000 — Hinglish never needed translation.
+2. **Re-enable the fallback for now** via `ABSA_ALLOW_KEYWORD_FALLBACK=true`,
+   accepting inverted polarity on some English text in exchange for coarse Hindi
+   coverage.
+
+Option 1 is correct. Option 2 is available if Hindi content is in production
+today and cannot go dark while translation is fixed.
+
+### What did improve, that the benchmark cannot see
+
+Canonicalization affects aggregation, not extraction, so it does not move F1 —
+the scorer compares raw surface forms. Verified separately by unit test:
+`Delivery`, `delivery`, and `the delivery` now produce **one** ranking entry with
+frequency 3, where before they produced three entries of frequency 1 and each
+ranked too low to surface. Co-occurrence edges accumulate across variants
+instead of splitting below the weight-2 threshold.
+
+### Honest summary
+
+| Claim | Verdict |
+|---|---|
+| Silent fallback removed | ✅ 0% keyword rows, provenance on every row |
+| Pipeline fails loudly | ✅ `/health` reports `degraded`, was always wrong before |
+| Polarity inversions fixed | ✅ "stopped working" now Negative |
+| Aspect fragmentation fixed | ✅ verified by test, invisible to F1 |
+| **Accuracy improved** | ⚠️ **precision and sentiment yes; F1 no; recall worse** |
+| Hindi | ❌ **regressed to zero — needs `HF_TOKEN`** |
+
+The remaining gap is unchanged and is the real ML work: recall on multi-aspect
+reviews, implicit aspects, and negation/sarcasm polarity.

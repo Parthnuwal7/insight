@@ -182,7 +182,15 @@ def main() -> int:
         confidences = list(detail.get("confidence_scores") or [])
         positions = list(detail.get("positions") or [])
 
-        route = recorder.route_for(original)
+        # The pipeline now reports its own provenance. Prefer it over the
+        # wrapper-derived route: it is what a production consumer would see.
+        method = detail.get("extraction_method")
+        reason = detail.get("degraded_reason")
+        if method:
+            route = method if method != "none" else f"none:{reason}"
+        else:
+            route = recorder.route_for(original)
+
         tinfo = recorder.translation_for(original)
         meta = meta_by_review.get(original, {})
 

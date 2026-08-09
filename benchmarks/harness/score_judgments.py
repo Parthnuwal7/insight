@@ -288,7 +288,15 @@ def main() -> int:
     triage = render_triage(result, run_id)
     (run_dir / "triage.md").write_text(triage, encoding="utf-8")
 
-    print(triage)
+    # Windows consoles default to cp1252 and cannot encode Devanagari review
+    # text. The artifacts are already written as UTF-8; degrade the console
+    # echo rather than failing the run over a display concern.
+    try:
+        print(triage)
+    except UnicodeEncodeError:
+        enc = sys.stdout.encoding or "utf-8"
+        print(triage.encode(enc, errors="replace").decode(enc))
+
     print(f"\n[score] wrote {run_dir / 'metrics_labeled.json'}")
     print(f"[score] wrote {run_dir / 'triage.md'}")
     return 0

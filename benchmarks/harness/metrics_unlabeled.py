@@ -17,12 +17,24 @@ from typing import Any
 from instrument import FALLBACK_CONFIDENCE, FALLBACK_TAXONOMY
 from matching import cluster, normalize
 
+# Legacy wrapper-derived route names, kept so older runs still score.
 FALLBACK_ROUTES = {
     "pyabsa_empty_to_fallback",
     "pyabsa_error_to_fallback",
     "model_unavailable_fallback",
     "fallback_unattributed",
+    "keyword_fallback",
 }
+
+
+def is_non_absa(route: str) -> bool:
+    """True when a row did not come from real aspect-based sentiment analysis.
+
+    Covers the legacy wrapper route names and the provenance the pipeline now
+    reports natively ('keyword_fallback', and 'none:<reason>' for reviews it
+    declined to guess at).
+    """
+    return route in FALLBACK_ROUTES or route.startswith("none:")
 
 
 def _pct(n: int, d: int) -> float:
@@ -35,8 +47,8 @@ def compute(review_rows: list[dict], aspect_rows: list[dict], model_loaded: bool
 
     # ---- route distribution -------------------------------------------
     routes = Counter(r["route"] for r in review_rows)
-    fallback_reviews = sum(c for r, c in routes.items() if r in FALLBACK_ROUTES)
-    fallback_aspect_rows = sum(1 for a in aspect_rows if a["route"] in FALLBACK_ROUTES)
+    fallback_reviews = sum(c for r, c in routes.items() if is_non_absa(r))
+    fallback_aspect_rows = sum(1 for a in aspect_rows if is_non_absa(a["route"]))
 
     # ---- fragmentation -------------------------------------------------
     surface_forms = [a["aspect"] for a in aspect_rows if a.get("aspect")]
@@ -80,7 +92,7 @@ def compute(review_rows: list[dict], aspect_rows: list[dict], model_loaded: bool
     in_taxonomy = sum(1 for a in aspect_rows if a.get("aspect") in FALLBACK_TAXONOMY)
 
     # ---- heuristic provenance check ------------------------------------
-    truth = [r["route"] in FALLBACK_ROUTES for r in review_rows]
+    truth = [is_non_absa(r["route"]) for r in review_rows]
     guess = [bool(r.get("heuristic_fallback")) for r in review_rows]
     tp = sum(1 for t, g in zip(truth, guess) if t and g)
     fp = sum(1 for t, g in zip(truth, guess) if not t and g)

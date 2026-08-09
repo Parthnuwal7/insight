@@ -1,0 +1,760 @@
+{
+"judgments": [
+{
+"review_id": 1,
+"language": "en",
+"aspects": [
+{
+"aspect": "product",
+"sentiment": "Positive",
+"evidence": "Absolutely love this product!"
+},
+{
+"aspect": "quality",
+"sentiment": "Positive",
+"evidence": "quality is outstanding"
+},
+{
+"aspect": "delivery",
+"sentiment": "Positive",
+"evidence": "delivery was super fast"
+}
+]
+},
+{
+"review_id": 2,
+"language": "en",
+"aspects": [
+{
+"aspect": "experience",
+"sentiment": "Negative",
+"evidence": "Terrible experience."
+},
+{
+"aspect": "product",
+"sentiment": "Negative",
+"evidence": "Product arrived damaged"
+},
+{
+"aspect": "customer service",
+"sentiment": "Negative",
+"evidence": "customer service was unhelpful"
+}
+]
+},
+{
+"review_id": 3,
+"language": "en",
+"aspects": [
+{
+"aspect": "product",
+"sentiment": "Positive",
+"evidence": "Good product overall"
+},
+{
+"aspect": "price",
+"sentiment": "Negative",
+"evidence": "price is too high"
+},
+{
+"aspect": "quality",
+"sentiment": "Positive",
+"evidence": "Quality is decent"
+}
+]
+},
+{
+"review_id": 4,
+"language": "hi",
+"aspects": [
+{
+"aspect": "product",
+"sentiment": "Positive",
+"evidence": "यह उत्पाद बहुत अच्छा है"
+},
+{
+"aspect": "quality",
+"sentiment": "Positive",
+"evidence": "गुणवत्ता शानदार है"
+},
+{
+"aspect": "delivery",
+"sentiment": "Positive",
+"evidence": "डिलीवरी भी तेज़ थी"
+}
+]
+},
+{
+"review_id": 5,
+"language": "en",
+"aspects": [
+{
+"aspect": "product quality",
+"sentiment": "Positive",
+"evidence": "Product quality is excellent"
+},
+{
+"aspect": "delivery",
+"sentiment": "Negative",
+"evidence": "delivery took forever"
+}
+]
+},
+{
+"review_id": 6,
+"language": "en",
+"aspects": [
+{
+"aspect": "design",
+"sentiment": "Positive",
+"evidence": "design is beautiful"
+},
+{
+"aspect": "functionality",
+"sentiment": "Negative",
+"evidence": "functionality is lacking"
+}
+]
+},
+{
+"review_id": 7,
+"language": "en",
+"aspects": [
+{
+"aspect": "description",
+"sentiment": "Negative",
+"evidence": "Misleading description."
+},
+{
+"aspect": "product",
+"sentiment": "Negative",
+"evidence": "Product looks nothing like the pictures"
+}
+]
+},
+{
+"review_id": 8,
+"language": "en",
+"aspects": [
+{
+"aspect": "delivery",
+"sentiment": "Negative",
+"evidence": "Delivery was delayed by 2 weeks"
+},
+{
+"aspect": "product",
+"sentiment": "Positive",
+"evidence": "Product is fine"
+}
+]
+},
+{
+"review_id": 9,
+"language": "en",
+"aspects": [
+{
+"aspect": "customer service",
+"sentiment": "Negative",
+"evidence": "Customer service needs improvement"
+},
+{
+"aspect": "product",
+"sentiment": "Neutral",
+"evidence": "Product is okay"
+},
+{
+"aspect": "support",
+"sentiment": "Negative",
+"evidence": "support is terrible"
+}
+]
+},
+{
+"review_id": 10,
+"language": "en",
+"aspects": [
+{
+"aspect": "product",
+"sentiment": "Negative",
+"evidence": "Product stopped working"
+},
+{
+"aspect": "return process",
+"sentiment": "Negative",
+"evidence": "process is complicated"
+}
+]
+},
+{
+"review_id": 11,
+"language": "en",
+"aspects": [
+{
+"aspect": "product",
+"sentiment": "Positive",
+"evidence": "Good product"
+},
+{
+"aspect": "packaging",
+"sentiment": "Negative",
+"evidence": "packaging was poor"
+}
+]
+},
+{
+"review_id": 12,
+"language": "en",
+"aspects": [
+{
+"aspect": "dining experience",
+"sentiment": "Positive",
+"evidence": "Fantastic dining experience!"
+},
+{
+"aspect": "food quality",
+"sentiment": "Positive",
+"evidence": "Food quality was exceptional"
+},
+{
+"aspect": "service",
+"sentiment": "Positive",
+"evidence": "service was prompt"
+},
+{
+"aspect": "ambiance",
+"sentiment": "Positive",
+"evidence": "Ambiance was perfect"
+}
+]
+},
+{
+"review_id": 13,
+"language": "en",
+"aspects": [
+{
+"aspect": "food",
+"sentiment": "Negative",
+"evidence": "Food was cold"
+},
+{
+"aspect": "wait time",
+"sentiment": "Negative",
+"evidence": "Waited 45 minutes for our order"
+}
+]
+},
+{
+"review_id": 14,
+"language": "en",
+"aspects": [
+{
+"aspect": "taste",
+"sentiment": "Positive",
+"evidence": "Great taste"
+},
+{
+"aspect": "portions",
+"sentiment": "Negative",
+"evidence": "portions are too small"
+},
+{
+"aspect": "atmosphere",
+"sentiment": "Positive",
+"evidence": "Atmosphere is nice"
+}
+]
+},
+{
+"review_id": 15,
+"language": "hi",
+"aspects": [
+{
+"aspect": "food",
+"sentiment": "Positive",
+"evidence": "भोजन बहुत स्वादिष्ट था"
+},
+{
+"aspect": "service",
+"sentiment": "Positive",
+"evidence": "सेवा भी उत्कृष्ट थी"
+}
+]
+},
+{
+"review_id": 16,
+"language": "en",
+"aspects": [
+{
+"aspect": "food",
+"sentiment": "Negative",
+"evidence": "Food poisoning"
+},
+{
+"aspect": "restaurant",
+"sentiment": "Negative",
+"evidence": "Never going back."
+}
+]
+},
+{
+"review_id": 17,
+"language": "en",
+"aspects": [
+{
+"aspect": "service",
+"sentiment": "Negative",
+"evidence": "Terrible service."
+},
+{
+"aspect": "waiter",
+"sentiment": "Negative",
+"evidence": "Waiter was rude"
+},
+{
+"aspect": "food",
+"sentiment": "Negative",
+"evidence": "Food was mediocre"
+}
+]
+},
+{
+"review_id": 18,
+"language": "en",
+"aspects": [
+{
+"aspect": "atmosphere",
+"sentiment": "Positive",
+"evidence": "Cozy atmosphere"
+},
+{
+"aspect": "desserts",
+"sentiment": "Positive",
+"evidence": "delicious desserts!"
+},
+{
+"aspect": "main course",
+"sentiment": "Neutral",
+"evidence": "Main course was okay"
+}
+]
+},
+{
+"review_id": 19,
+"language": "en",
+"aspects": [
+{
+"aspect": "vegetarian options",
+"sentiment": "Negative",
+"evidence": "Vegetarian options are limited"
+},
+{
+"aspect": "food taste",
+"sentiment": "Positive",
+"evidence": "Food taste is good"
+},
+{
+"aspect": "variety",
+"sentiment": "Negative",
+"evidence": "needs more variety"
+}
+]
+},
+{
+"review_id": 20,
+"language": "en",
+"aspects": [
+{
+"aspect": "noise level",
+"sentiment": "Negative",
+"evidence": "Noise level is too high"
+},
+{
+"aspect": "food",
+"sentiment": "Positive",
+"evidence": "Food is great"
+}
+]
+},
+{
+"review_id": 21,
+"language": "en",
+"aspects": [
+{
+"aspect": "app",
+"sentiment": "Positive",
+"evidence": "This app is amazing!"
+},
+{
+"aspect": "user interface",
+"sentiment": "Positive",
+"evidence": "User interface is intuitive"
+},
+{
+"aspect": "performance",
+"sentiment": "Positive",
+"evidence": "performance is super fast"
+}
+]
+},
+{
+"review_id": 22,
+"language": "en",
+"aspects": [
+{
+"aspect": "features",
+"sentiment": "Positive",
+"evidence": "Great features"
+},
+{
+"aspect": "battery drain",
+"sentiment": "Negative",
+"evidence": "battery drain is excessive"
+}
+]
+},
+{
+"review_id": 23,
+"language": "hi",
+"aspects": [
+{
+"aspect": "app",
+"sentiment": "Positive",
+"evidence": "यह ऐप बहुत उपयोगी है"
+},
+{
+"aspect": "interface",
+"sentiment": "Positive",
+"evidence": "इंटरफेस साफ और उपयोग में आसान है"
+}
+]
+},
+{
+"review_id": 24,
+"language": "en",
+"aspects": [
+{
+"aspect": "ads",
+"sentiment": "Negative",
+"evidence": "Too many ads!"
+},
+{
+"aspect": "app",
+"sentiment": "Negative",
+"evidence": "Can't use the app without constant interruptions"
+}
+]
+},
+{
+"review_id": 25,
+"language": "en",
+"aspects": [
+{
+"aspect": "privacy",
+"sentiment": "Negative",
+"evidence": "Privacy concerns"
+},
+{
+"aspect": "permissions",
+"sentiment": "Negative",
+"evidence": "app requests too many unnecessary permissions"
+}
+]
+},
+{
+"review_id": 26,
+"language": "en",
+"aspects": [
+{
+"aspect": "features",
+"sentiment": "Positive",
+"evidence": "Feature-rich"
+},
+{
+"aspect": "onboarding tutorial",
+"sentiment": "Negative",
+"evidence": "overwhelming for beginners. Needs better onboarding tutorial"
+}
+]
+},
+{
+"review_id": 27,
+"language": "en",
+"aspects": [
+{
+"aspect": "app",
+"sentiment": "Positive",
+"evidence": "App is good"
+},
+{
+"aspect": "notifications",
+"sentiment": "Negative",
+"evidence": "notifications are broken"
+}
+]
+},
+{
+"review_id": 28,
+"language": "en",
+"aspects": [
+{
+"aspect": "search function",
+"sentiment": "Negative",
+"evidence": "Search function is terrible"
+},
+{
+"aspect": "navigation",
+"sentiment": "Negative",
+"evidence": "Navigation is confusing"
+}
+]
+},
+{
+"review_id": 29,
+"language": "en",
+"aspects": [
+{
+"aspect": "recent updates",
+"sentiment": "Negative",
+"evidence": "recent updates made it worse"
+}
+]
+},
+{
+"review_id": 30,
+"language": "en",
+"aspects": [
+{
+"aspect": "animations",
+"sentiment": "Negative",
+"evidence": "Glitchy animations"
+},
+{
+"aspect": "ui",
+"sentiment": "Negative",
+"evidence": "UI lag"
+},
+{
+"aspect": "optimization",
+"sentiment": "Negative",
+"evidence": "Optimization needed for compatibility"
+}
+]
+},
+{
+"review_id": 31,
+"language": "en",
+"aspects": [
+{
+"aspect": "export function",
+"sentiment": "Negative",
+"evidence": "Export function doesn't work"
+}
+]
+},
+{
+"review_id": 32,
+"language": "en",
+"aspects": [
+{
+"aspect": "cloud backup",
+"sentiment": "Negative",
+"evidence": "Cloud backup failed"
+},
+{
+"aspect": "local backup option",
+"sentiment": "Negative",
+"evidence": "No local backup option"
+}
+]
+},
+{
+"review_id": 33,
+"language": "en",
+"aspects": [
+{
+"aspect": "battery",
+"sentiment": "Positive",
+"evidence": "does not drain quickly at all"
+},
+{
+"aspect": "screen",
+"sentiment": "Positive",
+"evidence": "isn't dim even outdoors"
+}
+]
+},
+{
+"review_id": 34,
+"language": "en",
+"aspects": [
+{
+"aspect": "delivery",
+"sentiment": "Positive",
+"evidence": "I wouldn't say the delivery was slow"
+},
+{
+"aspect": "packaging",
+"sentiment": "Negative",
+"evidence": "can't call the packaging acceptable either"
+}
+]
+},
+{
+"review_id": 35,
+"language": "en",
+"aspects": [
+{
+"aspect": "sound quality",
+"sentiment": "Positive",
+"evidence": "Not a single problem with the sound quality"
+},
+{
+"aspect": "build",
+"sentiment": "Negative",
+"evidence": "can't recommend the build"
+}
+]
+},
+{
+"review_id": 36,
+"language": "en",
+"aspects": [
+{
+"aspect": "delivery",
+"sentiment": "Negative",
+"evidence": "Waited three weeks"
+},
+{
+"aspect": "cable",
+"sentiment": "Negative",
+"evidence": "arrived snapped in half"
+}
+]
+},
+{
+"review_id": 37,
+"language": "en",
+"aspects": [
+{
+"aspect": "app",
+"sentiment": "Negative",
+"evidence": "logs me out every ten minutes"
+}
+]
+},
+{
+"review_id": 38,
+"language": "en",
+"aspects": [
+{
+"aspect": "battery life",
+"sentiment": "Negative",
+"evidence": "charging twice before lunch"
+}
+]
+},
+{
+"review_id": 39,
+"language": "hi-latn",
+"aspects": [
+{
+"aspect": "delivery",
+"sentiment": "Negative",
+"evidence": "Delivery bohot slow thi"
+},
+{
+"aspect": "product quality",
+"sentiment": "Positive",
+"evidence": "product ki quality ekdum mast hai"
+}
+]
+},
+{
+"review_id": 40,
+"language": "hi-latn",
+"aspects": [
+{
+"aspect": "camera",
+"sentiment": "Neutral",
+"evidence": "Camera thoda average hai"
+},
+{
+"aspect": "battery backup",
+"sentiment": "Positive",
+"evidence": "battery backup zabardast hai"
+}
+]
+},
+{
+"review_id": 41,
+"language": "hi-latn",
+"aspects": [
+{
+"aspect": "service staff",
+"sentiment": "Negative",
+"evidence": "Service staff ka behaviour bahut kharab tha"
+},
+{
+"aspect": "food",
+"sentiment": "Neutral",
+"evidence": "khana theek tha"
+}
+]
+},
+{
+"review_id": 42,
+"language": "en",
+"aspects": [
+{
+"aspect": "battery life",
+"sentiment": "Negative",
+"evidence": "looking for the charger twice a day"
+}
+]
+},
+{
+"review_id": 43,
+"language": "en",
+"aspects": [
+{
+"aspect": "service",
+"sentiment": "Negative",
+"evidence": "had to ask twice for water and once for the bill"
+}
+]
+},
+{
+"review_id": 44,
+"language": "en",
+"aspects": [
+{
+"aspect": "speaker",
+"sentiment": "Negative",
+"evidence": "could hear my private call through the speaker"
+}
+]
+},
+{
+"review_id": 45,
+"language": "en",
+"aspects": [
+{
+"aspect": "screen",
+"sentiment": "Positive",
+"evidence": "screen is bright and sharp"
+}
+]
+},
+{
+"review_id": 46,
+"language": "en",
+"aspects": [
+{
+"aspect": "delivery",
+"sentiment": "Negative",
+"evidence": "Delivery was late"
+}
+]
+}
+]
+}
