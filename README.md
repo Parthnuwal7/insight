@@ -178,6 +178,7 @@ insights/
 │   ├── app.py                     # FastAPI application
 │   └── src/
 │       ├── absa/                  # 7-stage ABSA pipeline package
+│       │   ├── validation.py      # DataValidator (CSV schema validation)
 │       │   ├── pipeline.py        # DataProcessor orchestration
 │       │   ├── extraction.py      # PyABSA aspect/sentiment extraction
 │       │   ├── translation.py     # AI4Bharat translation
