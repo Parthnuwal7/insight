@@ -6,8 +6,6 @@
 ![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
 ![HuggingFace](https://img.shields.io/badge/HuggingFace-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black)
-![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
 
 **A production-grade NLP system for extracting actionable insights from product reviews using Aspect-Based Sentiment Analysis (ABSA), multilingual translation, and AI-powered summarization.**
 
@@ -29,7 +27,7 @@
 | Languages | English only | Hindi + English (auto-translation) |
 | Output | Positive/Negative label | Aspects, Sentiments, Intents, AI Summaries |
 | Deployment | Local scripts | Cloud-native (Streamlit Cloud + HF Spaces) |
-| Scalability | Synchronous | Async job queue with Redis |
+| Scalability | Synchronous | In-process async task manager |
 
 ---
 
@@ -41,10 +39,9 @@
 
 | Layer | Technology | Responsibility |
 |-------|------------|----------------|
-| **User Experience** | Streamlit Cloud | Interactive dashboard, visualizations, admin panel |
-| **Processing Layer** | FastAPI on HuggingFace Spaces | REST API, rate limiting, async job orchestration |
+| **User Experience** | Streamlit Cloud | Interactive dashboard, visualizations |
+| **Processing Layer** | FastAPI on HuggingFace Spaces | REST API, async job orchestration |
 | **ABSA Pipeline** | PyABSA + HuggingFace Transformers | 7-stage NLP processing pipeline |
-| **Backend Services** | Redis, MongoDB | Caching, rate limiting, telemetry, analytics |
 | **ML Services** | HuggingFace API, Google Gemini | Translation, sentiment models, AI summaries |
 
 ---
@@ -77,29 +74,6 @@ Each review passes through a **7-stage NLP pipeline**:
 
 ---
 
-## 🔧 Backend Services
-
-### Redis — Performance & Rate Limiting
-```python
-# Rate limiting: 100 requests/minute per IP
-# Session caching for faster dashboard loads
-# Async task queue for long-running ABSA jobs
-```
-- **Rate Limiting**: Protects API from abuse (100 req/min)
-- **Session Cache**: Reduces redundant processing
-- **Task Queue**: Enables async job submission with status tracking
-
-### MongoDB — Telemetry & Analytics
-```python
-# Stores: session logs, user events, API analytics
-# Enables: usage dashboards, error tracking, geo-analytics
-```
-- **Telemetry Logging**: Track sessions, events, errors
-- **User Analytics**: Usage patterns and popular features
-- **IP Geolocation**: Geographic distribution of users
-
----
-
 ## 🌟 Features
 
 ### Dashboard Capabilities
@@ -115,7 +89,7 @@ Each review passes through a **7-stage NLP pipeline**:
 - **Dual Ranking Tables**: Areas of improvement vs. strength anchors
 - **Priority Scoring**: Weighted impact scores for business prioritization
 - **AI Summaries**: Gemini-powered macro and micro insights
-- **Export Engine**: PDF reports and CSV data exports
+- **Export**: CSV data exports
 
 ---
 
@@ -124,7 +98,6 @@ Each review passes through a **7-stage NLP pipeline**:
 ### Prerequisites
 - Python 3.8+
 - 4GB+ RAM (for ML models)
-- Redis & MongoDB (optional, for full features)
 
 ### Local Development
 
@@ -149,9 +122,7 @@ cd ABSA && uvicorn app:app --reload --port 7860
 # Required
 HF_TOKEN=your_huggingface_token
 
-# Optional (for full features)
-MONGODB_URI=mongodb+srv://...
-REDIS_URL=redis://...
+# Optional
 GEMINI_API_KEY=your_gemini_key
 ```
 
@@ -161,18 +132,20 @@ GEMINI_API_KEY=your_gemini_key
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `GET /` | GET | Health check |
-| `POST /process` | POST | Sync ABSA processing |
-| `POST /submit_job` | POST | Async job submission |
-| `GET /job/{job_id}` | GET | Job status polling |
-| `POST /cancel/{task_id}` | POST | Cancel running task |
-| `POST /log_session` | POST | Log user session |
-| `POST /log_event` | POST | Log telemetry event |
+| `GET /` | GET | Service info |
+| `GET /health` | GET | Health check |
+| `POST /process-reviews` | POST | Process reviews through the ABSA pipeline |
+| `POST /cancel-task/{task_id}` | POST | Cancel a running task |
+| `GET /task-status/{task_id}` | GET | Get status of a specific task |
+| `POST /cancel-user-tasks/{user_id}` | POST | Cancel all tasks for a user |
+| `GET /user-tasks/{user_id}` | GET | Get all tasks for a user |
+| `GET /task-stats` | GET | Get overall task statistics |
+| `POST /cleanup-old-tasks` | POST | Clean up old completed tasks |
 
 ### Example Request
 
 ```bash
-curl -X POST "https://your-hf-space.hf.space/process" \
+curl -X POST "https://your-hf-space.hf.space/process-reviews" \
   -H "Content-Type: application/json" \
   -d '{
     "data": [
@@ -192,7 +165,6 @@ curl -X POST "https://your-hf-space.hf.space/process" \
 | **Backend** | FastAPI, Uvicorn, Pydantic |
 | **ML/NLP** | PyABSA, HuggingFace Transformers, AI4Bharat |
 | **AI** | Google Gemini API |
-| **Database** | MongoDB Atlas, Redis Cloud |
 | **Deployment** | Streamlit Cloud, HuggingFace Spaces, Docker |
 | **DevOps** | GitHub Actions, Docker |
 
@@ -204,15 +176,18 @@ curl -X POST "https://your-hf-space.hf.space/process" \
 insights/
 ├── ABSA/                          # Backend API (HuggingFace Spaces)
 │   ├── app.py                     # FastAPI application
-│   ├── admin_dashboard.py         # Admin endpoints
 │   └── src/
-│       ├── utils/
-│       │   ├── data_processor.py  # 7-stage ABSA pipeline
-│       │   ├── task_manager.py    # Async job management
-│       │   ├── redis_service.py   # Rate limiting & caching
-│       │   └── mongodb_service.py # Telemetry logging
-│       └── components/
-│           └── visualizations.py  # Chart generation
+│       ├── absa/                  # 7-stage ABSA pipeline package
+│       │   ├── pipeline.py        # DataProcessor orchestration
+│       │   ├── extraction.py      # PyABSA aspect/sentiment extraction
+│       │   ├── translation.py     # AI4Bharat translation
+│       │   ├── intent.py          # Intent classification
+│       │   ├── analytics.py       # Aggregation & network analysis
+│       │   ├── aspect_canonical.py# Aspect canonicalization
+│       │   ├── progress.py        # ProgressReporter
+│       │   └── config.py          # Settings resolution
+│       └── utils/
+│           └── task_manager.py    # Async job management
 │
 ├── streamlit-deployment/          # Frontend (Streamlit Cloud)
 │   ├── app_a.py                   # Main dashboard
