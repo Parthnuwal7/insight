@@ -229,6 +229,12 @@ REMOVED_MODULES = [
     "utils/rate_limit_middleware.py",
 ]
 
+# ip_location_service.py gates on Redis but belongs to the telemetry removal in
+# Task 4, which deletes it. Task 4 empties this set.
+REDIS_ALLOWLIST = {
+    "utils/ip_location_service.py",
+}
+
 
 def test_removed_modules_are_gone():
     still_present = [m for m in REMOVED_MODULES if (SRC / m).exists()]
@@ -238,10 +244,21 @@ def test_removed_modules_are_gone():
 def test_no_redis_references_in_backend():
     offenders = []
     for path in sorted(SRC.rglob("*.py")):
-        text = path.read_text(encoding="utf-8").lower()
-        if "redis" in text:
-            offenders.append(path.relative_to(SRC).as_posix())
+        rel = path.relative_to(SRC).as_posix()
+        if rel in REDIS_ALLOWLIST:
+            continue
+        if "redis" in path.read_text(encoding="utf-8").lower():
+            offenders.append(rel)
     assert offenders == [], f"redis still referenced: {offenders}"
+
+
+def test_redis_allowlist_has_no_stale_entries():
+    stale = [
+        rel for rel in sorted(REDIS_ALLOWLIST)
+        if not (SRC / rel).exists()
+        or "redis" not in (SRC / rel).read_text(encoding="utf-8").lower()
+    ]
+    assert stale == [], f"allowlist entries no longer needed: {stale}"
 ```
 
 - [ ] **Step 2: Run it to verify it fails**
@@ -344,6 +361,12 @@ REMOVED_MODULES = [
     "utils/ip_location_service.py",
     "utils/admin_endpoints.py",
 ]
+```
+
+Empty the Redis allowlist, since this task deletes the file it covered:
+
+```python
+REDIS_ALLOWLIST: set[str] = set()
 ```
 
 And add:
