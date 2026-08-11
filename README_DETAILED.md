@@ -42,7 +42,6 @@ Concretely, one processing run yields:
 | Strength anchors | Ranked table by `strength_score` | same |
 | Aspect co-occurrence graph | NetworkX graph, nodes = aspects, edges = co-mentions | `AspectAnalytics.calculate_aspect_cooccurrence` |
 | Sentiment spike alerts | Week-over-week negativity jumps per aspect | `AspectAnalytics.detect_sentiment_spikes` |
-| Macro / micro summaries | Template-generated prose | `SummaryGenerator` |
 | LLM narrative insights | Markdown from an LLM | Frontend, `generate_llm_insights` |
 
 The distinguishing capability is the **aspect-level reshape**: because the pipeline emits one row per aspect mention, the dashboard can do multi-aspect relationship analysis (co-occurrence, mixed sentiment, per-aspect drill-down) that a review-level dataset cannot support.
@@ -214,9 +213,8 @@ All of this is `DataProcessor.process_uploaded_data`. Note that **intent classif
 | 5 | **Extract aspects + sentiment** | `ABSAProcessor` | 50–90% | PyABSA `AspectTermExtraction.AspectExtractor('multilingual')` (FAST-LCF-ATEPC). Batches of 5 for responsive cancellation. Per-review try/except falls back to rules. |
 | 5b | *(fallback)* | `_extract_with_fallback` | — | If PyABSA fails to load *or* fails on a review: 14 keyword aspect buckets (OTP/Verification, Login/Account, App Performance, Payment, Quality, Price, Service, Delivery, Design, Performance, Usability, Features, Size, Battery — with Hindi variants) + rule-based polarity, fixed confidence `0.7`. |
 | 6 | **Combine** | inline | 90% | Adds `translated_review`, `detected_language`, `intent*`, `aspects`, `aspect_sentiments`, and a majority-vote `overall_sentiment`. |
-| 7 | **Analytics** | `AspectAnalytics` | 95% | Priority/strength scores, co-occurrence graph, spike detection. Formulae below. |
-| 8 | **Summarize** | `SummaryGenerator` | 100% | Template prose for macro insights + micro summaries for the top 3 negative and top 3 positive aspects. |
-| 9 | **Reshape** | inline | — | Explodes to one row per *(review, aspect)*; flags reviews holding both Positive and Negative aspects as mixed. |
+| 7 | **Analytics** | `AspectAnalytics` | 95–100% | Priority/strength scores, co-occurrence graph, spike detection. Formulae below. |
+| 8 | **Reshape** | inline | — | Explodes to one row per *(review, aspect)*; flags reviews holding both Positive and Negative aspects as mixed. |
 
 ### Scoring formulae
 
@@ -273,7 +271,7 @@ Entry point (`CMD ["python", "app.py"]` → uvicorn on `0.0.0.0:7860`). Mounts C
 
 ### `src/utils/data_processor.py` — the pipeline
 
-Six classes: `DataValidator`, `TranslationService`, `ABSAProcessor`, `IntentClassifier`, `AspectAnalytics`, `SummaryGenerator`, coordinated by `DataProcessor`. This is where essentially all analytical behaviour lives; see [§6](#6-the-nlp-pipeline-stage-by-stage).
+Five classes: `DataValidator`, `TranslationService`, `ABSAProcessor`, `IntentClassifier`, `AspectAnalytics`, coordinated by `DataProcessor`. This is where essentially all analytical behaviour lives; see [§6](#6-the-nlp-pipeline-stage-by-stage).
 
 ### `src/utils/task_manager.py` — in-process task registry
 
@@ -389,7 +387,6 @@ Device identity (`uuid4` in session state), `log_session_metadata` / `log_event`
     "strength_anchors": [ /* ranked by strength_score */ ],
     "aspect_network": { "nodes": [], "links": [] },   // nx.node_link_data
     "sentiment_alerts": [ /* spike alerts */ ],
-    "macro_summary": {}, "micro_summaries": {},
     "summary": {
       "total_reviews": 0, "total_aspects": 0,
       "mixed_sentiment_count": 0, "mixed_sentiment_pct": 0.0,
