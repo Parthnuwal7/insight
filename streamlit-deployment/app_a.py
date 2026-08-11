@@ -26,14 +26,6 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-# Import telemetry helpers
-try:
-    from frontend_helpers import initialize_telemetry, log_event
-except ImportError:
-    # Fallback if frontend_helpers not available
-    def initialize_telemetry(*args, **kwargs): pass
-    def log_event(*args, **kwargs): pass
-
 # Install streamlit-option-menu if not available
 try:
     from streamlit_option_menu import option_menu
@@ -54,12 +46,6 @@ BACKEND_API_URL = os.getenv("BACKEND_API_URL", "http://localhost:7860")
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
 OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
 LLM_MODEL = "nvidia/nemotron-3-nano-30b-a3b:free"
-
-# Initialize telemetry (session tracking, dashboard view event)
-try:
-    initialize_telemetry(BACKEND_API_URL)
-except:
-    pass  # Silently fail if backend not available
 
 # Enhanced CSS styling for professional dashboard
 def apply_custom_css():
@@ -1158,265 +1144,6 @@ def create_top_aspects_chart(df: pd.DataFrame) -> go.Figure:
     except Exception as e:
         st.warning(f"Could not generate top aspects chart: {str(e)}")
         return go.Figure()
-
-# ========== ADMIN DASHBOARD FUNCTIONS ==========
-
-def check_admin_auth():
-    """Check if admin is authenticated."""
-    if "admin_token" not in st.session_state:
-        st.session_state.admin_token = None
-    
-    if not st.session_state.admin_token:
-        st.warning("⚠️ Please enter admin token to access analytics")
-        token = st.text_input("Admin Token", type="password", key="token_input")
-        if st.button("Login"):
-            st.session_state.admin_token = token
-            st.rerun()
-        return False
-    
-    return True
-
-
-def get_admin_headers():
-    """Get authorization headers for admin endpoints."""
-    return {
-        "Authorization": f"Bearer {st.session_state.admin_token}"
-    }
-
-
-def fetch_metrics_summary(api_url: str):
-    """Fetch metrics summary from admin endpoint."""
-    try:
-        response = requests.get(
-            f"{api_url}/admin/metrics/summary",
-            headers=get_admin_headers(),
-            timeout=10
-        )
-        
-        if response.status_code == 401:
-            st.error("❌ Invalid admin token. Please check and try again.")
-            st.session_state.admin_token = None
-            return None
-        
-        response.raise_for_status()
-        return response.json()["data"]
-    
-    except Exception as e:
-        st.error(f"Failed to fetch summary: {str(e)}")
-        return None
-
-
-def fetch_events_timeline(api_url: str, days: int = 7):
-    """Fetch events timeline."""
-    try:
-        response = requests.get(
-            f"{api_url}/admin/metrics/events?days={days}",
-            headers=get_admin_headers(),
-            timeout=10
-        )
-        response.raise_for_status()
-        return response.json()["data"]
-    
-    except Exception as e:
-        st.error(f"Failed to fetch timeline: {str(e)}")
-        return None
-
-
-def fetch_funnel_analysis(api_url: str, days: int = 7):
-    """Fetch funnel analysis."""
-    try:
-        response = requests.get(
-            f"{api_url}/admin/metrics/funnel?days={days}",
-            headers=get_admin_headers(),
-            timeout=10
-        )
-        response.raise_for_status()
-        return response.json()["data"]
-    
-    except Exception as e:
-        st.error(f"Failed to fetch funnel: {str(e)}")
-        return None
-
-
-def fetch_rate_limit_stats(api_url: str, days: int = 7):
-    """Fetch rate limit statistics."""
-    try:
-        response = requests.get(
-            f"{api_url}/admin/metrics/rate-limits?days={days}",
-            headers=get_admin_headers(),
-            timeout=10
-        )
-        response.raise_for_status()
-        return response.json()["data"]
-    
-    except Exception as e:
-        st.error(f"Failed to fetch rate limit stats: {str(e)}")
-        return None
-
-
-def show_admin_page():
-    """Display the admin analytics page."""
-    st.markdown("## 🔒 Admin Analytics Dashboard")
-    
-    # Check authentication
-    if not check_admin_auth():
-        return
-    
-    # Logout button
-    if st.button("Logout", key="admin_logout"):
-        st.session_state.admin_token = None
-        st.rerun()
-    
-    # Time range selector in sidebar
-    st.sidebar.markdown("### ⚙️ Admin Settings")
-    days = st.sidebar.slider(
-        "Days to analyze",
-        min_value=1,
-        max_value=30,
-        value=7,
-        help="Number of days to include in analysis"
-    )
-    
-    # Refresh button
-    if st.sidebar.button("🔄 Refresh Data"):
-        st.rerun()
-    
-    st.divider()
-    
-    # === METRICS SUMMARY ===
-    st.markdown("### 📊 Metrics Summary")
-    
-    summary = fetch_metrics_summary(BACKEND_API_URL)
-    
-    if summary:
-        col1, col2, col3 = st.columns(3)
-        
-        with col1:
-            st.metric("Unique Devices", summary["unique_devices"])
-        
-        with col2:
-            st.metric("Unique Users", summary["unique_users"])
-        
-        with col3:
-            total_events = sum(summary["events_by_type"].values())
-            st.metric("Total Events", total_events)
-        
-        # Events by type
-        st.markdown("#### Events by Type")
-        
-        events_df = pd.DataFrame([
-            {"Event Type": k, "Count": v}
-            for k, v in summary["events_by_type"].items()
-        ])
-        
-        if not events_df.empty:
-            fig = px.bar(
-                events_df,
-                x="Event Type",
-                y="Count",
-                color="Event Type",
-                title="Event Distribution"
-            )
-            st.plotly_chart(fig, width='stretch', key="admin_events_bar")
-    
-    st.divider()
-    
-    # === EVENTS TIMELINE ===
-    st.markdown("### 📈 Events Timeline")
-    
-    timeline_data = fetch_events_timeline(BACKEND_API_URL, days)
-    
-    if timeline_data and timeline_data["timeline"]:
-        timeline_df = pd.DataFrame(timeline_data["timeline"])
-        
-        fig = px.line(
-            timeline_df,
-            x="date",
-            y="count",
-            color="event_type",
-            title=f"Events Over Last {days} Days",
-            labels={"count": "Event Count", "date": "Date", "event_type": "Event Type"}
-        )
-        st.plotly_chart(fig, width='stretch', key="admin_timeline")
-    else:
-        st.info("No timeline data available")
-    
-    st.divider()
-    
-    # === FUNNEL ANALYSIS ===
-    st.markdown("### 🔀 Conversion Funnel")
-    
-    funnel_data = fetch_funnel_analysis(BACKEND_API_URL, days)
-    
-    if funnel_data:
-        stages = funnel_data["funnel_stages"]
-        conversions = funnel_data["conversion_rates"]
-        
-        # Funnel chart
-        funnel_stages = ["DASHBOARD_VIEW", "ANALYSIS_REQUEST", "TASK_QUEUED", "TASK_COMPLETED"]
-        funnel_values = [stages.get(stage, 0) for stage in funnel_stages]
-        
-        fig = go.Figure(go.Funnel(
-            y=funnel_stages,
-            x=funnel_values,
-            textinfo="value+percent initial"
-        ))
-        
-        fig.update_layout(title=f"User Journey Funnel (Last {days} Days)")
-        st.plotly_chart(fig, width='stretch', key="admin_funnel")
-        
-        # Conversion metrics
-        st.markdown("#### Conversion Rates")
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.metric("View → Request", f"{conversions['view_to_request']:.1f}%")
-            st.metric("Request → Queued", f"{conversions['request_to_queued']:.1f}%")
-        
-        with col2:
-            st.metric("Queued → Completed", f"{conversions['queued_to_completed']:.1f}%")
-            st.metric("Overall Completion", f"{conversions['overall_completion']:.1f}%")
-    
-    st.divider()
-    
-    # === RATE LIMIT STATS ===
-    st.markdown("### 🚦 Rate Limiting Statistics")
-    
-    rate_limit_data = fetch_rate_limit_stats(BACKEND_API_URL, days)
-    
-    if rate_limit_data:
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.metric("Total Rate Limit Hits", rate_limit_data["total_hits"])
-        
-        with col2:
-            top_devices = len(rate_limit_data["top_devices"])
-            st.metric("Unique Devices Hit", top_devices)
-        
-        # Top offenders
-        if rate_limit_data["top_devices"]:
-            st.markdown("#### Top Rate Limited Devices")
-            
-            devices_df = pd.DataFrame(rate_limit_data["top_devices"])
-            st.dataframe(devices_df, width='stretch')
-        
-        # Timeline
-        if rate_limit_data["timeline"]:
-            st.markdown("#### Rate Limit Hits Over Time")
-            
-            timeline_df = pd.DataFrame(rate_limit_data["timeline"])
-            
-            fig = px.bar(
-                timeline_df,
-                x="date",
-                y="count",
-                title="Daily Rate Limit Hits",
-                labels={"count": "Hits", "date": "Date"}
-            )
-            st.plotly_chart(fig, width='stretch', key="admin_rate_limits")
-
 
 def show_home_page():
     """Display the home page with file upload and processing"""
@@ -2831,8 +2558,8 @@ def main():
         
         selected = option_menu(
             menu_title="Navigation",
-            options=["Home", "Analytics", "Admin"],
-            icons=["house", "bar-chart", "lock"],
+            options=["Home", "Analytics"],
+            icons=["house", "bar-chart"],
             menu_icon="cast",
             default_index=0,
         )
@@ -2861,8 +2588,6 @@ def main():
         show_home_page()
     elif selected == "Analytics":
         show_analytics_page()
-    elif selected == "Admin":
-        show_admin_page()
 
 if __name__ == "__main__":
     main()
