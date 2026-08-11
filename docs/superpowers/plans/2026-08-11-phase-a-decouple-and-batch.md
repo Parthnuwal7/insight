@@ -166,14 +166,16 @@ In `ABSA/tests/test_import_hygiene.py`, remove these four entries from `STREAMLI
     "utils/data_management.py",
 ```
 
-Leaving:
+Leaving exactly one entry:
 
 ```python
 STREAMLIT_ALLOWLIST = {
     "utils/data_processor.py",
-    "utils/admin_endpoints.py",
 }
 ```
+
+(Task 1 established that `utils/admin_endpoints.py` contains no Streamlit
+reference, so it is not in the allowlist. Task 6 empties this set.)
 
 - [ ] **Step 6: Run the tests**
 
@@ -416,15 +418,18 @@ grep -n "initialize_telemetry\|log_event\|log_session_metadata\|fetch_metrics_su
 
 Delete each definition and call site reported.
 
-- [ ] **Step 6: Shrink the hygiene allowlist**
+- [ ] **Step 6: Confirm the hygiene allowlist is already correct**
 
-In `ABSA/tests/test_import_hygiene.py`, `STREAMLIT_ALLOWLIST` becomes:
+`STREAMLIT_ALLOWLIST` should already be exactly:
 
 ```python
 STREAMLIT_ALLOWLIST = {
     "utils/data_processor.py",
 }
 ```
+
+Task 2 reduced it to this. Nothing this task deletes was in it, so no edit is
+expected here — but run the hygiene tests and reconcile if they disagree.
 
 - [ ] **Step 7: Run the tests**
 
@@ -607,12 +612,55 @@ In `ABSA/src/utils/data_processor.py`, find both token lookups (near lines 136 a
 
 Delete any now-unused `try/except` around `st.secrets`.
 
-- [ ] **Step 6: Run the full suite**
+- [ ] **Step 6: Validate configuration at startup**
+
+Without this, `get_settings()` is first called lazily when `DataProcessor` is
+constructed inside `get_processor()` — on the first request, not at boot. The
+spec's justification for this whole module is failing at boot rather than
+mid-run, so make that true.
+
+In `ABSA/app.py`, immediately after the `load_dotenv()` call and before the
+pyabsa preload block, add:
+
+```python
+# Fail fast on unusable configuration. Deferring this to the first request
+# means a misconfigured deployment looks healthy until someone uses it.
+import sys as _sys
+import os as _os
+
+_src = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "src")
+if _src not in _sys.path:
+    _sys.path.insert(0, _src)
+
+from absa.config import get_settings  # noqa: E402
+
+get_settings()
+```
+
+This duplicates the `sys.path` setup that appears later in the file, because
+the settings check must run before anything else can fail more confusingly.
+Leave the existing later `sys.path` block in place — it is idempotent.
+
+Verify both directions:
+
+```bash
+cd ABSA && HF_TOKEN= ABSA_ALLOW_NO_TRANSLATION= ../.venv-bench/Scripts/python.exe -c "import app"
+```
+
+Expected: raises `ConfigError` naming `HF_TOKEN`.
+
+```bash
+cd ABSA && HF_TOKEN= ABSA_ALLOW_NO_TRANSLATION=1 ../.venv-bench/Scripts/python.exe -c "import app; print('imports fine')"
+```
+
+Expected: prints `imports fine`.
+
+- [ ] **Step 7: Run the full suite**
 
 Run: `.venv-bench/Scripts/python.exe -m pytest ABSA/tests/ -v`
 Expected: all PASS. `test_import_hygiene` still allows `utils/data_processor.py` because `import streamlit` remains at its top for `st.spinner` — removed in Task 6.
 
-- [ ] **Step 7: Commit**
+- [ ] **Step 8: Commit**
 
 ```bash
 git -C ABSA add -A
