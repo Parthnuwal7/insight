@@ -1,7 +1,7 @@
 """
 Baseline benchmark runner.
 
-Executes the REAL pipeline from ABSA/src/utils/data_processor.py -- unmodified,
+Executes the REAL pipeline from ABSA/src/absa/pipeline.py -- unmodified,
 imported directly -- against the evaluation set, with runtime instrumentation
 recording which code path handled each review. Persists every artifact under
 benchmarks/runs/<timestamp>/ so results are reproducible and comparable across
@@ -22,7 +22,7 @@ from __future__ import annotations
 # a native initialisation-order conflict between the numpy/pandas and
 # torch/pyabsa native stacks. Importing pyabsa first is stable.
 #
-# ABSA/src/utils/data_processor.py imports pandas at module scope, so pyabsa
+# ABSA/src/absa/extraction.py imports pandas at module scope, so pyabsa
 # must be imported before that module is touched. This affects only import
 # sequencing, not pipeline behaviour.
 # ---------------------------------------------------------------------------
@@ -137,7 +137,9 @@ def main() -> int:
         print("[run] WARNING: without en_core_web_sm every PyABSA call will raise "
               "and fall back to keyword buckets.")
 
-    from utils.data_processor import ABSAProcessor, DataProcessor, TranslationService
+    from absa.extraction import ABSAProcessor
+    from absa.pipeline import DataProcessor
+    from absa.translation import TranslationService
 
     recorder = PipelineRecorder()
     recorder.install(ABSAProcessor, TranslationService)
