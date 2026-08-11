@@ -52,14 +52,14 @@ st.set_page_config(
 )
 
 # Configuration
-HF_SPACES_API_URL = "https://parthnuwal7-absa.hf.space"
+BACKEND_API_URL = os.getenv("BACKEND_API_URL", "http://localhost:7860")
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
 OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
 LLM_MODEL = "nvidia/nemotron-3-nano-30b-a3b:free"
 
 # Initialize telemetry (session tracking, dashboard view event)
 try:
-    initialize_telemetry(HF_SPACES_API_URL)
+    initialize_telemetry(BACKEND_API_URL)
 except:
     pass  # Silently fail if backend not available
 
@@ -173,15 +173,16 @@ def call_ml_backend(data: Dict, user_id: str = "default") -> Dict:
         request_data = {**data, "user_id": user_id}
         
         response = requests.post(
-            f"{HF_SPACES_API_URL}/process-reviews",
+            f"{BACKEND_API_URL}/process-reviews",
             json=request_data,
             timeout=900  # 15 minutes max timeout (server will handle its own timeout)
         )
         
         if response.status_code == 200:
             result = response.json()
-            # Store task_id in session state if present
-            if 'data' in result and 'task_id' in result['data']:
+            # Store task_id in session state if present.
+            # `data` is null on timeout/cancelled responses, which are also 200.
+            if isinstance(result.get('data'), dict) and 'task_id' in result['data']:
                 st.session_state.current_task_id = result['data']['task_id']
             return result
         else:
@@ -216,7 +217,7 @@ def cancel_task(task_id: str) -> bool:
     """
     try:
         response = requests.post(
-            f"{HF_SPACES_API_URL}/cancel-task/{task_id}",
+            f"{BACKEND_API_URL}/cancel-task/{task_id}",
             timeout=5
         )
         
@@ -241,7 +242,7 @@ def get_task_status(task_id: str) -> Optional[Dict]:
     """
     try:
         response = requests.get(
-            f"{HF_SPACES_API_URL}/task-status/{task_id}",
+            f"{BACKEND_API_URL}/task-status/{task_id}",
             timeout=5
         )
         
@@ -1287,7 +1288,7 @@ def show_admin_page():
     # === METRICS SUMMARY ===
     st.markdown("### 📊 Metrics Summary")
     
-    summary = fetch_metrics_summary(HF_SPACES_API_URL)
+    summary = fetch_metrics_summary(BACKEND_API_URL)
     
     if summary:
         col1, col2, col3 = st.columns(3)
@@ -1325,7 +1326,7 @@ def show_admin_page():
     # === EVENTS TIMELINE ===
     st.markdown("### 📈 Events Timeline")
     
-    timeline_data = fetch_events_timeline(HF_SPACES_API_URL, days)
+    timeline_data = fetch_events_timeline(BACKEND_API_URL, days)
     
     if timeline_data and timeline_data["timeline"]:
         timeline_df = pd.DataFrame(timeline_data["timeline"])
@@ -1347,7 +1348,7 @@ def show_admin_page():
     # === FUNNEL ANALYSIS ===
     st.markdown("### 🔀 Conversion Funnel")
     
-    funnel_data = fetch_funnel_analysis(HF_SPACES_API_URL, days)
+    funnel_data = fetch_funnel_analysis(BACKEND_API_URL, days)
     
     if funnel_data:
         stages = funnel_data["funnel_stages"]
@@ -1384,7 +1385,7 @@ def show_admin_page():
     # === RATE LIMIT STATS ===
     st.markdown("### 🚦 Rate Limiting Statistics")
     
-    rate_limit_data = fetch_rate_limit_stats(HF_SPACES_API_URL, days)
+    rate_limit_data = fetch_rate_limit_stats(BACKEND_API_URL, days)
     
     if rate_limit_data:
         col1, col2 = st.columns(2)
@@ -1593,7 +1594,7 @@ def show_home_page():
                         # Debug: Show API request
                         with st.expander("🔍 Debug: API Request", expanded=False):
                             st.json({
-                                "url": f"{HF_SPACES_API_URL}/process-reviews",
+                                "url": f"{BACKEND_API_URL}/process-reviews",
                                 "sample_record": records[0] if records else {},
                                 "total_records": len(records)
                             })

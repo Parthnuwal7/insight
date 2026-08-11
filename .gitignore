@@ -123,6 +123,7 @@ celerybeat.pid
 .env
 .venv
 .venv-bench/
+.venv-ui/
 env/
 venv/
 ENV/
