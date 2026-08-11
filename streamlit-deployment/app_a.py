@@ -28,13 +28,11 @@ load_dotenv()
 
 # Import telemetry helpers
 try:
-    from frontend_helpers import initialize_telemetry, log_event, submit_analysis_job, get_job_status
+    from frontend_helpers import initialize_telemetry, log_event
 except ImportError:
     # Fallback if frontend_helpers not available
     def initialize_telemetry(*args, **kwargs): pass
     def log_event(*args, **kwargs): pass
-    def submit_analysis_job(*args, **kwargs): return None
-    def get_job_status(*args, **kwargs): return None
 
 # Install streamlit-option-menu if not available
 try:
