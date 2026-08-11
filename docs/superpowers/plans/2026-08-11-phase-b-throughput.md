@@ -191,6 +191,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
+import threading
 import time
 import uuid
 from pathlib import Path
@@ -205,7 +206,9 @@ class JobStatus:
     CANCELLED = "cancelled"
 
 
-_UPDATABLE = {"status", "stage", "total_chunks", "completed_chunks", "error"}
+# completed_chunks is deliberately absent: record_chunk derives it from the
+# chunks table, and letting update_job overwrite it would break that invariant.
+_UPDATABLE = {"status", "stage", "total_chunks", "error"}
 
 _SCHEMA = """
 CREATE TABLE IF NOT EXISTS jobs (
@@ -236,15 +239,20 @@ class JobStore:
 
     def __init__(self, db_path: str | Path):
         self._path = str(db_path)
-        # check_same_thread=False: FastAPI runs handlers across a thread pool.
-        # Writes are serialised by SQLite's own locking plus WAL.
+        # check_same_thread=False lets FastAPI's thread pool share this
+        # connection, but it only disables Python's same-thread assertion --
+        # it does NOT make the connection safe for concurrent use. Each
+        # `with self._conn:` drives one transaction on the connection, so two
+        # threads entering it collide ("cannot start a transaction within a
+        # transaction") and writes are silently lost. Every public method
+        # therefore takes self._lock. WAL's job is arbitration between
+        # separate processes -- which the extraction pool needs later -- not
+        # between threads sharing one connection.
+        self._lock = threading.RLock()
         self._conn = sqlite3.connect(self._path, check_same_thread=False)
         self._conn.row_factory = sqlite3.Row
         if self._path != ":memory:":
-            # WAL lets a reader (status polling) proceed during a writer
-            # (chunk persistence) instead of blocking on it.
             self._conn.execute("PRAGMA journal_mode=WAL")
-        self._conn.execute("PRAGMA foreign_keys=ON")
         self._conn.executescript(_SCHEMA)
         self._conn.commit()
 
@@ -359,12 +367,59 @@ class JobStore:
         return len(list(ids))
 ```
 
-- [ ] **Step 4: Run the tests**
+**Every public method above must acquire `self._lock` around all connection
+access — reads included.** Wrap each body in `with self._lock:`. Concurrent
+reads on a shared connection during a write are not safe either, and the
+contention cost is nil: a write is one small JSON blob per chunk, while a chunk
+represents seconds to minutes of model inference.
+
+- [ ] **Step 4: Add the concurrency regression test**
+
+Append to `ABSA/tests/test_job_store.py`:
+
+```python
+def test_concurrent_writes_do_not_lose_chunks(store):
+    """FastAPI serves handlers from a thread pool, so the store is written to
+    from many threads at once. A shared sqlite3 connection is NOT safe for
+    that on its own: two threads entering `with conn:` collide with
+    "cannot start a transaction within a transaction", and chunks vanish with
+    no exception reaching the caller.
+    """
+    import threading
+
+    job_id = store.create_job("u1", total_chunks=50)
+    errors = []
+
+    def write(start):
+        try:
+            for i in range(start, start + 10):
+                store.record_chunk(job_id, i, {"rows": [i]})
+        except Exception as exc:  # noqa: BLE001
+            errors.append(exc)
+
+    threads = [threading.Thread(target=write, args=(s,)) for s in range(0, 50, 10)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+
+    assert errors == [], f"concurrent writes raised: {errors}"
+    assert store.completed_chunk_indices(job_id) == set(range(50))
+    assert store.get_job(job_id)["completed_chunks"] == 50
+```
+
+- [ ] **Step 5: Run the tests, and prove the concurrency test is load-bearing**
 
 Run: `.venv-bench/Scripts/python.exe -m pytest ABSA/tests/test_job_store.py -v`
 Expected: all PASS.
 
-- [ ] **Step 5: Confirm the store has no heavy imports**
+Then temporarily remove the `with self._lock:` guards and re-run
+`test_concurrent_writes_do_not_lose_chunks`. Expected: it FAILS, with either
+`OperationalError` or a short chunk count. Restore the guards and confirm it
+passes again. **A concurrency test that passes on unsynchronised code is worse
+than no test at all**, so this probe is mandatory, not optional.
+
+- [ ] **Step 6: Confirm the store has no heavy imports**
 
 Run:
 
@@ -374,7 +429,7 @@ Run:
 
 Expected: `False False`. The store must stay importable in a worker without dragging in the ML stack.
 
-- [ ] **Step 6: Run the full suite and commit**
+- [ ] **Step 7: Run the full suite and commit**
 
 Run: `.venv-bench/Scripts/python.exe -m pytest ABSA/tests/ -v` — expect 85 + the new tests.
 
@@ -674,7 +729,7 @@ class JobRunner:
 Run: `.venv-bench/Scripts/python.exe -m pytest ABSA/tests/test_runner.py -v`
 Expected: all PASS.
 
-- [ ] **Step 6: Run the full suite and commit**
+- [ ] **Step 7: Run the full suite and commit**
 
 ```bash
 git -C ABSA add src/jobs tests/test_runner.py
