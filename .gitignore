@@ -377,3 +377,6 @@ mprofile_*.dat
 *.pyc
 *.pyo
 *.pyd
+
+# Personal resume/context notes, not part of the project
+project_context.md
