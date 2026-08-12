@@ -1460,19 +1460,25 @@ def show_analytics_page():
     
     # ========== TABS FOR DIFFERENT ANALYSIS VIEWS ==========
     st.markdown("---")
-    tab1, tab2, tab3 = st.tabs(["📊 Overview", "🔗 Multi-Aspect Analysis", "🔍 Deep Dive"])
-    
+    tab1, tab2, tab3, tab4 = st.tabs(
+        ["📊 Overview", "🔗 Multi-Aspect Analysis", "🔍 Deep Dive", "🧭 Insight Report"]
+    )
+
     # ========== TAB 1: OVERVIEW ==========
     with tab1:
         show_overview_tab(df)
-    
+
     # ========== TAB 2: MULTI-ASPECT ANALYSIS ==========
     with tab2:
         show_multi_aspect_tab(df, aspect_level_df, mixed_sentiment_df)
-    
+
     # ========== TAB 3: DEEP DIVE ==========
     with tab3:
         show_deep_dive_tab(df)
+
+    # ========== TAB 4: INSIGHT REPORT (Phase C payoff) ==========
+    with tab4:
+        show_insight_report_tab(df, aspect_level_df)
 
 
 def show_overview_tab(df):
@@ -2231,6 +2237,168 @@ def prepare_analysis_context(aspect_level_df: pd.DataFrame) -> str:
             context_parts.append("")
     
     return "\n".join(context_parts)
+
+
+def _fetch_insight_report(df: pd.DataFrame, aspect_level_df: pd.DataFrame) -> Dict[str, Any]:
+    """Call the backend's grounded-report endpoint and return its payload.
+
+    Posts the same processed_data / aspect_level_data this dashboard
+    already holds in session state -- the backend re-runs investigation
+    and verification over it rather than this function computing anything
+    itself. This dashboard runs on a separate, ML-free venv (see
+    streamlit-deployment/requirements.txt); it never imports insights/,
+    absa/, torch, or sklearn -- everything below talks to the backend
+    purely over HTTP.
+
+    Returns the report dict on success, or `{"_error": "..."}` -- the
+    caller renders that as a plain error message rather than a report.
+    df.to_json/read_json round-trip (not to_dict('records')) so NaN values
+    become JSON null instead of the token `NaN`, which not every JSON
+    consumer accepts.
+    """
+    try:
+        processed_records = json.loads(df.to_json(orient="records")) if df is not None else []
+        aspect_records = (
+            json.loads(aspect_level_df.to_json(orient="records"))
+            if aspect_level_df is not None and not aspect_level_df.empty
+            else []
+        )
+        response = requests.post(
+            f"{BACKEND_API_URL}/insights/report",
+            json={"processed_data": processed_records, "aspect_level_data": aspect_records},
+            timeout=240,
+        )
+        if response.status_code != 200:
+            return {"_error": f"HTTP {response.status_code}: {response.text[:500]}"}
+        body = response.json()
+        return body.get("data", {})
+    except requests.exceptions.RequestException as e:
+        return {"_error": f"Could not reach backend: {e}"}
+    except Exception as e:  # noqa: BLE001
+        return {"_error": str(e)}
+
+
+def _render_claim_citations(claim: Dict[str, Any], df: pd.DataFrame):
+    """Expand one claim into the actual review text behind it.
+
+    THE POINT OF THIS FUNCTION: a finding the user cannot expand to see
+    its supporting review text is indistinguishable from templated output.
+    Every claim from the backend carries review_ids (verify.py refuses to
+    keep an uncited claim); this looks each one up in the already-loaded
+    processed_data DataFrame -- no extra network round trip needed, since
+    the dashboard already has full review text locally.
+    """
+    review_ids = claim.get("review_ids", [])
+    id_col = "id" if "id" in df.columns else ("review_id" if "review_id" in df.columns else None)
+
+    for rid in review_ids:
+        st.markdown(f"**Review `{rid}`**")
+        match = df[df[id_col] == rid] if id_col is not None else pd.DataFrame()
+        if match.empty:
+            st.caption("Review text unavailable locally for this id.")
+            continue
+        row = match.iloc[0]
+        sentiment = row.get("overall_sentiment", "unknown")
+        text = row.get("review", "")
+        st.caption(f"Sentiment: {sentiment}")
+        st.write(text)
+        st.markdown("---")
+
+
+def _render_insight_report(report: Dict[str, Any], df: pd.DataFrame):
+    """Render a backend report: caveats, stats/clusters (always shown,
+    even when empty), then each section's claims with expandable
+    citations. Mirrors insights.report.Report's shape 1:1."""
+    caveats = report.get("caveats", [])
+    stats = report.get("stats", {})
+    is_empty = report.get("is_empty", True)
+
+    for caveat in caveats:
+        st.warning(caveat)
+
+    with st.expander("📊 Investigation & verification statistics", expanded=is_empty):
+        verify_stats = stats.get("verification", {})
+        agent_stats = stats.get("investigation", {})
+        health = stats.get("extraction_health", {})
+
+        c1, c2, c3 = st.columns(3)
+        c1.metric("Claims verified", verify_stats.get("kept", 0))
+        c1.metric("Claims dropped in verification", verify_stats.get("dropped", 0))
+        c2.metric("Tool calls made", agent_stats.get("tool_calls_made", 0))
+        c2.metric("Investigation ended because", agent_stats.get("stopped_reason", "n/a"))
+        c3.metric("Reviews in this run", health.get("total", 0))
+        c3.metric("Degraded-extraction share", f"{health.get('degraded_fraction', 0.0):.0%}")
+
+        if verify_stats.get("dropped_by_reason"):
+            st.markdown("**Why claims were dropped in verification:**")
+            st.json(verify_stats["dropped_by_reason"])
+
+        clusters = stats.get("clusters", [])
+        if clusters:
+            st.markdown(f"**{len(clusters)} theme(s) discovered:**")
+            st.dataframe(pd.DataFrame(clusters), use_container_width=True)
+
+    if is_empty:
+        st.info(
+            "No claims survived verification for this run. That is a valid "
+            "outcome, not an error — see the caveats and statistics above "
+            "for exactly what was attempted and why nothing was kept."
+        )
+        return
+
+    sections = [
+        ("findings", "🔎 Findings"),
+        ("complaints", "⚠️ Complaints"),
+        ("strengths", "✅ Strengths"),
+        ("actions", "🛠️ Suggested actions"),
+    ]
+    for key, title in sections:
+        claims = report.get(key, [])
+        if not claims:
+            continue
+        st.markdown(f"#### {title} ({len(claims)})")
+        for claim in claims:
+            review_ids = claim.get("review_ids", [])
+            label = f"{claim.get('text', '(no text)')}  —  {len(review_ids)} review(s) cited"
+            with st.expander(label, expanded=False):
+                _render_claim_citations(claim, df)
+
+
+def show_insight_report_tab(df, aspect_level_df):
+    """The Phase C payoff: a report of findings drawn from actual review
+    text, each traceable to the reviews it rests on.
+
+    Nothing here is templated prose -- every claim shown passed
+    insights.verify's independent check against the cited review text,
+    re-fetched from this run's own data. An empty report is rendered as
+    exactly that (see _render_insight_report), never papered over with a
+    generated reassurance.
+    """
+    st.markdown("### 🧭 Insight Report")
+    st.caption(
+        "Runs the investigation agent and verifier over this run's reviews. "
+        "Every finding below is backed by real review text you can expand "
+        "and read; an empty section means nothing survived verification, "
+        "not that nothing was checked."
+    )
+
+    if st.button("🔎 Generate insight report", key="insight_report_button"):
+        with st.spinner(
+            "Investigating and verifying findings — this can take a "
+            "minute or two on first use while models warm up..."
+        ):
+            st.session_state["insight_report"] = _fetch_insight_report(df, aspect_level_df)
+
+    report = st.session_state.get("insight_report")
+    if report is None:
+        st.info("Click **Generate insight report** to run the investigation agent over this data.")
+        return
+
+    if report.get("_error"):
+        st.error(f"Report generation failed: {report['_error']}")
+        return
+
+    _render_insight_report(report, df)
 
 
 def show_deep_dive_tab(df):
