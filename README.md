@@ -6,7 +6,7 @@
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
 ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)
 ![HuggingFace](https://img.shields.io/badge/HuggingFace-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black)
-![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)
 
 **Give it your review data. It tells you what customers actually said — which
 aspects they complained about, where the product did well, and what to do about
@@ -27,9 +27,10 @@ The system ingests a CSV of reviews (English or Hindi), extracts aspects and the
 sentiments, ranks problem areas against strengths, and renders the result as an
 interactive dashboard.
 
-**Current state:** the extraction and throughput layers are built and measured. The
-interpretation layer — turning aspect tables into written findings — is specified
-and planned, not yet built. See [Roadmap](#roadmap) for the honest breakdown.
+**Current state:** the extraction and throughput layers are built and measured,
+and the interpretation layer — turning aspect tables into written findings —
+is built on a grounded agent and verifier. A decoupled Next.js frontend talks
+to the backend over JSON. See [Roadmap](#roadmap) for the honest breakdown.
 
 ---
 
@@ -107,14 +108,23 @@ ABSA/
         ├── pool.py             optional process pool for extraction
         └── progress.py         job-store progress adapter
 
-streamlit-deployment/       Dashboard (Streamlit)
+web/                       Frontend (Next.js App Router, TypeScript, Tailwind)
+    ├── app/                   pages (upload, run, report) + route handlers
+    ├── components/            upload, progress, report, charts
+    └── lib/                   typed API client, types, citation resolution
+
+streamlit-deployment/       Legacy dashboard (Streamlit) — kept for reference,
+                            superseded by web/
 benchmarks/                 Evaluation set, harness, recorded runs
 docs/superpowers/           Design spec and phase-by-phase implementation plans
 ```
 
 **Dependency direction is one-way and test-enforced:** `jobs/` may import `absa/`;
 `absa/` may import neither `jobs/` nor the API layer. A guard test fails the build
-if that is ever violated.
+if that is ever violated. The web app is pure presentation plus orchestration:
+all heavy work happens in the backend, reached through Next.js route handlers
+that proxy over JSON (see `web/app/api/`), so the backend URL never ships to the
+browser and CORS stops mattering for a real deployment.
 
 ---
 
@@ -138,19 +148,21 @@ depended on both, and both lapsing took the system down with them.
 
 ## Features
 
-**Dashboard**
-- KPI metrics, sentiment distribution, aspect coverage
-- Timeline analysis with anomaly detection
-- Aspect-sentiment heatmaps and co-occurrence network graphs
-- Sankey diagrams: intent → aspect → sentiment
-- Sentiment-filtered word clouds
-- Impact simulation (what-if analysis on aspect improvement)
+**Frontend (web/)**
+- Upload a CSV or pick a sample dataset; client-side validation with explicit
+  errors before anything hits the backend
+- Durable job progress with stage labels and chunk bars, plus cancellation
+- Insight report: four sections of grounded findings, each expandable to the
+  actual review text it cites, with caveats shown prominently and an honest
+  empty state when nothing survives verification
+- Explore views: KPI tiles, sentiment distribution, dual aspect rankings
+  (areas of improvement vs. strength anchors), aspect-sentiment heatmap, and a
+  per-review drill-down that surfaces extraction degradation
 
-**Analytics**
+**Backend analytics**
 - Dual ranking: areas of improvement vs. strength anchors
 - Priority scoring weighted by complaint severity
 - Aspect canonicalisation, so one concept is not split across five surface forms
-- CSV export
 
 ---
 
@@ -164,13 +176,15 @@ python -m venv .venv
 .venv/Scripts/pip install -r ABSA/requirements.txt
 cd ABSA && python -m uvicorn app:app --port 7860
 
-# Dashboard (separate terminal, separate venv — no ML dependencies)
-python -m venv .venv-ui
-.venv-ui/Scripts/pip install -r streamlit-deployment/requirements.txt
-.venv-ui/Scripts/streamlit run streamlit-deployment/app_a.py
+# Frontend (separate terminal, Node.js 20.9+)
+cd web
+npm install
+cp .env.example .env.local      # set BACKEND_API_URL if not http://localhost:7860
+npm run dev                     # http://localhost:3000
 ```
 
-Sample data lives in `streamlit-deployment/test_data_*.csv`.
+Sample data lives in `streamlit-deployment/test_data_*.csv` (also available as
+one-click sample datasets in the app).
 
 > **Dependency note:** `ABSA/requirements.txt` carries load-bearing pins
 > (`update_checker<1.0`, `spacy>=3.7,<3.9`, `transformers<4.37`). Relaxing any of
@@ -207,6 +221,11 @@ the memory cost was.
 | `/jobs/{job_id}` | GET | Job status, stage, chunk progress |
 | `/jobs/{job_id}/results` | GET | Merged results of a completed job |
 | `/jobs/{job_id}/cancel` | POST | Request cancellation |
+
+The web app never calls these directly from the browser. `web/app/api/*` route
+handlers proxy each one (and `/insights/report`, which gets a 15-minute server-side
+timeout), so the backend URL stays server-side and slow calls aren't the
+browser's problem.
 
 ```bash
 curl -X POST http://localhost:7860/jobs \
@@ -246,7 +265,7 @@ curl -X POST http://localhost:7860/jobs \
 | **ML/NLP** | PyABSA (ATEPC), HuggingFace Transformers, PyTorch, spaCy, langdetect |
 | **Translation** | Helsinki-NLP opus-mt via HF Inference API |
 | **Persistence** | SQLite (WAL) |
-| **Frontend** | Streamlit, Plotly, NetworkX, WordCloud |
+| **Frontend** | Next.js (App Router), React 19, TypeScript, Tailwind CSS, Recharts, PapaParse |
 | **Testing** | pytest — 302 tests by default (2 `slow` deselected), plus a 20-test groundedness benchmark suite and a reproducible accuracy benchmark |
 
 ---
@@ -261,7 +280,7 @@ Work is planned in four phases. Specs and task-level plans live in
 | **A** | Decouple the backend from Streamlit; batch inference | ✅ **Done** — 2.5× faster extraction, accuracy unchanged |
 | **B** | Durable SQLite job store, chunked resumption, per-stage concurrency | ✅ **Done** — restart-resumption proven against a killed process |
 | **C** | Insight engine: embeddings, clustering, grounded agent, verifier, report | ✅ **Done** — 9 tasks shipped, plus a whole-branch review pass |
-| **D** | Decoupled Next.js frontend | 📝 **Specified** |
+| **D** | Decoupled Next.js frontend | ✅ **Done** — `web/` replaces the Streamlit dashboard |
 
 ### What Phase C changes
 
