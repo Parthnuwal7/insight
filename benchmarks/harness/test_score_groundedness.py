@@ -174,7 +174,63 @@ class TestFailsClosed:
         result = sg.score_report(report, REVIEWS, "m", None)
 
         assert result["claims"][0]["reason"] == "llm_unavailable"
+        # UNJUDGED, not ungrounded. A claim the judge could not reach was not
+        # measured; calling it ungrounded would report a damning 0.0 for a run
+        # that simply failed to run.
+        assert result["claims"][0]["verdict"] == "unjudged"
+
+    def test_unreachable_judge_leaves_groundedness_undefined_not_zero(self, monkeypatch):
+        """The whole point of the metric is honesty about what is known.
+
+        Reporting 0.0 when nothing could be judged would read as 'every claim
+        is unsupported', which is a far stronger statement than the evidence
+        allows -- and the exact class of silently-wrong number this metric
+        exists to catch elsewhere.
+        """
+        monkeypatch.setattr(sg, "_call_judge", _boom)
+        report = _report(findings=[_claim(review_ids=[1]), _claim(review_ids=[2])])
+
+        result = sg.score_report(report, REVIEWS, "m", None)
+
+        assert result["groundedness_fraction"] is None
+        assert result["totals"]["claims_judged"] == 0
+        assert result["totals"]["unjudged"] == 2
+        assert "UNDEFINED" in result["groundedness_note"]
+        # Citations still resolve, and that is knowable without any judge.
+        assert result["citation_validity_fraction"] == 1.0
+
+    def test_unjudged_claims_are_excluded_from_the_denominator(self, monkeypatch):
+        """One judged-and-grounded claim plus one unreachable claim is 1.0
+        over the claims actually judged, not 0.5 over everything."""
+        calls = {"n": 0}
+
+        def judge_first_then_fail(*_a, **_k):
+            calls["n"] += 1
+            if calls["n"] == 1:
+                return '{"verdict": "supported"}'
+            raise sg.JudgeUnavailable("network down")
+
+        monkeypatch.setattr(sg, "_call_judge", judge_first_then_fail)
+        report = _report(findings=[_claim(review_ids=[1]), _claim(review_ids=[2])])
+
+        result = sg.score_report(report, REVIEWS, "m", "key", workers=1)
+
+        assert result["totals"]["claims_judged"] == 1
+        assert result["totals"]["unjudged"] == 1
+        assert result["groundedness_fraction"] == 1.0
+        assert "excluded from the denominator" in result["groundedness_note"]
+
+    def test_unknown_review_id_is_still_genuinely_ungrounded(self, monkeypatch):
+        """A citation that does not resolve needs no judge to be wrong --
+        this must stay `ungrounded`, not become `unjudged`."""
+        monkeypatch.setattr(sg, "_call_judge", _boom)
+        report = _report(findings=[_claim(review_ids=[99999])])
+
+        result = sg.score_report(report, REVIEWS, "m", "key")
+
         assert result["claims"][0]["verdict"] == "ungrounded"
+        assert result["claims"][0]["reason"] == "unknown_review_id"
+        assert result["citation_validity_fraction"] == 0.0
 
     def test_judge_call_failure_after_retry_is_llm_unavailable(self, monkeypatch):
         def raise_unavailable(*_a, **_k):

@@ -210,12 +210,21 @@ no API key required:
 
 ### Report groundedness (Phase C)
 
-| Metric | Note |
-|---|---|
-| Groundedness fraction | Grounded claims ÷ total claims in the report, per `score_groundedness.py` |
-| Ungrounded, by reason | `unknown_review_id`, `not_supported`, `llm_unavailable`, `unparseable_response`, `ambiguous_verdict` |
+| Metric | Value (2026-08-12) | Note |
+|---|---|---|
+| Citation validity | **1.000** (11/11 claims) | Every cited review id resolves. Needs no judge. |
+| Groundedness fraction | **not established** | Judge unreachable — see below |
+| Claims scored | 11 (8 complaints, 3 strengths) | Report over the 46-review eval set |
 
-Two decisions, both deliberate, mirroring the discipline in
+**The groundedness baseline is not yet established, and the number is
+`null` rather than `0.0`.** A report was generated end to end over the
+evaluation set and produced 11 verified claims, but scoring hit the
+OpenRouter free-tier daily quota before any claim could be judged. Re-run
+`score_groundedness.py --run 20260811T180751Z-task4-pool-default-serial`
+once quota or credit is available; `report.json` is committed, so no
+re-processing is needed.
+
+Three decisions, all deliberate, mirroring the discipline in
 `insights.verify` (see its module docstring) but applied by a scorer that
 does not import from it:
 
@@ -226,6 +235,15 @@ exactly where the report is least trustworthy.
 **Zero claims means an undefined fraction, not a perfect one.** A report
 that found nothing to say is not "100% grounded" — `groundedness_fraction`
 is `null` in that case, with an explanatory `groundedness_note`.
+
+**A claim the judge could not reach is `unjudged`, not `ungrounded`, and is
+excluded from the denominator.** This distinction is the difference between
+"we measured nothing" and "everything failed". The first version of this
+scorer conflated them and emitted `groundedness_fraction: 0.0` for a run in
+which zero claims had actually been evaluated — a damning number for a
+measurement that never ran. When no claim can be judged the fraction is
+`null`; `citation_validity_fraction` still reports what is knowable without
+a judge.
 
 Two measurement decisions, both deliberate:
 

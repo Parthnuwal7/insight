@@ -1,5 +1,5 @@
 {
-  "judge_model": "nvidia/nemotron-3-nano-30b-a3b:free",
+  "judge_model": "none-available",
   "judge_temperature": 0.0,
   "totals": {
     "claims_total": 11,
@@ -9,14 +9,18 @@
       "strengths": 3,
       "actions": 0
     },
+    "claims_judged": 0,
     "grounded": 0,
-    "ungrounded": 11,
-    "ungrounded_by_reason": {
+    "ungrounded": 0,
+    "unjudged": 11,
+    "ungrounded_by_reason": {},
+    "unjudged_by_reason": {
       "llm_unavailable": 11
     }
   },
-  "groundedness_fraction": 0.0,
-  "groundedness_note": null,
+  "groundedness_fraction": null,
+  "groundedness_note": "None of the 11 claim(s) could be judged ({'llm_unavailable': 11}). Groundedness is UNDEFINED, not 0.0 -- these claims were not measured, not found wanting. Re-run the scorer once the judge is reachable.",
+  "citation_validity_fraction": 1.0,
   "claims": [
     {
       "section": "complaints",
@@ -28,7 +32,7 @@
         39,
         46
       ],
-      "verdict": "ungrounded",
+      "verdict": "unjudged",
       "reason": "llm_unavailable"
     },
     {
@@ -41,7 +45,7 @@
         39,
         46
       ],
-      "verdict": "ungrounded",
+      "verdict": "unjudged",
       "reason": "llm_unavailable"
     },
     {
@@ -54,7 +58,7 @@
         39,
         46
       ],
-      "verdict": "ungrounded",
+      "verdict": "unjudged",
       "reason": "llm_unavailable"
     },
     {
@@ -67,7 +71,7 @@
         39,
         46
       ],
-      "verdict": "ungrounded",
+      "verdict": "unjudged",
       "reason": "llm_unavailable"
     },
     {
@@ -80,7 +84,7 @@
         39,
         46
       ],
-      "verdict": "ungrounded",
+      "verdict": "unjudged",
       "reason": "llm_unavailable"
     },
     {
@@ -93,7 +97,7 @@
         39,
         46
       ],
-      "verdict": "ungrounded",
+      "verdict": "unjudged",
       "reason": "llm_unavailable"
     },
     {
@@ -106,7 +110,7 @@
         39,
         46
       ],
-      "verdict": "ungrounded",
+      "verdict": "unjudged",
       "reason": "llm_unavailable"
     },
     {
@@ -119,7 +123,7 @@
         39,
         46
       ],
-      "verdict": "ungrounded",
+      "verdict": "unjudged",
       "reason": "llm_unavailable"
     },
     {
@@ -130,7 +134,7 @@
         1,
         4
       ],
-      "verdict": "ungrounded",
+      "verdict": "unjudged",
       "reason": "llm_unavailable"
     },
     {
@@ -141,7 +145,7 @@
         1,
         4
       ],
-      "verdict": "ungrounded",
+      "verdict": "unjudged",
       "reason": "llm_unavailable"
     },
     {
@@ -152,12 +156,8 @@
         1,
         4
       ],
-      "verdict": "ungrounded",
+      "verdict": "unjudged",
       "reason": "llm_unavailable"
     }
-  ],
-  "run_id": "20260811T180751Z-task4-pool-default-serial",
-  "report_path": "C:\\Users\\Lenovo\\insights\\benchmarks\\runs\\20260811T180751Z-task4-pool-default-serial\\report.json",
-  "reviews_path": "C:\\Users\\Lenovo\\insights\\benchmarks\\runs\\20260811T180751Z-task4-pool-default-serial\\predictions.json",
-  "scoring_seconds": 3.7
+  ]
 }

@@ -228,7 +228,7 @@ def score_one_claim(
             return {**base, "verdict": "ungrounded", "reason": "unknown_review_id"}
 
     if not api_key:
-        return {**base, "verdict": "ungrounded", "reason": "llm_unavailable"}
+        return {**base, "verdict": "unjudged", "reason": "llm_unavailable"}
 
     prompt = JUDGE_PROMPT_TEMPLATE.format(
         kind=kind, claim_text=text, reviews=_format_citations(review_ids, reviews_by_id)
@@ -236,7 +236,7 @@ def score_one_claim(
     try:
         raw_response = _call_judge(prompt, model, api_key, timeout)
     except JudgeUnavailable:
-        return {**base, "verdict": "ungrounded", "reason": "llm_unavailable"}
+        return {**base, "verdict": "unjudged", "reason": "llm_unavailable"}
 
     verdict, error_reason = _parse_verdict(raw_response)
     if error_reason is not None:
@@ -275,22 +275,53 @@ def score_report(
             for future, i in futures.items():
                 results[i] = future.result()
 
-    grounded = sum(1 for r in results if r["verdict"] == "grounded") if results else 0
-    ungrounded = total - grounded
+    grounded = sum(1 for r in results if r["verdict"] == "grounded")
+    unjudged = sum(1 for r in results if r["verdict"] == "unjudged")
+    ungrounded = sum(1 for r in results if r["verdict"] == "ungrounded")
+    judged = total - unjudged
+
     ungrounded_by_reason: dict[str, int] = {}
+    unjudged_by_reason: dict[str, int] = {}
     for r in results:
         if r["verdict"] == "ungrounded":
             ungrounded_by_reason[r["reason"]] = ungrounded_by_reason.get(r["reason"], 0) + 1
+        elif r["verdict"] == "unjudged":
+            unjudged_by_reason[r["reason"]] = unjudged_by_reason.get(r["reason"], 0) + 1
 
+    # The denominator is JUDGED claims, never the total. A claim the judge
+    # could not reach is not evidence of a bad claim -- scoring it ungrounded
+    # would report 0.0 for a run that simply failed to measure anything, which
+    # is precisely the "silently plausible wrongness" this metric exists to
+    # catch. Same reasoning as insights.verify keeping
+    # `verification_budget_exhausted` distinct from `not_supported`.
     if total == 0:
         fraction = None
         note = (
             "The report contained zero claims. Groundedness is undefined here, "
             "not 1.0 -- a report that says nothing is not perfectly grounded."
         )
+    elif judged == 0:
+        fraction = None
+        note = (
+            f"None of the {total} claim(s) could be judged "
+            f"({unjudged_by_reason}). Groundedness is UNDEFINED, not 0.0 -- "
+            "these claims were not measured, not found wanting. Re-run the "
+            "scorer once the judge is reachable."
+        )
     else:
-        fraction = round(grounded / total, 4)
-        note = None
+        fraction = round(grounded / judged, 4)
+        note = (
+            f"Scored over {judged} judged claim(s); {unjudged} could not be "
+            f"judged ({unjudged_by_reason}) and are excluded from the "
+            "denominator."
+        ) if unjudged else None
+
+    # Structural grounding needs no judge: a claim whose cited ids do not
+    # resolve is ungrounded on its face. Reported separately so a run with an
+    # unreachable judge still yields one real, verifiable number.
+    structural_ok = sum(
+        1 for r in results if r["reason"] not in ("uncited", "unknown_review_id")
+    )
 
     return {
         "judge_model": model,
@@ -298,14 +329,31 @@ def score_report(
         "totals": {
             "claims_total": total,
             "claims_by_section": claims_by_section,
+            "claims_judged": judged,
             "grounded": grounded,
             "ungrounded": ungrounded,
+            "unjudged": unjudged,
             "ungrounded_by_reason": ungrounded_by_reason,
+            "unjudged_by_reason": unjudged_by_reason,
         },
         "groundedness_fraction": fraction,
         "groundedness_note": note,
+        "citation_validity_fraction": (
+            round(structural_ok / total, 4) if total else None
+        ),
         "claims": [r for r in results if r is not None],
     }
+
+
+def _frac_label(frac: Optional[float], totals: dict[str, Any]) -> str:
+    """Say *why* a fraction is undefined. 'undefined' with no reason invites
+    the reader to assume the worst, which is how a not-measured run gets
+    quoted as a failed one."""
+    if frac is not None:
+        return str(frac)
+    if totals["claims_total"] == 0:
+        return "undefined (report contained 0 claims)"
+    return f"undefined ({totals['unjudged']} of {totals['claims_total']} claims could not be judged)"
 
 
 def render_markdown(result: dict[str, Any], run_id: str) -> str:
@@ -322,10 +370,13 @@ def render_markdown(result: dict[str, Any], run_id: str) -> str:
         "| Metric | Value |",
         "|---|---:|",
         f"| Claims in report | {t['claims_total']} |",
+        f"| Claims judged | {t['claims_judged']} |",
         f"| Grounded | {t['grounded']} |",
         f"| Ungrounded | {t['ungrounded']} |",
-        f"| Groundedness fraction | "
-        f"**{frac if frac is not None else 'undefined (0 claims)'}** |",
+        f"| Unjudged | {t['unjudged']} |",
+        f"| Groundedness fraction | **{_frac_label(frac, t)}** |",
+        f"| Citation validity | "
+        f"**{result.get('citation_validity_fraction')}** |",
     ]
     if result["groundedness_note"]:
         lines += ["", f"> {result['groundedness_note']}"]
