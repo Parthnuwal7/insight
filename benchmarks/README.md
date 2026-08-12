@@ -42,7 +42,10 @@ benchmarks/
 │   ├── matching.py                aspect normalization + fuzzy alignment
 │   ├── metrics_unlabeled.py       metrics that need no ground truth
 │   ├── make_judge_packet.py       builds the blind LLM judging prompt
-│   └── score_judgments.py         scores judge output → triage.md
+│   ├── score_judgments.py         scores judge output → triage.md
+│   ├── run_insight_report.py      generates a Report over a run's extraction output
+│   ├── score_groundedness.py      scores a Report's claims → groundedness.json
+│   └── test_score_groundedness.py unit tests for the groundedness scorer (no network)
 ├── judgments/                     drop LLM replies here as <run_id>.json
 └── runs/
     ├── LATEST                     run id of the most recent run
@@ -55,7 +58,10 @@ benchmarks/
         ├── metrics_unlabeled.md   human-readable summary
         ├── judge_packet.md        prompt to paste into an LLM
         ├── metrics_labeled.json   (after scoring)
-        └── triage.md              (after scoring) the decision document
+        ├── triage.md              (after scoring) the decision document
+        ├── report.json            (after run_insight_report.py) a generated Report
+        ├── groundedness.json      (after score_groundedness.py) per-claim verdicts
+        └── groundedness.md        (after score_groundedness.py) human-readable summary
 ```
 
 ---
@@ -137,6 +143,47 @@ inflate the score.
 
 Writes `metrics_labeled.json` and `triage.md`.
 
+### 4. Generate and score a report's groundedness (Phase C)
+
+The metrics above score the ABSA extraction layer. `insights.report.Report` —
+the investigation agent's cited findings/complaints/strengths/actions — is a
+separate layer with its own failure mode: a claim that reads as grounded but
+whose citation does not actually support it. `insights.verify` already checks
+this once, internally, before a claim is allowed into a `Report` — but that
+check cannot catch a regression in the prompt that produces the check itself.
+These two scripts are the external, independent gate:
+
+```bash
+.venv-bench/Scripts/python.exe benchmarks/harness/run_insight_report.py --run <run_id>
+.venv-bench/Scripts/python.exe benchmarks/harness/score_groundedness.py --run <run_id>
+```
+
+`run_insight_report.py` re-shapes an existing run's `predictions.json` into
+the `processed_data` / `aspect_level_data` records `InsightTools` expects,
+runs `insights.agent.investigate` → `insights.verify.verify_claims` →
+`insights.report.build_report` (the same sequence `ABSA/app.py`'s
+`POST /insights/report` runs), and writes the result to `report.json`. It
+needs `OPENROUTER_API_KEY` and skips theme clustering (no embedding model
+load) — see the script's docstring.
+
+`score_groundedness.py` then takes each claim in `report.json`, re-fetches
+its cited reviews from `predictions.json`, and asks an independent LLM judge
+(temperature 0, its own prompt — deliberately **not** imported from
+`insights.verify`, so a prompt regression there cannot silently pass this
+gate too) whether the text actually supports the claim. Writes
+`groundedness.json` and `groundedness.md`. See the script's module docstring
+for the full design rationale, and "Groundedness" below for the current
+baseline.
+
+`test_score_groundedness.py` covers the scorer's own logic (unknown citation
+handling, the zero-claims denominator, fail-closed behaviour, verdict
+parsing) against a fixture report, with the judge call stubbed — no network,
+no API key required:
+
+```bash
+.venv-bench/Scripts/python.exe -m pytest benchmarks/harness/test_score_groundedness.py -v
+```
+
 ---
 
 ## What gets measured
@@ -160,6 +207,25 @@ Writes `metrics_labeled.json` and `triage.md`.
 | Sentiment accuracy | Computed **only over correctly matched aspects** |
 | Coverage ratio | Predicted aspects ÷ gold aspects |
 | Sentiment confusion matrix | Which polarity flips dominate |
+
+### Report groundedness (Phase C)
+
+| Metric | Note |
+|---|---|
+| Groundedness fraction | Grounded claims ÷ total claims in the report, per `score_groundedness.py` |
+| Ungrounded, by reason | `unknown_review_id`, `not_supported`, `llm_unavailable`, `unparseable_response`, `ambiguous_verdict` |
+
+Two decisions, both deliberate, mirroring the discipline in
+`insights.verify` (see its module docstring) but applied by a scorer that
+does not import from it:
+
+**A claim citing a review id absent from the run's data is ungrounded, not
+skipped.** Excluding it from the denominator would flatter the fraction
+exactly where the report is least trustworthy.
+
+**Zero claims means an undefined fraction, not a perfect one.** A report
+that found nothing to say is not "100% grounded" — `groundedness_fraction`
+is `null` in that case, with an explanatory `groundedness_note`.
 
 Two measurement decisions, both deliberate:
 
@@ -233,6 +299,42 @@ for a baseline: a future improvement cannot be overstated by them. Tightening
 this (requiring head-noun agreement, or dropping subset matching for
 single-token forms) is worth doing before the numbers are used to compare two
 candidate models against each other rather than against this baseline.
+
+---
+
+## Groundedness baseline (Phase C)
+
+**Status: not yet established.** A report was generated end-to-end against
+the full 46-review eval set on **2026-08-12**, run
+`20260811T180751Z-task4-pool-default-serial`
+(`.venv-bench/Scripts/python.exe benchmarks/harness/run_insight_report.py --run 20260811T180751Z-task4-pool-default-serial`,
+judge/agent model `nvidia/nemotron-3-nano-30b-a3b:free`, no theme clustering
+— see the script's docstring). The investigation agent produced 11 claims
+(8 complaints, 3 strengths), `insights.verify` kept 11 of 12 raised (1
+dropped as `not_supported`), and the result is committed at
+`runs/20260811T180751Z-task4-pool-default-serial/report.json`.
+
+Scoring that report with `score_groundedness.py`, however, could not
+complete: OpenRouter's free-tier daily cap (`free-models-per-day`, 50
+requests across all `:free`-suffixed models, account-wide) was already
+exhausted before scoring started — confirmed via `GET
+/api/v1/credits` returning `total_credits: 0`, so no paid fallback is
+available either. Every one of the 11 claims was correctly recorded as
+`ungrounded` / `llm_unavailable` by the scorer's fail-closed behaviour
+(see `runs/20260811T180751Z-task4-pool-default-serial/groundedness.json`)
+— **that `0.0` is a quota artifact demonstrating the fail-closed path
+works, not a groundedness measurement.** Treat it as unscored, not as a
+baseline of zero.
+
+To establish the real baseline once the quota resets (`X-RateLimit-Reset`
+on the 429 response was `2026-08-13T00:00:00Z`) or credits are added:
+
+```bash
+.venv-bench/Scripts/python.exe benchmarks/harness/score_groundedness.py --run 20260811T180751Z-task4-pool-default-serial
+```
+
+(`report.json` and `predictions.json` are already committed for this run —
+no need to regenerate the report, only to re-run the scorer.)
 
 ---
 

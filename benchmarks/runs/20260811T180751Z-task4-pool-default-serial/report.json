@@ -1,0 +1,537 @@
+{
+  "run_id": "20260811T180751Z-task4-pool-default-serial",
+  "llm_model": "nvidia/nemotron-3-nano-30b-a3b:free",
+  "generated_seconds": 75.2,
+  "findings": [],
+  "complaints": [
+    {
+      "text": "Delivery is frequently cited as a negative aspect, with multiple reviews complaining about delays and slow shipping.",
+      "kind": "complaint",
+      "review_ids": [
+        5,
+        8,
+        39,
+        46
+      ],
+      "reason": "supported"
+    },
+    {
+      "text": "Delivery is frequently mentioned as a negative aspect, with multiple reviews citing delays.",
+      "kind": "complaint",
+      "review_ids": [
+        5,
+        8,
+        39,
+        46
+      ],
+      "reason": "supported"
+    },
+    {
+      "text": "Delivery is frequently cited as a negative aspect, with multiple reviews mentioning slow or late shipping",
+      "kind": "complaint",
+      "review_ids": [
+        5,
+        8,
+        39,
+        46
+      ],
+      "reason": "supported"
+    },
+    {
+      "text": "Delivery is frequently cited as slow or delayed, with 4 negative reviews (ids 5,8,39,46) mentioning slow delivery.",
+      "kind": "complaint",
+      "review_ids": [
+        5,
+        8,
+        39,
+        46
+      ],
+      "reason": "supported"
+    },
+    {
+      "text": "delivery is a pain point",
+      "kind": "complaint",
+      "review_ids": [
+        5,
+        8,
+        39,
+        46
+      ],
+      "reason": "supported"
+    },
+    {
+      "text": "Delivery delays are a frequent complaint, cited in reviews 5, 8, 39, and 46.",
+      "kind": "complaint",
+      "review_ids": [
+        5,
+        8,
+        39,
+        46
+      ],
+      "reason": "supported"
+    },
+    {
+      "text": "Delivery is frequently mentioned as slow or delayed, leading to negative sentiment.",
+      "kind": "complaint",
+      "review_ids": [
+        5,
+        8,
+        39,
+        46
+      ],
+      "reason": "supported"
+    },
+    {
+      "text": "Delivery is frequently cited as a negative aspect, with multiple reviews complaining about slow or late delivery.",
+      "kind": "complaint",
+      "review_ids": [
+        5,
+        8,
+        39,
+        46
+      ],
+      "reason": "supported"
+    }
+  ],
+  "strengths": [
+    {
+      "text": "Some customers report a positive delivery experience, noting fast shipping",
+      "kind": "strength",
+      "review_ids": [
+        1,
+        4
+      ],
+      "reason": "supported"
+    },
+    {
+      "text": "A minority of reviews praise fast delivery, citing positive experiences (ids 1,4).",
+      "kind": "strength",
+      "review_ids": [
+        1,
+        4
+      ],
+      "reason": "supported"
+    },
+    {
+      "text": "Some customers experienced fast and satisfactory delivery, indicating occasional positive delivery performance.",
+      "kind": "strength",
+      "review_ids": [
+        1,
+        4
+      ],
+      "reason": "supported"
+    }
+  ],
+  "actions": [],
+  "stats": {
+    "claims_by_section": {
+      "findings": 0,
+      "complaints": 8,
+      "strengths": 3,
+      "actions": 0
+    },
+    "verification": {
+      "kept": 11,
+      "dropped": 1,
+      "dropped_by_reason": {
+        "not_supported": 1
+      }
+    },
+    "investigation": {
+      "tool_calls_made": 4,
+      "claims_returned": 12,
+      "claims_discarded_uncited": 0,
+      "claims_discarded_malformed": 0,
+      "stopped_reason": "insufficient_time_for_call",
+      "budget_hit": true,
+      "elapsed_seconds": 61.43700000003446
+    },
+    "extraction_health": {
+      "total": 46,
+      "by_method": {
+        "pyabsa": 41,
+        "none": 5
+      },
+      "degraded_count": 5,
+      "degraded_fraction": 0.10869565217391304
+    },
+    "clusters": [],
+    "aspect_stats": {
+      "ads": {
+        "count": 1,
+        "sentiment_counts": {
+          "Negative": 1
+        },
+        "dominant_sentiment": "Negative"
+      },
+      "ambiance": {
+        "count": 1,
+        "sentiment_counts": {
+          "Positive": 1
+        },
+        "dominant_sentiment": "Positive"
+      },
+      "animation": {
+        "count": 1,
+        "sentiment_counts": {
+          "Negative": 1
+        },
+        "dominant_sentiment": "Negative"
+      },
+      "atmosphere": {
+        "count": 2,
+        "sentiment_counts": {
+          "Positive": 2
+        },
+        "dominant_sentiment": "Positive"
+      },
+      "battery": {
+        "count": 1,
+        "sentiment_counts": {
+          "Negative": 1
+        },
+        "dominant_sentiment": "Negative"
+      },
+      "battery backup": {
+        "count": 1,
+        "sentiment_counts": {
+          "Negative": 1
+        },
+        "dominant_sentiment": "Negative"
+      },
+      "battery drain": {
+        "count": 1,
+        "sentiment_counts": {
+          "Negative": 1
+        },
+        "dominant_sentiment": "Negative"
+      },
+      "battery life": {
+        "count": 1,
+        "sentiment_counts": {
+          "Positive": 1
+        },
+        "dominant_sentiment": "Positive"
+      },
+      "bill": {
+        "count": 1,
+        "sentiment_counts": {
+          "Neutral": 1
+        },
+        "dominant_sentiment": "Neutral"
+      },
+      "build": {
+        "count": 1,
+        "sentiment_counts": {
+          "Negative": 1
+        },
+        "dominant_sentiment": "Negative"
+      },
+      "cable": {
+        "count": 1,
+        "sentiment_counts": {
+          "Negative": 1
+        },
+        "dominant_sentiment": "Negative"
+      },
+      "camera": {
+        "count": 1,
+        "sentiment_counts": {
+          "Neutral": 1
+        },
+        "dominant_sentiment": "Neutral"
+      },
+      "charger": {
+        "count": 1,
+        "sentiment_counts": {
+          "Negative": 1
+        },
+        "dominant_sentiment": "Negative"
+      },
+      "cloud backup": {
+        "count": 1,
+        "sentiment_counts": {
+          "Negative": 1
+        },
+        "dominant_sentiment": "Negative"
+      },
+      "customer service": {
+        "count": 2,
+        "sentiment_counts": {
+          "Negative": 2
+        },
+        "dominant_sentiment": "Negative"
+      },
+      "delivery": {
+        "count": 7,
+        "sentiment_counts": {
+          "Negative": 4,
+          "Positive": 2,
+          "Neutral": 1
+        },
+        "dominant_sentiment": "Negative"
+      },
+      "description": {
+        "count": 1,
+        "sentiment_counts": {
+          "Negative": 1
+        },
+        "dominant_sentiment": "Negative"
+      },
+      "design": {
+        "count": 1,
+        "sentiment_counts": {
+          "Positive": 1
+        },
+        "dominant_sentiment": "Positive"
+      },
+      "dessert": {
+        "count": 1,
+        "sentiment_counts": {
+          "Positive": 1
+        },
+        "dominant_sentiment": "Positive"
+      },
+      "dining": {
+        "count": 1,
+        "sentiment_counts": {
+          "Positive": 1
+        },
+        "dominant_sentiment": "Positive"
+      },
+      "feature": {
+        "count": 1,
+        "sentiment_counts": {
+          "Positive": 1
+        },
+        "dominant_sentiment": "Positive"
+      },
+      "food": {
+        "count": 6,
+        "sentiment_counts": {
+          "Negative": 4,
+          "Positive": 2
+        },
+        "dominant_sentiment": "Negative"
+      },
+      "food quality": {
+        "count": 1,
+        "sentiment_counts": {
+          "Positive": 1
+        },
+        "dominant_sentiment": "Positive"
+      },
+      "functionality": {
+        "count": 1,
+        "sentiment_counts": {
+          "Negative": 1
+        },
+        "dominant_sentiment": "Negative"
+      },
+      "interface": {
+        "count": 1,
+        "sentiment_counts": {
+          "Positive": 1
+        },
+        "dominant_sentiment": "Positive"
+      },
+      "lunch": {
+        "count": 1,
+        "sentiment_counts": {
+          "Neutral": 1
+        },
+        "dominant_sentiment": "Neutral"
+      },
+      "main course": {
+        "count": 1,
+        "sentiment_counts": {
+          "Neutral": 1
+        },
+        "dominant_sentiment": "Neutral"
+      },
+      "navigation": {
+        "count": 1,
+        "sentiment_counts": {
+          "Negative": 1
+        },
+        "dominant_sentiment": "Negative"
+      },
+      "noise": {
+        "count": 1,
+        "sentiment_counts": {
+          "Negative": 1
+        },
+        "dominant_sentiment": "Negative"
+      },
+      "notification": {
+        "count": 1,
+        "sentiment_counts": {
+          "Negative": 1
+        },
+        "dominant_sentiment": "Negative"
+      },
+      "packaging": {
+        "count": 2,
+        "sentiment_counts": {
+          "Negative": 2
+        },
+        "dominant_sentiment": "Negative"
+      },
+      "performance": {
+        "count": 1,
+        "sentiment_counts": {
+          "Positive": 1
+        },
+        "dominant_sentiment": "Positive"
+      },
+      "portion": {
+        "count": 1,
+        "sentiment_counts": {
+          "Negative": 1
+        },
+        "dominant_sentiment": "Negative"
+      },
+      "price": {
+        "count": 2,
+        "sentiment_counts": {
+          "Negative": 1,
+          "Neutral": 1
+        },
+        "dominant_sentiment": "Negative"
+      },
+      "quality": {
+        "count": 4,
+        "sentiment_counts": {
+          "Positive": 3,
+          "Negative": 1
+        },
+        "dominant_sentiment": "Positive"
+      },
+      "room": {
+        "count": 1,
+        "sentiment_counts": {
+          "Neutral": 1
+        },
+        "dominant_sentiment": "Neutral"
+      },
+      "screen": {
+        "count": 2,
+        "sentiment_counts": {
+          "Negative": 1,
+          "Positive": 1
+        },
+        "dominant_sentiment": "Negative"
+      },
+      "search function": {
+        "count": 1,
+        "sentiment_counts": {
+          "Negative": 1
+        },
+        "dominant_sentiment": "Negative"
+      },
+      "served": {
+        "count": 1,
+        "sentiment_counts": {
+          "Negative": 1
+        },
+        "dominant_sentiment": "Negative"
+      },
+      "service": {
+        "count": 3,
+        "sentiment_counts": {
+          "Positive": 2,
+          "Negative": 1
+        },
+        "dominant_sentiment": "Positive"
+      },
+      "service staff": {
+        "count": 1,
+        "sentiment_counts": {
+          "Negative": 1
+        },
+        "dominant_sentiment": "Negative"
+      },
+      "sound quality": {
+        "count": 1,
+        "sentiment_counts": {
+          "Positive": 1
+        },
+        "dominant_sentiment": "Positive"
+      },
+      "speaker": {
+        "count": 1,
+        "sentiment_counts": {
+          "Positive": 1
+        },
+        "dominant_sentiment": "Positive"
+      },
+      "support": {
+        "count": 1,
+        "sentiment_counts": {
+          "Negative": 1
+        },
+        "dominant_sentiment": "Negative"
+      },
+      "tutorial": {
+        "count": 1,
+        "sentiment_counts": {
+          "Negative": 1
+        },
+        "dominant_sentiment": "Negative"
+      },
+      "ui": {
+        "count": 1,
+        "sentiment_counts": {
+          "Negative": 1
+        },
+        "dominant_sentiment": "Negative"
+      },
+      "user interface": {
+        "count": 1,
+        "sentiment_counts": {
+          "Positive": 1
+        },
+        "dominant_sentiment": "Positive"
+      },
+      "vegetarian": {
+        "count": 1,
+        "sentiment_counts": {
+          "Negative": 1
+        },
+        "dominant_sentiment": "Negative"
+      },
+      "wait": {
+        "count": 1,
+        "sentiment_counts": {
+          "Negative": 1
+        },
+        "dominant_sentiment": "Negative"
+      },
+      "waiter": {
+        "count": 1,
+        "sentiment_counts": {
+          "Negative": 1
+        },
+        "dominant_sentiment": "Negative"
+      },
+      "water": {
+        "count": 1,
+        "sentiment_counts": {
+          "Negative": 1
+        },
+        "dominant_sentiment": "Negative"
+      },
+      "work": {
+        "count": 1,
+        "sentiment_counts": {
+          "Positive": 1
+        },
+        "dominant_sentiment": "Positive"
+      }
+    }
+  },
+  "caveats": [
+    "Investigation stopped early (insufficient_time_for_call) after 4 tool call(s) and 61s. This report reflects a partial investigation, not a complete one."
+  ],
+  "is_empty": false
+}
