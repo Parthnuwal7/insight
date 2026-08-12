@@ -107,7 +107,11 @@ def main() -> int:
     import metrics_unlabeled
     from make_judge_packet import build_packet
 
-    eval_path = Path(args.eval_set)
+    # Resolved before use: the manifest records this path via relative_to(REPO_ROOT),
+    # which raises on a relative --eval-set (it compares a relative path against an
+    # absolute one). That crashed *after* a full 102s extraction run, discarding the
+    # results, so the failure cost far more than the typo that triggered it.
+    eval_path = Path(args.eval_set).resolve()
     df_eval = pd.read_csv(eval_path)
 
     dupes = df_eval["review"][df_eval["review"].duplicated()].tolist()

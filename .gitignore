@@ -14,8 +14,13 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
+# Anchored to the repo root. Unanchored, these match at any depth -- which
+# silently excluded web/lib/ (the Next.js frontend's api/types/citations
+# modules) from a `git add web/`, producing a staged tree that could not
+# build. They exist here for a Python distutils build directory at the
+# root, which is the only place that directory would ever appear.
+/lib/
+/lib64/
 parts/
 sdist/
 var/

@@ -62,22 +62,79 @@ why. Degraded output is never presented as if it were good output.
 
 ## Measured Quality
 
-The pipeline is benchmarked against a 46-review evaluation set with per-category
-probes (multi-aspect, mixed sentiment, sarcasm, negation, Hindi, out-of-taxonomy).
-Results are reproducible via `benchmarks/harness/run_benchmark.py`.
+Headline numbers come from the **general evaluation set**: 150 constructed reviews
+across five domains (e-commerce, mobile app, restaurant, hotel, electronics),
+balanced across single-aspect, multi-aspect, mixed-sentiment, long-form, Hindi and
+Hinglish reviews, carrying 372 hand-written gold aspects. Reproduce with:
+
+```bash
+python benchmarks/harness/run_benchmark.py \
+    --eval-set benchmarks/eval_set/eval_reviews_v2_general.csv --label v2-general
+python benchmarks/harness/score_judgments.py --run <run-id>
+```
 
 | Metric | Value |
 |---|---|
-| Aspect F1 | **0.746** |
-| Sentiment accuracy | **0.873** |
+| Aspect F1 — reviews the model could process (131 of 150) | **0.904** |
+| Aspect F1 — whole set, including 19 silent failures | **0.752** |
+| Sentiment accuracy | **0.979** (239 judged) |
+| Precision / Recall (whole set) | 0.905 / 0.643 |
 | Keyword-fallback rows | **0%** |
-| Pipeline time (46 reviews) | **~35s** |
+| Pipeline time (150 reviews) | **102s** (0.68s/review) |
 
-These numbers are a regression gate, not a marketing claim: every change touching
-the pipeline must reproduce them or it does not land. Remaining weaknesses are
-documented honestly in `benchmarks/BASELINE_FINDINGS.md` — implicit aspects
-(F1 0.250), sarcasm (0.500), and negation polarity (0.500) are model-capability
-limits, not tuning gaps.
+**Both F1 numbers are real and neither alone is honest.** On ordinary-length
+reviews the extractor is strong — F1 0.904 with 97.9% sentiment accuracy. But 19
+reviews returned *no aspects at all*, and every one of them is over 80 words:
+
+| Review length | Reviews | Aspect F1 |
+|---|---|---|
+| ≤ 80 words | 131 | **0.904** |
+| > 80 words | 19 | **0.000** |
+
+The cause is `max_seq_len = 128` in the PyABSA ATEPC checkpoint. Long reviews
+exceed the model's token limit and yield an empty result rather than a truncated
+one — a **silent total failure**, which is the worst failure mode available: the
+row still appears in the output, just with nothing in it. This was invisible until
+the evaluation set included long-form reviews, and is the single largest known
+accuracy defect in the system. Fixing it (sentence-window chunking before
+extraction, then merging per-window aspects) is the highest-value work outstanding.
+
+Per-category breakdown on reviews the model processed:
+
+| Category | Aspect F1 | Sentiment accuracy |
+|---|---|---|
+| Hinglish | 1.000 | 0.950 |
+| Multi-aspect | 0.930 | 0.989 |
+| Hindi | 0.923 | 1.000 |
+| Single-aspect control | 0.923 | 1.000 |
+| Mixed sentiment | 0.898 | 1.000 |
+| Long-form | 0.287 | 0.880 |
+
+### The adversarial set
+
+A separate 46-review probe set (`eval_reviews_v1.csv`) is deliberately weighted
+toward sarcasm, implicit aspects, comparatives and out-of-taxonomy mentions. It
+scores **F1 0.746 / sentiment 0.873** and exists to answer "where does this break",
+not "how good is it". It remains the **parity gate**: every change touching the
+pipeline must reproduce those two numbers exactly or it does not land. The `absa`
+package split, the job machinery, and the process-pool change were each validated
+this way — all four runs are bit-identical.
+
+The two sets are not interchangeable and neither supersedes the other. Quoting the
+adversarial number as headline accuracy understates the system on realistic input;
+quoting the general number as though it covered the hard cases overstates it.
+Known model-capability limits from the adversarial set — implicit aspects (F1
+0.250), sarcasm (0.500), negation polarity (0.500) — are documented in
+`benchmarks/BASELINE_FINDINGS.md`.
+
+**Provenance caveat:** the general set's reviews are *constructed*, not sampled
+from real customer data, and its gold labels were written by the same author. It
+measures "does extraction recover the aspects a review was built to contain",
+which is weaker than agreement with independently-annotated real reviews, and it
+carries no inter-annotator agreement figure. The reviews and labels are generated
+from one source file (`benchmarks/eval_set/build_v2_general.py`) with validation
+that refuses to emit if any gold evidence span is not a literal substring of its
+review, so the two artefacts cannot drift apart.
 
 ---
 
@@ -322,10 +379,22 @@ obvious from the code alone:
   travel with every row from extraction through to the API. An earlier version
   silently emitted keyword-matched output indistinguishable from real ABSA — 17% of
   rows in a "healthy" run.
-- **Benchmark parity gates every pipeline change.** Refactors must reproduce
-  F1 0.746 / accuracy 0.873 exactly. The `absa` package split was validated this
-  way: five of six moved classes were byte-identical, and the metrics file matched
-  the baseline byte-for-byte.
+- **Benchmark parity gates every pipeline change.** Refactors must reproduce the
+  adversarial set's F1 0.746 / accuracy 0.873 exactly. The `absa` package split was
+  validated this way: five of six moved classes were byte-identical, and the
+  metrics file matched the baseline byte-for-byte.
+- **Two evaluation sets, two questions.** An adversarial probe set answers "where
+  does this break"; a general set answers "how does this do on ordinary traffic".
+  Collapsing them into one number would have hidden both the 0.904 the extractor
+  actually achieves on normal reviews and the 0.000 it scores on long ones.
+- **Reviews and gold labels are generated from one source.** Hand-maintaining an
+  eval CSV alongside a separate labels file lets them drift silently — a review
+  gets reworded and the metric quietly measures something else. `build_v2_general.py`
+  emits both and refuses to write if any gold evidence span is not a literal
+  substring of its review. It also enforces that Hindi gold names aspects in
+  English (the pipeline translates before extracting), which caught a real labelling
+  error that would have scored every Hindi review 0.00 while looking like a model
+  failure.
 
 ---
 

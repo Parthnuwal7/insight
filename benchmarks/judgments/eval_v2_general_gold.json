@@ -1,0 +1,2764 @@
+{
+  "judgments": [
+    {
+      "review_id": 1,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "delivery",
+          "sentiment": "Positive",
+          "evidence": "delivery was incredibly fast"
+        }
+      ]
+    },
+    {
+      "review_id": 2,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "packaging",
+          "sentiment": "Negative",
+          "evidence": "Packaging was terrible"
+        }
+      ]
+    },
+    {
+      "review_id": 3,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "price",
+          "sentiment": "Positive",
+          "evidence": "price is very reasonable"
+        }
+      ]
+    },
+    {
+      "review_id": 4,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "customer service",
+          "sentiment": "Negative",
+          "evidence": "Customer service never responded"
+        }
+      ]
+    },
+    {
+      "review_id": 5,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "refund",
+          "sentiment": "Positive",
+          "evidence": "refund was processed without any hassle"
+        }
+      ]
+    },
+    {
+      "review_id": 6,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "quality",
+          "sentiment": "Negative",
+          "evidence": "quality is disappointing"
+        }
+      ]
+    },
+    {
+      "review_id": 7,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "product",
+          "sentiment": "Positive",
+          "evidence": "Great product"
+        },
+        {
+          "aspect": "shipping",
+          "sentiment": "Positive",
+          "evidence": "shipping was quick"
+        }
+      ]
+    },
+    {
+      "review_id": 8,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "item",
+          "sentiment": "Negative",
+          "evidence": "item arrived damaged"
+        },
+        {
+          "aspect": "seller",
+          "sentiment": "Negative",
+          "evidence": "seller refused a replacement"
+        }
+      ]
+    },
+    {
+      "review_id": 9,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "packaging",
+          "sentiment": "Positive",
+          "evidence": "Excellent packaging"
+        },
+        {
+          "aspect": "delivery",
+          "sentiment": "Positive",
+          "evidence": "fast delivery"
+        },
+        {
+          "aspect": "product",
+          "sentiment": "Positive",
+          "evidence": "product works perfectly"
+        }
+      ]
+    },
+    {
+      "review_id": 10,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "build quality",
+          "sentiment": "Negative",
+          "evidence": "Poor build quality"
+        },
+        {
+          "aspect": "price",
+          "sentiment": "Negative",
+          "evidence": "price is far too high"
+        }
+      ]
+    },
+    {
+      "review_id": 11,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "website",
+          "sentiment": "Positive",
+          "evidence": "website was easy to navigate"
+        },
+        {
+          "aspect": "checkout",
+          "sentiment": "Positive",
+          "evidence": "checkout was smooth"
+        }
+      ]
+    },
+    {
+      "review_id": 12,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "delivery",
+          "sentiment": "Negative",
+          "evidence": "Delivery took three weeks"
+        },
+        {
+          "aspect": "packaging",
+          "sentiment": "Negative",
+          "evidence": "packaging was falling apart"
+        }
+      ]
+    },
+    {
+      "review_id": 13,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "value for money",
+          "sentiment": "Positive",
+          "evidence": "Good value for money"
+        },
+        {
+          "aspect": "return policy",
+          "sentiment": "Positive",
+          "evidence": "return policy is generous"
+        }
+      ]
+    },
+    {
+      "review_id": 14,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "size chart",
+          "sentiment": "Negative",
+          "evidence": "size chart was inaccurate"
+        },
+        {
+          "aspect": "customer support",
+          "sentiment": "Negative",
+          "evidence": "customer support was unhelpful"
+        }
+      ]
+    },
+    {
+      "review_id": 15,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "shipping",
+          "sentiment": "Positive",
+          "evidence": "Fast shipping"
+        },
+        {
+          "aspect": "packaging",
+          "sentiment": "Positive",
+          "evidence": "secure packaging"
+        },
+        {
+          "aspect": "price",
+          "sentiment": "Positive",
+          "evidence": "fair price"
+        }
+      ]
+    },
+    {
+      "review_id": 16,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "product",
+          "sentiment": "Positive",
+          "evidence": "product is excellent"
+        },
+        {
+          "aspect": "delivery",
+          "sentiment": "Negative",
+          "evidence": "delivery was painfully slow"
+        }
+      ]
+    },
+    {
+      "review_id": 17,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "Packaging",
+          "sentiment": "Positive",
+          "evidence": "Packaging was great"
+        },
+        {
+          "aspect": "quality",
+          "sentiment": "Negative",
+          "evidence": "quality did not match the photos"
+        }
+      ]
+    },
+    {
+      "review_id": 18,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "price",
+          "sentiment": "Positive",
+          "evidence": "Cheap price"
+        },
+        {
+          "aspect": "material",
+          "sentiment": "Negative",
+          "evidence": "material feels flimsy"
+        }
+      ]
+    },
+    {
+      "review_id": 19,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "Customer service",
+          "sentiment": "Positive",
+          "evidence": "Customer service was very responsive"
+        },
+        {
+          "aspect": "refund",
+          "sentiment": "Negative",
+          "evidence": "refund took a month"
+        }
+      ]
+    },
+    {
+      "review_id": 20,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "design",
+          "sentiment": "Positive",
+          "evidence": "Love the design"
+        },
+        {
+          "aspect": "price",
+          "sentiment": "Negative",
+          "evidence": "hate the price"
+        }
+      ]
+    },
+    {
+      "review_id": 21,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "Shipping",
+          "sentiment": "Positive",
+          "evidence": "Shipping was fast"
+        },
+        {
+          "aspect": "item",
+          "sentiment": "Negative",
+          "evidence": "item was the wrong colour"
+        }
+      ]
+    },
+    {
+      "review_id": 22,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "delivery",
+          "sentiment": "Positive",
+          "evidence": "delivery was genuinely impressive"
+        },
+        {
+          "aspect": "Packaging",
+          "sentiment": "Positive",
+          "evidence": "Packaging was sturdy"
+        },
+        {
+          "aspect": "quality",
+          "sentiment": "Negative",
+          "evidence": "quality of the fabric is nowhere near"
+        },
+        {
+          "aspect": "Customer service",
+          "sentiment": "Positive",
+          "evidence": "Customer service did respond quickly"
+        },
+        {
+          "aspect": "refund",
+          "sentiment": "Negative",
+          "evidence": "not able to offer a partial refund"
+        },
+        {
+          "aspect": "price",
+          "sentiment": "Positive",
+          "evidence": "price was reasonable"
+        }
+      ]
+    },
+    {
+      "review_id": 23,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "shipping",
+          "sentiment": "Negative",
+          "evidence": "shipping took nineteen days"
+        },
+        {
+          "aspect": "packaging",
+          "sentiment": "Negative",
+          "evidence": "packaging was torn open"
+        },
+        {
+          "aspect": "customer support",
+          "sentiment": "Negative",
+          "evidence": "four days of silence"
+        },
+        {
+          "aspect": "build quality",
+          "sentiment": "Positive",
+          "evidence": "build quality is solid"
+        }
+      ]
+    },
+    {
+      "review_id": 24,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "website",
+          "sentiment": "Positive",
+          "evidence": "website made it easy to compare"
+        },
+        {
+          "aspect": "size guide",
+          "sentiment": "Positive",
+          "evidence": "size guide was accurate"
+        },
+        {
+          "aspect": "Checkout",
+          "sentiment": "Positive",
+          "evidence": "Checkout was quick"
+        },
+        {
+          "aspect": "Delivery",
+          "sentiment": "Positive",
+          "evidence": "Delivery arrived within the promised window"
+        },
+        {
+          "aspect": "product",
+          "sentiment": "Positive",
+          "evidence": "product itself exceeded expectations"
+        },
+        {
+          "aspect": "price",
+          "sentiment": "Negative",
+          "evidence": "price was higher than competitors"
+        }
+      ]
+    },
+    {
+      "review_id": 25,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "packaging",
+          "sentiment": "Positive",
+          "evidence": "packaging was recyclable"
+        },
+        {
+          "aspect": "instructions",
+          "sentiment": "Negative",
+          "evidence": "instructions were almost unreadable"
+        },
+        {
+          "aspect": "Assembly",
+          "sentiment": "Negative",
+          "evidence": "Assembly took me three hours"
+        },
+        {
+          "aspect": "item",
+          "sentiment": "Positive",
+          "evidence": "item is sturdy"
+        },
+        {
+          "aspect": "price",
+          "sentiment": "Positive",
+          "evidence": "price is fair"
+        }
+      ]
+    },
+    {
+      "review_id": 26,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "delivery",
+          "sentiment": "Negative",
+          "evidence": "delivery date moved three times"
+        },
+        {
+          "aspect": "product",
+          "sentiment": "Negative",
+          "evidence": "product inside had a scratch"
+        },
+        {
+          "aspect": "seller",
+          "sentiment": "Positive",
+          "evidence": "seller was actually very reasonable"
+        },
+        {
+          "aspect": "finish",
+          "sentiment": "Positive",
+          "evidence": "finish is flawless"
+        },
+        {
+          "aspect": "courier",
+          "sentiment": "Negative",
+          "evidence": "courier let them down badly"
+        }
+      ]
+    },
+    {
+      "review_id": 27,
+      "language": "hi",
+      "aspects": [
+        {
+          "aspect": "delivery",
+          "sentiment": "Positive",
+          "evidence": "डिलीवरी बहुत तेज़ थी"
+        },
+        {
+          "aspect": "packaging",
+          "sentiment": "Positive",
+          "evidence": "पैकेजिंग भी अच्छी थी"
+        }
+      ]
+    },
+    {
+      "review_id": 28,
+      "language": "hi",
+      "aspects": [
+        {
+          "aspect": "price",
+          "sentiment": "Negative",
+          "evidence": "कीमत बहुत ज़्यादा है"
+        },
+        {
+          "aspect": "quality",
+          "sentiment": "Negative",
+          "evidence": "गुणवत्ता खराब है"
+        }
+      ]
+    },
+    {
+      "review_id": 29,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "Delivery",
+          "sentiment": "Positive",
+          "evidence": "Delivery bahut fast thi"
+        },
+        {
+          "aspect": "quality",
+          "sentiment": "Negative",
+          "evidence": "quality thodi average hai"
+        }
+      ]
+    },
+    {
+      "review_id": 30,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "Packaging",
+          "sentiment": "Positive",
+          "evidence": "Packaging ekdum solid tha"
+        },
+        {
+          "aspect": "price",
+          "sentiment": "Positive",
+          "evidence": "price bhi reasonable hai"
+        }
+      ]
+    },
+    {
+      "review_id": 31,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "interface",
+          "sentiment": "Positive",
+          "evidence": "interface is clean and intuitive"
+        }
+      ]
+    },
+    {
+      "review_id": 32,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "battery drain",
+          "sentiment": "Negative",
+          "evidence": "Battery drain is severe"
+        }
+      ]
+    },
+    {
+      "review_id": 33,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "sync",
+          "sentiment": "Positive",
+          "evidence": "Sync works flawlessly"
+        }
+      ]
+    },
+    {
+      "review_id": 34,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "ads",
+          "sentiment": "Negative",
+          "evidence": "far too many ads"
+        }
+      ]
+    },
+    {
+      "review_id": 35,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "dark mode",
+          "sentiment": "Positive",
+          "evidence": "dark mode looks fantastic"
+        }
+      ]
+    },
+    {
+      "review_id": 36,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "app",
+          "sentiment": "Negative",
+          "evidence": "app crashes every time"
+        }
+      ]
+    },
+    {
+      "review_id": 37,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "performance",
+          "sentiment": "Positive",
+          "evidence": "Fast performance"
+        },
+        {
+          "aspect": "interface",
+          "sentiment": "Positive",
+          "evidence": "beautiful interface"
+        }
+      ]
+    },
+    {
+      "review_id": 38,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "app",
+          "sentiment": "Negative",
+          "evidence": "app is slow to load"
+        },
+        {
+          "aspect": "notifications",
+          "sentiment": "Negative",
+          "evidence": "notifications never arrive on time"
+        }
+      ]
+    },
+    {
+      "review_id": 39,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "search function",
+          "sentiment": "Positive",
+          "evidence": "Great search function"
+        },
+        {
+          "aspect": "animations",
+          "sentiment": "Positive",
+          "evidence": "smooth animations"
+        },
+        {
+          "aspect": "offline mode",
+          "sentiment": "Positive",
+          "evidence": "offline mode actually works"
+        }
+      ]
+    },
+    {
+      "review_id": 40,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "subscription",
+          "sentiment": "Negative",
+          "evidence": "subscription is overpriced"
+        },
+        {
+          "aspect": "free tier",
+          "sentiment": "Negative",
+          "evidence": "free tier is unusable"
+        }
+      ]
+    },
+    {
+      "review_id": 41,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "login",
+          "sentiment": "Positive",
+          "evidence": "Login was simple"
+        },
+        {
+          "aspect": "onboarding tutorial",
+          "sentiment": "Positive",
+          "evidence": "onboarding tutorial was genuinely helpful"
+        }
+      ]
+    },
+    {
+      "review_id": 42,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "crashes",
+          "sentiment": "Negative",
+          "evidence": "Constant crashes"
+        },
+        {
+          "aspect": "data sync",
+          "sentiment": "Negative",
+          "evidence": "data sync lost two weeks"
+        }
+      ]
+    },
+    {
+      "review_id": 43,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "widget",
+          "sentiment": "Positive",
+          "evidence": "widget is useful"
+        },
+        {
+          "aspect": "customisation options",
+          "sentiment": "Positive",
+          "evidence": "customisation options are extensive"
+        }
+      ]
+    },
+    {
+      "review_id": 44,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "permissions",
+          "sentiment": "Negative",
+          "evidence": "Permissions requested are excessive"
+        },
+        {
+          "aspect": "privacy policy",
+          "sentiment": "Negative",
+          "evidence": "privacy policy is vague"
+        }
+      ]
+    },
+    {
+      "review_id": 45,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "performance",
+          "sentiment": "Positive",
+          "evidence": "Smooth performance"
+        },
+        {
+          "aspect": "ads",
+          "sentiment": "Positive",
+          "evidence": "no ads"
+        },
+        {
+          "aspect": "export feature",
+          "sentiment": "Positive",
+          "evidence": "export feature saves me hours"
+        }
+      ]
+    },
+    {
+      "review_id": 46,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "interface",
+          "sentiment": "Positive",
+          "evidence": "interface is gorgeous"
+        },
+        {
+          "aspect": "battery",
+          "sentiment": "Negative",
+          "evidence": "drains my battery in hours"
+        }
+      ]
+    },
+    {
+      "review_id": 47,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "features",
+          "sentiment": "Positive",
+          "evidence": "Powerful features"
+        },
+        {
+          "aspect": "navigation",
+          "sentiment": "Negative",
+          "evidence": "confusing navigation"
+        }
+      ]
+    },
+    {
+      "review_id": 48,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "update",
+          "sentiment": "Positive",
+          "evidence": "update improved performance"
+        },
+        {
+          "aspect": "widget",
+          "sentiment": "Negative",
+          "evidence": "removed my favourite widget"
+        }
+      ]
+    },
+    {
+      "review_id": 49,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "sync",
+          "sentiment": "Positive",
+          "evidence": "Sync is reliable"
+        },
+        {
+          "aspect": "interface",
+          "sentiment": "Negative",
+          "evidence": "interface feels dated"
+        }
+      ]
+    },
+    {
+      "review_id": 50,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "customer support",
+          "sentiment": "Positive",
+          "evidence": "Customer support replied within an hour"
+        },
+        {
+          "aspect": "crash",
+          "sentiment": "Negative",
+          "evidence": "could not fix the crash"
+        }
+      ]
+    },
+    {
+      "review_id": 51,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "free version",
+          "sentiment": "Positive",
+          "evidence": "Free version is generous"
+        },
+        {
+          "aspect": "ads",
+          "sentiment": "Negative",
+          "evidence": "ads are intrusive"
+        }
+      ]
+    },
+    {
+      "review_id": 52,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "interface",
+          "sentiment": "Positive",
+          "evidence": "interface is genuinely one of the best"
+        },
+        {
+          "aspect": "animations",
+          "sentiment": "Positive",
+          "evidence": "animations are smooth"
+        },
+        {
+          "aspect": "sync",
+          "sentiment": "Positive",
+          "evidence": "Sync across my phone and tablet has never once failed"
+        },
+        {
+          "aspect": "battery consumption",
+          "sentiment": "Negative",
+          "evidence": "battery consumption is a real problem"
+        },
+        {
+          "aspect": "subscription price",
+          "sentiment": "Negative",
+          "evidence": "subscription price went up twice"
+        },
+        {
+          "aspect": "customer support",
+          "sentiment": "Positive",
+          "evidence": "Customer support was responsive"
+        }
+      ]
+    },
+    {
+      "review_id": 53,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "performance",
+          "sentiment": "Negative",
+          "evidence": "nearly ten seconds to open"
+        },
+        {
+          "aspect": "ads",
+          "sentiment": "Negative",
+          "evidence": "banner ad on every screen"
+        },
+        {
+          "aspect": "search function",
+          "sentiment": "Positive",
+          "evidence": "search function still works well"
+        },
+        {
+          "aspect": "offline mode",
+          "sentiment": "Positive",
+          "evidence": "still rely on the offline mode"
+        },
+        {
+          "aspect": "notification system",
+          "sentiment": "Negative",
+          "evidence": "notification system is broken"
+        }
+      ]
+    },
+    {
+      "review_id": 54,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "onboarding",
+          "sentiment": "Positive",
+          "evidence": "onboarding was quick"
+        },
+        {
+          "aspect": "interface",
+          "sentiment": "Positive",
+          "evidence": "it is very efficient"
+        },
+        {
+          "aspect": "performance",
+          "sentiment": "Positive",
+          "evidence": "Performance is fast"
+        },
+        {
+          "aspect": "free tier",
+          "sentiment": "Positive",
+          "evidence": "free tier is limited but fair"
+        },
+        {
+          "aspect": "dark mode",
+          "sentiment": "Positive",
+          "evidence": "Dark mode is well implemented"
+        },
+        {
+          "aspect": "tablet layout",
+          "sentiment": "Negative",
+          "evidence": "tablet layout wastes a lot of space"
+        }
+      ]
+    },
+    {
+      "review_id": 55,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "editor",
+          "sentiment": "Positive",
+          "evidence": "editor is fast, stable"
+        },
+        {
+          "aspect": "cloud sync",
+          "sentiment": "Negative",
+          "evidence": "cloud sync is unreliable"
+        },
+        {
+          "aspect": "settings menu",
+          "sentiment": "Negative",
+          "evidence": "settings menu is a maze"
+        },
+        {
+          "aspect": "customer support",
+          "sentiment": "Negative",
+          "evidence": "took eleven days to reply"
+        },
+        {
+          "aspect": "pricing",
+          "sentiment": "Positive",
+          "evidence": "pricing is reasonable"
+        }
+      ]
+    },
+    {
+      "review_id": 56,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "signup process",
+          "sentiment": "Negative",
+          "evidence": "signup process demanded access to my contacts"
+        },
+        {
+          "aspect": "interface",
+          "sentiment": "Negative",
+          "evidence": "interface is cluttered"
+        },
+        {
+          "aspect": "performance",
+          "sentiment": "Negative",
+          "evidence": "Performance is sluggish"
+        },
+        {
+          "aspect": "export function",
+          "sentiment": "Positive",
+          "evidence": "export function works properly"
+        }
+      ]
+    },
+    {
+      "review_id": 57,
+      "language": "hi",
+      "aspects": [
+        {
+          "aspect": "interface",
+          "sentiment": "Positive",
+          "evidence": "इंटरफेस बहुत साफ है"
+        },
+        {
+          "aspect": "battery",
+          "sentiment": "Negative",
+          "evidence": "बैटरी जल्दी खत्म होती है"
+        }
+      ]
+    },
+    {
+      "review_id": 58,
+      "language": "hi",
+      "aspects": [
+        {
+          "aspect": "ads",
+          "sentiment": "Negative",
+          "evidence": "विज्ञापन बहुत ज़्यादा हैं"
+        },
+        {
+          "aspect": "app",
+          "sentiment": "Negative",
+          "evidence": "ऐप बार बार बंद हो जाता है"
+        }
+      ]
+    },
+    {
+      "review_id": 59,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "interface",
+          "sentiment": "Positive",
+          "evidence": "interface bahut accha hai"
+        },
+        {
+          "aspect": "ads",
+          "sentiment": "Negative",
+          "evidence": "ads irritating hain"
+        }
+      ]
+    },
+    {
+      "review_id": 60,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "performance",
+          "sentiment": "Positive",
+          "evidence": "Performance fast hai"
+        },
+        {
+          "aspect": "sync",
+          "sentiment": "Positive",
+          "evidence": "sync bhi perfectly kaam karta hai"
+        }
+      ]
+    },
+    {
+      "review_id": 61,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "food",
+          "sentiment": "Positive",
+          "evidence": "food was absolutely delicious"
+        }
+      ]
+    },
+    {
+      "review_id": 62,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "service",
+          "sentiment": "Negative",
+          "evidence": "Service was painfully slow"
+        }
+      ]
+    },
+    {
+      "review_id": 63,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "ambiance",
+          "sentiment": "Positive",
+          "evidence": "ambiance is warm and welcoming"
+        }
+      ]
+    },
+    {
+      "review_id": 64,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "portions",
+          "sentiment": "Negative",
+          "evidence": "Portions are far too small"
+        }
+      ]
+    },
+    {
+      "review_id": 65,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "staff",
+          "sentiment": "Positive",
+          "evidence": "staff were friendly and attentive"
+        }
+      ]
+    },
+    {
+      "review_id": 66,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "dessert menu",
+          "sentiment": "Negative",
+          "evidence": "dessert menu is very limited"
+        }
+      ]
+    },
+    {
+      "review_id": 67,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "food",
+          "sentiment": "Positive",
+          "evidence": "Wonderful food"
+        },
+        {
+          "aspect": "service",
+          "sentiment": "Positive",
+          "evidence": "excellent service"
+        }
+      ]
+    },
+    {
+      "review_id": 68,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "pasta",
+          "sentiment": "Negative",
+          "evidence": "pasta was undercooked"
+        },
+        {
+          "aspect": "waiter",
+          "sentiment": "Negative",
+          "evidence": "waiter was rude"
+        }
+      ]
+    },
+    {
+      "review_id": 69,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "atmosphere",
+          "sentiment": "Positive",
+          "evidence": "Lovely atmosphere"
+        },
+        {
+          "aspect": "portions",
+          "sentiment": "Positive",
+          "evidence": "generous portions"
+        },
+        {
+          "aspect": "prices",
+          "sentiment": "Positive",
+          "evidence": "reasonable prices"
+        }
+      ]
+    },
+    {
+      "review_id": 70,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "wait time",
+          "sentiment": "Negative",
+          "evidence": "wait time was over an hour"
+        },
+        {
+          "aspect": "table",
+          "sentiment": "Negative",
+          "evidence": "table was sticky"
+        }
+      ]
+    },
+    {
+      "review_id": 71,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "wine list",
+          "sentiment": "Positive",
+          "evidence": "Excellent wine list"
+        },
+        {
+          "aspect": "steak",
+          "sentiment": "Positive",
+          "evidence": "steak was cooked perfectly"
+        }
+      ]
+    },
+    {
+      "review_id": 72,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "dining room",
+          "sentiment": "Negative",
+          "evidence": "Noisy dining room"
+        },
+        {
+          "aspect": "music",
+          "sentiment": "Negative",
+          "evidence": "music was far too loud"
+        }
+      ]
+    },
+    {
+      "review_id": 73,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "bread",
+          "sentiment": "Positive",
+          "evidence": "bread was fresh"
+        },
+        {
+          "aspect": "olive oil",
+          "sentiment": "Positive",
+          "evidence": "olive oil was excellent quality"
+        }
+      ]
+    },
+    {
+      "review_id": 74,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "menu",
+          "sentiment": "Negative",
+          "evidence": "Overpriced menu"
+        },
+        {
+          "aspect": "parking",
+          "sentiment": "Negative",
+          "evidence": "parking situation is a nightmare"
+        }
+      ]
+    },
+    {
+      "review_id": 75,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "ingredients",
+          "sentiment": "Positive",
+          "evidence": "Fresh ingredients"
+        },
+        {
+          "aspect": "presentation",
+          "sentiment": "Positive",
+          "evidence": "beautiful presentation"
+        },
+        {
+          "aspect": "staff",
+          "sentiment": "Positive",
+          "evidence": "friendly staff"
+        }
+      ]
+    },
+    {
+      "review_id": 76,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "food",
+          "sentiment": "Positive",
+          "evidence": "food was outstanding"
+        },
+        {
+          "aspect": "service",
+          "sentiment": "Negative",
+          "evidence": "service was incredibly slow"
+        }
+      ]
+    },
+    {
+      "review_id": 77,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "decor",
+          "sentiment": "Positive",
+          "evidence": "Beautiful decor"
+        },
+        {
+          "aspect": "food",
+          "sentiment": "Negative",
+          "evidence": "food was bland"
+        }
+      ]
+    },
+    {
+      "review_id": 78,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "staff",
+          "sentiment": "Positive",
+          "evidence": "Staff were lovely"
+        },
+        {
+          "aspect": "kitchen",
+          "sentiment": "Negative",
+          "evidence": "kitchen got our order wrong twice"
+        }
+      ]
+    },
+    {
+      "review_id": 79,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "value for money",
+          "sentiment": "Positive",
+          "evidence": "Great value for money"
+        },
+        {
+          "aspect": "seating",
+          "sentiment": "Negative",
+          "evidence": "seating is uncomfortable"
+        }
+      ]
+    },
+    {
+      "review_id": 80,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "curry",
+          "sentiment": "Positive",
+          "evidence": "curry was superb"
+        },
+        {
+          "aspect": "naan",
+          "sentiment": "Negative",
+          "evidence": "naan arrived cold"
+        }
+      ]
+    },
+    {
+      "review_id": 81,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "service",
+          "sentiment": "Positive",
+          "evidence": "Quick service"
+        },
+        {
+          "aspect": "coffee",
+          "sentiment": "Negative",
+          "evidence": "coffee tasted burnt"
+        }
+      ]
+    },
+    {
+      "review_id": 82,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "ambiance",
+          "sentiment": "Positive",
+          "evidence": "ambiance is genuinely special"
+        },
+        {
+          "aspect": "server",
+          "sentiment": "Positive",
+          "evidence": "server was attentive"
+        },
+        {
+          "aspect": "starters",
+          "sentiment": "Positive",
+          "evidence": "starters were the highlight"
+        },
+        {
+          "aspect": "lamb",
+          "sentiment": "Negative",
+          "evidence": "lamb was noticeably overcooked"
+        },
+        {
+          "aspect": "wine list",
+          "sentiment": "Negative",
+          "evidence": "markup is steep"
+        },
+        {
+          "aspect": "staff",
+          "sentiment": "Positive",
+          "evidence": "staff brought out a candle"
+        }
+      ]
+    },
+    {
+      "review_id": 83,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "menu",
+          "sentiment": "Negative",
+          "evidence": "menu has been cut in half"
+        },
+        {
+          "aspect": "prices",
+          "sentiment": "Negative",
+          "evidence": "prices have gone up"
+        },
+        {
+          "aspect": "food quality",
+          "sentiment": "Negative",
+          "evidence": "food quality is not what it was"
+        },
+        {
+          "aspect": "service",
+          "sentiment": "Negative",
+          "evidence": "Service was disorganised"
+        },
+        {
+          "aspect": "dining room",
+          "sentiment": "Positive",
+          "evidence": "dining room itself is still lovely"
+        },
+        {
+          "aspect": "location",
+          "sentiment": "Positive",
+          "evidence": "location is convenient"
+        }
+      ]
+    },
+    {
+      "review_id": 84,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "bread",
+          "sentiment": "Positive",
+          "evidence": "bread arrived warm"
+        },
+        {
+          "aspect": "tasting menu",
+          "sentiment": "Positive",
+          "evidence": "tasting menu was well paced"
+        },
+        {
+          "aspect": "portions",
+          "sentiment": "Positive",
+          "evidence": "Portions were judged well"
+        },
+        {
+          "aspect": "staff",
+          "sentiment": "Positive",
+          "evidence": "staff were knowledgeable"
+        },
+        {
+          "aspect": "prices",
+          "sentiment": "Negative",
+          "evidence": "Prices are high"
+        },
+        {
+          "aspect": "ingredients",
+          "sentiment": "Positive",
+          "evidence": "quality of the ingredients"
+        }
+      ]
+    },
+    {
+      "review_id": 85,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "food",
+          "sentiment": "Positive",
+          "evidence": "food was competent"
+        },
+        {
+          "aspect": "soup",
+          "sentiment": "Positive",
+          "evidence": "soup was properly seasoned"
+        },
+        {
+          "aspect": "service",
+          "sentiment": "Positive",
+          "evidence": "Service was efficient"
+        },
+        {
+          "aspect": "interior",
+          "sentiment": "Negative",
+          "evidence": "interior is a bit tired"
+        },
+        {
+          "aspect": "lighting",
+          "sentiment": "Negative",
+          "evidence": "lighting is harsh"
+        },
+        {
+          "aspect": "prices",
+          "sentiment": "Negative",
+          "evidence": "Prices are on the higher side"
+        }
+      ]
+    },
+    {
+      "review_id": 86,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "manager",
+          "sentiment": "Positive",
+          "evidence": "manager was apologetic"
+        },
+        {
+          "aspect": "food",
+          "sentiment": "Positive",
+          "evidence": "food was very good"
+        },
+        {
+          "aspect": "platters",
+          "sentiment": "Positive",
+          "evidence": "platters especially were generous"
+        },
+        {
+          "aspect": "service",
+          "sentiment": "Positive",
+          "evidence": "Service after that point was attentive"
+        },
+        {
+          "aspect": "noise level",
+          "sentiment": "Negative",
+          "evidence": "noise level made conversation across the table impossible"
+        }
+      ]
+    },
+    {
+      "review_id": 87,
+      "language": "hi",
+      "aspects": [
+        {
+          "aspect": "food",
+          "sentiment": "Positive",
+          "evidence": "खाना बहुत स्वादिष्ट था"
+        },
+        {
+          "aspect": "service",
+          "sentiment": "Positive",
+          "evidence": "सेवा भी अच्छी थी"
+        }
+      ]
+    },
+    {
+      "review_id": 88,
+      "language": "hi",
+      "aspects": [
+        {
+          "aspect": "price",
+          "sentiment": "Negative",
+          "evidence": "कीमत बहुत ज़्यादा थी"
+        },
+        {
+          "aspect": "atmosphere",
+          "sentiment": "Negative",
+          "evidence": "माहौल शोरगुल वाला था"
+        }
+      ]
+    },
+    {
+      "review_id": 89,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "Khana",
+          "sentiment": "Positive",
+          "evidence": "Khana bahut tasty tha"
+        },
+        {
+          "aspect": "service",
+          "sentiment": "Negative",
+          "evidence": "service slow thi"
+        }
+      ]
+    },
+    {
+      "review_id": 90,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "Ambiance",
+          "sentiment": "Positive",
+          "evidence": "Ambiance ekdum mast tha"
+        },
+        {
+          "aspect": "staff",
+          "sentiment": "Positive",
+          "evidence": "staff bhi friendly the"
+        }
+      ]
+    },
+    {
+      "review_id": 91,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "room",
+          "sentiment": "Positive",
+          "evidence": "room was spotlessly clean"
+        }
+      ]
+    },
+    {
+      "review_id": 92,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "wifi",
+          "sentiment": "Negative",
+          "evidence": "wifi was unusable"
+        }
+      ]
+    },
+    {
+      "review_id": 93,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "breakfast",
+          "sentiment": "Positive",
+          "evidence": "Breakfast was excellent"
+        }
+      ]
+    },
+    {
+      "review_id": 94,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "bathroom",
+          "sentiment": "Negative",
+          "evidence": "bathroom was outdated"
+        }
+      ]
+    },
+    {
+      "review_id": 95,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "location",
+          "sentiment": "Positive",
+          "evidence": "location is perfect"
+        }
+      ]
+    },
+    {
+      "review_id": 96,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "beds",
+          "sentiment": "Negative",
+          "evidence": "beds were extremely uncomfortable"
+        }
+      ]
+    },
+    {
+      "review_id": 97,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "room",
+          "sentiment": "Positive",
+          "evidence": "Lovely room"
+        },
+        {
+          "aspect": "staff",
+          "sentiment": "Positive",
+          "evidence": "staff were incredibly helpful"
+        }
+      ]
+    },
+    {
+      "review_id": 98,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "air conditioning",
+          "sentiment": "Negative",
+          "evidence": "air conditioning was broken"
+        },
+        {
+          "aspect": "reception",
+          "sentiment": "Negative",
+          "evidence": "reception was unresponsive"
+        }
+      ]
+    },
+    {
+      "review_id": 99,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "beds",
+          "sentiment": "Positive",
+          "evidence": "Comfortable beds"
+        },
+        {
+          "aspect": "rooms",
+          "sentiment": "Positive",
+          "evidence": "quiet rooms"
+        },
+        {
+          "aspect": "breakfast",
+          "sentiment": "Positive",
+          "evidence": "excellent breakfast spread"
+        }
+      ]
+    },
+    {
+      "review_id": 100,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "pool",
+          "sentiment": "Negative",
+          "evidence": "pool was closed"
+        },
+        {
+          "aspect": "gym equipment",
+          "sentiment": "Negative",
+          "evidence": "gym equipment was broken"
+        }
+      ]
+    },
+    {
+      "review_id": 101,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "check in",
+          "sentiment": "Positive",
+          "evidence": "Check in was fast"
+        },
+        {
+          "aspect": "view",
+          "sentiment": "Positive",
+          "evidence": "stunning view"
+        }
+      ]
+    },
+    {
+      "review_id": 102,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "walls",
+          "sentiment": "Negative",
+          "evidence": "Thin walls"
+        },
+        {
+          "aspect": "corridors",
+          "sentiment": "Negative",
+          "evidence": "noisy corridors"
+        },
+        {
+          "aspect": "heating",
+          "sentiment": "Negative",
+          "evidence": "heating never worked"
+        }
+      ]
+    },
+    {
+      "review_id": 103,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "spa",
+          "sentiment": "Positive",
+          "evidence": "spa was wonderful"
+        },
+        {
+          "aspect": "restaurant",
+          "sentiment": "Positive",
+          "evidence": "restaurant served great food"
+        }
+      ]
+    },
+    {
+      "review_id": 104,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "parking",
+          "sentiment": "Negative",
+          "evidence": "Parking is expensive"
+        },
+        {
+          "aspect": "lift",
+          "sentiment": "Negative",
+          "evidence": "lift was out of service"
+        }
+      ]
+    },
+    {
+      "review_id": 105,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "room",
+          "sentiment": "Positive",
+          "evidence": "Spacious room"
+        },
+        {
+          "aspect": "bathroom",
+          "sentiment": "Positive",
+          "evidence": "modern bathroom"
+        },
+        {
+          "aspect": "reception staff",
+          "sentiment": "Positive",
+          "evidence": "friendly reception staff"
+        }
+      ]
+    },
+    {
+      "review_id": 106,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "location",
+          "sentiment": "Positive",
+          "evidence": "location is excellent"
+        },
+        {
+          "aspect": "rooms",
+          "sentiment": "Negative",
+          "evidence": "rooms are very dated"
+        }
+      ]
+    },
+    {
+      "review_id": 107,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "staff",
+          "sentiment": "Positive",
+          "evidence": "Staff were wonderful"
+        },
+        {
+          "aspect": "breakfast",
+          "sentiment": "Negative",
+          "evidence": "breakfast was disappointing"
+        }
+      ]
+    },
+    {
+      "review_id": 108,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "lobby",
+          "sentiment": "Positive",
+          "evidence": "Beautiful lobby"
+        },
+        {
+          "aspect": "room",
+          "sentiment": "Negative",
+          "evidence": "room smelled of damp"
+        }
+      ]
+    },
+    {
+      "review_id": 109,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "value",
+          "sentiment": "Positive",
+          "evidence": "Great value for the price"
+        },
+        {
+          "aspect": "wifi",
+          "sentiment": "Negative",
+          "evidence": "wifi kept dropping"
+        }
+      ]
+    },
+    {
+      "review_id": 110,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "bed",
+          "sentiment": "Positive",
+          "evidence": "bed was extremely comfortable"
+        },
+        {
+          "aspect": "shower",
+          "sentiment": "Negative",
+          "evidence": "shower had no pressure"
+        }
+      ]
+    },
+    {
+      "review_id": 111,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "garden",
+          "sentiment": "Positive",
+          "evidence": "garden was quiet and peaceful"
+        },
+        {
+          "aspect": "check out process",
+          "sentiment": "Negative",
+          "evidence": "check out process was chaotic"
+        }
+      ]
+    },
+    {
+      "review_id": 112,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "location",
+          "sentiment": "Positive",
+          "evidence": "location is the standout feature"
+        },
+        {
+          "aspect": "check in",
+          "sentiment": "Positive",
+          "evidence": "Check in was efficient"
+        },
+        {
+          "aspect": "room",
+          "sentiment": "Positive",
+          "evidence": "room was compact but very well designed"
+        },
+        {
+          "aspect": "bed",
+          "sentiment": "Positive",
+          "evidence": "genuinely comfortable bed"
+        },
+        {
+          "aspect": "bathroom",
+          "sentiment": "Positive",
+          "evidence": "bathroom was modern"
+        },
+        {
+          "aspect": "breakfast",
+          "sentiment": "Negative",
+          "evidence": "Breakfast was the weak point"
+        },
+        {
+          "aspect": "wifi",
+          "sentiment": "Positive",
+          "evidence": "Wifi was fast and stable"
+        }
+      ]
+    },
+    {
+      "review_id": 113,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "room",
+          "sentiment": "Negative",
+          "evidence": "Our room was tired"
+        },
+        {
+          "aspect": "carpet",
+          "sentiment": "Negative",
+          "evidence": "carpet was stained"
+        },
+        {
+          "aspect": "reception",
+          "sentiment": "Positive",
+          "evidence": "handled politely"
+        },
+        {
+          "aspect": "heating",
+          "sentiment": "Negative",
+          "evidence": "heating was uncontrollable"
+        },
+        {
+          "aspect": "Breakfast",
+          "sentiment": "Positive",
+          "evidence": "Breakfast was actually decent"
+        },
+        {
+          "aspect": "location",
+          "sentiment": "Positive",
+          "evidence": "location is convenient"
+        }
+      ]
+    },
+    {
+      "review_id": 114,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "staff",
+          "sentiment": "Positive",
+          "evidence": "staff clearly care about it"
+        },
+        {
+          "aspect": "room",
+          "sentiment": "Positive",
+          "evidence": "room overlooked the garden and was quiet"
+        },
+        {
+          "aspect": "bed",
+          "sentiment": "Positive",
+          "evidence": "bed and pillows were excellent"
+        },
+        {
+          "aspect": "breakfast",
+          "sentiment": "Positive",
+          "evidence": "Breakfast is cooked to order"
+        },
+        {
+          "aspect": "spa",
+          "sentiment": "Positive",
+          "evidence": "spa was small but immaculate"
+        },
+        {
+          "aspect": "parking",
+          "sentiment": "Negative",
+          "evidence": "Parking is limited"
+        },
+        {
+          "aspect": "prices",
+          "sentiment": "Positive",
+          "evidence": "Prices are fair"
+        }
+      ]
+    },
+    {
+      "review_id": 115,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "pool area",
+          "sentiment": "Positive",
+          "evidence": "pool area is fantastic"
+        },
+        {
+          "aspect": "family room",
+          "sentiment": "Positive",
+          "evidence": "family room was spacious"
+        },
+        {
+          "aspect": "restaurant",
+          "sentiment": "Negative",
+          "evidence": "restaurant was consistently poor"
+        },
+        {
+          "aspect": "housekeeping",
+          "sentiment": "Negative",
+          "evidence": "Housekeeping was inconsistent"
+        },
+        {
+          "aspect": "reception staff",
+          "sentiment": "Positive",
+          "evidence": "reception staff were always friendly"
+        }
+      ]
+    },
+    {
+      "review_id": 116,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "receptionist",
+          "sentiment": "Positive",
+          "evidence": "receptionist was apologetic"
+        },
+        {
+          "aspect": "room",
+          "sentiment": "Positive",
+          "evidence": "room itself was clean"
+        },
+        {
+          "aspect": "bed",
+          "sentiment": "Positive",
+          "evidence": "bed comfortable"
+        },
+        {
+          "aspect": "noise",
+          "sentiment": "Negative",
+          "evidence": "Noise from the street was significant"
+        },
+        {
+          "aspect": "breakfast",
+          "sentiment": "Neutral",
+          "evidence": "Breakfast was fine"
+        }
+      ]
+    },
+    {
+      "review_id": 117,
+      "language": "hi",
+      "aspects": [
+        {
+          "aspect": "room",
+          "sentiment": "Positive",
+          "evidence": "कमरा बहुत साफ था"
+        },
+        {
+          "aspect": "staff",
+          "sentiment": "Positive",
+          "evidence": "स्टाफ मददगार था"
+        }
+      ]
+    },
+    {
+      "review_id": 118,
+      "language": "hi",
+      "aspects": [
+        {
+          "aspect": "bathroom",
+          "sentiment": "Negative",
+          "evidence": "बाथरूम गंदा था"
+        },
+        {
+          "aspect": "breakfast",
+          "sentiment": "Negative",
+          "evidence": "नाश्ता बहुत खराब था"
+        }
+      ]
+    },
+    {
+      "review_id": 119,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "Room",
+          "sentiment": "Positive",
+          "evidence": "Room ekdum clean tha"
+        },
+        {
+          "aspect": "wifi",
+          "sentiment": "Negative",
+          "evidence": "wifi bilkul kaam nahi kar raha tha"
+        }
+      ]
+    },
+    {
+      "review_id": 120,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "Location",
+          "sentiment": "Positive",
+          "evidence": "Location bahut acchi hai"
+        },
+        {
+          "aspect": "breakfast",
+          "sentiment": "Positive",
+          "evidence": "breakfast bhi tasty tha"
+        }
+      ]
+    },
+    {
+      "review_id": 121,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "battery life",
+          "sentiment": "Positive",
+          "evidence": "battery life is outstanding"
+        }
+      ]
+    },
+    {
+      "review_id": 122,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "screen",
+          "sentiment": "Negative",
+          "evidence": "screen scratches far too easily"
+        }
+      ]
+    },
+    {
+      "review_id": 123,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "sound quality",
+          "sentiment": "Positive",
+          "evidence": "Sound quality is rich"
+        }
+      ]
+    },
+    {
+      "review_id": 124,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "charging cable",
+          "sentiment": "Negative",
+          "evidence": "charging cable stopped working"
+        }
+      ]
+    },
+    {
+      "review_id": 125,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "build quality",
+          "sentiment": "Positive",
+          "evidence": "build quality feels premium"
+        }
+      ]
+    },
+    {
+      "review_id": 126,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "camera",
+          "sentiment": "Negative",
+          "evidence": "camera struggles badly in low light"
+        }
+      ]
+    },
+    {
+      "review_id": 127,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "display",
+          "sentiment": "Positive",
+          "evidence": "Excellent display"
+        },
+        {
+          "aspect": "battery",
+          "sentiment": "Positive",
+          "evidence": "battery lasts all day"
+        }
+      ]
+    },
+    {
+      "review_id": 128,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "speakers",
+          "sentiment": "Negative",
+          "evidence": "speakers are tinny"
+        },
+        {
+          "aspect": "microphone",
+          "sentiment": "Negative",
+          "evidence": "microphone picks up too much noise"
+        }
+      ]
+    },
+    {
+      "review_id": 129,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "processor",
+          "sentiment": "Positive",
+          "evidence": "Fast processor"
+        },
+        {
+          "aspect": "screen",
+          "sentiment": "Positive",
+          "evidence": "sharp screen"
+        },
+        {
+          "aspect": "fingerprint sensor",
+          "sentiment": "Positive",
+          "evidence": "fingerprint sensor is reliable"
+        }
+      ]
+    },
+    {
+      "review_id": 130,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "device",
+          "sentiment": "Negative",
+          "evidence": "device overheats during use"
+        },
+        {
+          "aspect": "fan",
+          "sentiment": "Negative",
+          "evidence": "fan is very loud"
+        }
+      ]
+    },
+    {
+      "review_id": 131,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "keyboard",
+          "sentiment": "Positive",
+          "evidence": "Great keyboard feel"
+        },
+        {
+          "aspect": "trackpad",
+          "sentiment": "Positive",
+          "evidence": "trackpad is very precise"
+        }
+      ]
+    },
+    {
+      "review_id": 132,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "software",
+          "sentiment": "Negative",
+          "evidence": "software is bloated"
+        },
+        {
+          "aspect": "storage",
+          "sentiment": "Negative",
+          "evidence": "storage fills up within months"
+        }
+      ]
+    },
+    {
+      "review_id": 133,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "design",
+          "sentiment": "Positive",
+          "evidence": "Lightweight design"
+        },
+        {
+          "aspect": "battery",
+          "sentiment": "Positive",
+          "evidence": "long battery"
+        },
+        {
+          "aspect": "charging",
+          "sentiment": "Positive",
+          "evidence": "charges very quickly"
+        }
+      ]
+    },
+    {
+      "review_id": 134,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "port selection",
+          "sentiment": "Negative",
+          "evidence": "port selection is limited"
+        },
+        {
+          "aspect": "adapter",
+          "sentiment": "Negative",
+          "evidence": "adapter feels cheap"
+        }
+      ]
+    },
+    {
+      "review_id": 135,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "display",
+          "sentiment": "Positive",
+          "evidence": "Crisp display"
+        },
+        {
+          "aspect": "speakers",
+          "sentiment": "Positive",
+          "evidence": "excellent speakers"
+        },
+        {
+          "aspect": "touchscreen",
+          "sentiment": "Positive",
+          "evidence": "responsive touchscreen"
+        }
+      ]
+    },
+    {
+      "review_id": 136,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "camera",
+          "sentiment": "Positive",
+          "evidence": "camera is superb"
+        },
+        {
+          "aspect": "battery",
+          "sentiment": "Negative",
+          "evidence": "battery drains within four hours"
+        }
+      ]
+    },
+    {
+      "review_id": 137,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "screen",
+          "sentiment": "Positive",
+          "evidence": "Beautiful screen"
+        },
+        {
+          "aspect": "hinge",
+          "sentiment": "Negative",
+          "evidence": "flimsy hinge"
+        }
+      ]
+    },
+    {
+      "review_id": 138,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "performance",
+          "sentiment": "Positive",
+          "evidence": "Performance is excellent"
+        },
+        {
+          "aspect": "fan noise",
+          "sentiment": "Negative",
+          "evidence": "fan noise is distracting"
+        }
+      ]
+    },
+    {
+      "review_id": 139,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "price",
+          "sentiment": "Positive",
+          "evidence": "price is very competitive"
+        },
+        {
+          "aspect": "build",
+          "sentiment": "Negative",
+          "evidence": "build feels cheap"
+        }
+      ]
+    },
+    {
+      "review_id": 140,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "sound quality",
+          "sentiment": "Positive",
+          "evidence": "Sound quality is great"
+        },
+        {
+          "aspect": "bluetooth connection",
+          "sentiment": "Negative",
+          "evidence": "bluetooth connection keeps dropping"
+        }
+      ]
+    },
+    {
+      "review_id": 141,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "setup",
+          "sentiment": "Positive",
+          "evidence": "Setup was straightforward"
+        },
+        {
+          "aspect": "manual",
+          "sentiment": "Negative",
+          "evidence": "manual was useless"
+        }
+      ]
+    },
+    {
+      "review_id": 142,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "build quality",
+          "sentiment": "Positive",
+          "evidence": "build quality is genuinely excellent"
+        },
+        {
+          "aspect": "keyboard",
+          "sentiment": "Positive",
+          "evidence": "keyboard is the best I have used"
+        },
+        {
+          "aspect": "performance",
+          "sentiment": "Positive",
+          "evidence": "Performance handles everything"
+        },
+        {
+          "aspect": "battery life",
+          "sentiment": "Negative",
+          "evidence": "Battery life is the weak point"
+        },
+        {
+          "aspect": "fan",
+          "sentiment": "Negative",
+          "evidence": "fan becomes quite loud"
+        },
+        {
+          "aspect": "display",
+          "sentiment": "Positive",
+          "evidence": "display is sharp and colour accurate"
+        }
+      ]
+    },
+    {
+      "review_id": 143,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "screen",
+          "sentiment": "Positive",
+          "evidence": "screen is genuinely beautiful"
+        },
+        {
+          "aspect": "speakers",
+          "sentiment": "Positive",
+          "evidence": "speakers are far better than I expected"
+        },
+        {
+          "aspect": "software",
+          "sentiment": "Negative",
+          "evidence": "software experience ruined it"
+        },
+        {
+          "aspect": "interface",
+          "sentiment": "Negative",
+          "evidence": "interface lagged when switching between apps"
+        },
+        {
+          "aspect": "storage",
+          "sentiment": "Negative",
+          "evidence": "Storage was already forty percent used"
+        },
+        {
+          "aspect": "camera",
+          "sentiment": "Negative",
+          "evidence": "camera was mediocre"
+        }
+      ]
+    },
+    {
+      "review_id": 144,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "setup",
+          "sentiment": "Positive",
+          "evidence": "Setup took under ten minutes"
+        },
+        {
+          "aspect": "display",
+          "sentiment": "Positive",
+          "evidence": "display is a huge improvement"
+        },
+        {
+          "aspect": "battery",
+          "sentiment": "Positive",
+          "evidence": "Battery comfortably lasts a full day"
+        },
+        {
+          "aspect": "cameras",
+          "sentiment": "Positive",
+          "evidence": "cameras are excellent"
+        },
+        {
+          "aspect": "build quality",
+          "sentiment": "Positive",
+          "evidence": "Build quality feels solid"
+        },
+        {
+          "aspect": "price",
+          "sentiment": "Negative",
+          "evidence": "price, which is high"
+        }
+      ]
+    },
+    {
+      "review_id": 145,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "sound quality",
+          "sentiment": "Positive",
+          "evidence": "sound quality is genuinely very good"
+        },
+        {
+          "aspect": "noise cancellation",
+          "sentiment": "Positive",
+          "evidence": "Noise cancellation is effective"
+        },
+        {
+          "aspect": "comfort",
+          "sentiment": "Negative",
+          "evidence": "comfort is poor for me"
+        },
+        {
+          "aspect": "app",
+          "sentiment": "Negative",
+          "evidence": "companion app is buggy"
+        },
+        {
+          "aspect": "battery life",
+          "sentiment": "Positive",
+          "evidence": "Battery life is strong"
+        },
+        {
+          "aspect": "carrying case",
+          "sentiment": "Positive",
+          "evidence": "carrying case is well made"
+        }
+      ]
+    },
+    {
+      "review_id": 146,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "colour accuracy",
+          "sentiment": "Positive",
+          "evidence": "Colour accuracy out of the box was better than expected"
+        },
+        {
+          "aspect": "panel",
+          "sentiment": "Positive",
+          "evidence": "panel is uniform"
+        },
+        {
+          "aspect": "stand",
+          "sentiment": "Positive",
+          "evidence": "stand is sturdy"
+        },
+        {
+          "aspect": "menu system",
+          "sentiment": "Negative",
+          "evidence": "menu system is genuinely awful"
+        },
+        {
+          "aspect": "speakers",
+          "sentiment": "Negative",
+          "evidence": "built in speakers are poor"
+        }
+      ]
+    },
+    {
+      "review_id": 147,
+      "language": "hi",
+      "aspects": [
+        {
+          "aspect": "battery",
+          "sentiment": "Positive",
+          "evidence": "बैटरी बहुत अच्छी है"
+        },
+        {
+          "aspect": "camera",
+          "sentiment": "Positive",
+          "evidence": "कैमरा भी शानदार है"
+        }
+      ]
+    },
+    {
+      "review_id": 148,
+      "language": "hi",
+      "aspects": [
+        {
+          "aspect": "screen",
+          "sentiment": "Negative",
+          "evidence": "स्क्रीन खराब है"
+        },
+        {
+          "aspect": "price",
+          "sentiment": "Negative",
+          "evidence": "कीमत बहुत ज़्यादा है"
+        }
+      ]
+    },
+    {
+      "review_id": 149,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "Camera quality",
+          "sentiment": "Positive",
+          "evidence": "Camera quality bahut acchi hai"
+        },
+        {
+          "aspect": "battery",
+          "sentiment": "Negative",
+          "evidence": "battery jaldi khatam hoti hai"
+        }
+      ]
+    },
+    {
+      "review_id": 150,
+      "language": "en",
+      "aspects": [
+        {
+          "aspect": "Sound",
+          "sentiment": "Positive",
+          "evidence": "Sound bahut clear hai"
+        },
+        {
+          "aspect": "build quality",
+          "sentiment": "Positive",
+          "evidence": "build quality bhi solid hai"
+        }
+      ]
+    }
+  ]
+}

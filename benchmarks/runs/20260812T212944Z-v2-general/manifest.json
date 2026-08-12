@@ -1,0 +1,26 @@
+{
+  "run_id": "20260812T212944Z-v2-general",
+  "created_utc": "2026-08-12T21:31:44.096716+00:00",
+  "git_sha": "46346fb",
+  "eval_set": "benchmarks\\eval_set\\eval_reviews_v2_general.csv",
+  "eval_set_sha256": "25bbe44d54e7d306",
+  "n_reviews_in": 150,
+  "n_reviews_processed": 150,
+  "rows_dropped_by_clean_data": 0,
+  "pyabsa_model_loaded": true,
+  "pyabsa_import_error": null,
+  "spacy_en_core_web_sm_available": true,
+  "hf_token_present": true,
+  "init_seconds": 33.5,
+  "process_seconds": 85.1,
+  "versions": {
+    "python": "3.11.9",
+    "torch": "2.1.2+cpu",
+    "transformers": "4.36.2",
+    "pyabsa": "2.4.2",
+    "pandas": "2.0.3",
+    "numpy": "1.25.2",
+    "langdetect": "unknown",
+    "networkx": "3.6.1"
+  }
+}

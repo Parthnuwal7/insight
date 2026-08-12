@@ -1,0 +1,265 @@
+review_id,aspect,sentiment,confidence,route,probe_category,review
+1,delivery,Positive,0.9982,pyabsa,single_aspect_control,"The delivery was incredibly fast, arrived in two days."
+2,Packaging,Negative,0.9964,pyabsa,single_aspect_control,"Packaging was terrible, the box was completely crushed."
+2,box,Negative,0.9966,pyabsa,single_aspect_control,"Packaging was terrible, the box was completely crushed."
+3,price,Positive,0.9978,pyabsa,single_aspect_control,The price is very reasonable for what you get.
+4,Customer service,Negative,0.9971,pyabsa,single_aspect_control,Customer service never responded to my emails.
+5,refund,Positive,0.8885,pyabsa,single_aspect_control,The refund was processed without any hassle.
+6,quality,Negative,0.9952,pyabsa,single_aspect_control,Product quality is disappointing for this price point.
+7,shipping,Positive,0.9988,pyabsa,multi_aspect,Great product and the shipping was quick too. Very satisfied.
+8,seller,Negative,0.9744,pyabsa,multi_aspect,The item arrived damaged and the seller refused a replacement.
+9,packaging,Positive,0.9988,pyabsa,multi_aspect,"Excellent packaging, fast delivery, and the product works perfectly."
+9,delivery,Positive,0.9987,pyabsa,multi_aspect,"Excellent packaging, fast delivery, and the product works perfectly."
+9,works,Positive,0.9987,pyabsa,multi_aspect,"Excellent packaging, fast delivery, and the product works perfectly."
+10,build quality,Negative,0.9961,pyabsa,multi_aspect,Poor build quality and the price is far too high.
+10,price,Negative,0.9968,pyabsa,multi_aspect,Poor build quality and the price is far too high.
+11,website,Positive,0.9977,pyabsa,multi_aspect,The website was easy to navigate and checkout was smooth.
+11,navigate,Positive,0.998,pyabsa,multi_aspect,The website was easy to navigate and checkout was smooth.
+11,checkout,Positive,0.9979,pyabsa,multi_aspect,The website was easy to navigate and checkout was smooth.
+12,Delivery,Negative,0.8455,pyabsa,multi_aspect,Delivery took three weeks and the packaging was falling apart.
+12,packaging,Negative,0.9959,pyabsa,multi_aspect,Delivery took three weeks and the packaging was falling apart.
+13,value,Positive,0.9969,pyabsa,multi_aspect,Good value for money and the return policy is generous.
+13,return policy,Positive,0.998,pyabsa,multi_aspect,Good value for money and the return policy is generous.
+14,size,Negative,0.9948,pyabsa,multi_aspect,The size chart was inaccurate and customer support was unhelpful.
+14,customer support,Negative,0.9968,pyabsa,multi_aspect,The size chart was inaccurate and customer support was unhelpful.
+15,shipping,Positive,0.9975,pyabsa,multi_aspect,"Fast shipping, secure packaging, and a fair price overall."
+15,packaging,Positive,0.997,pyabsa,multi_aspect,"Fast shipping, secure packaging, and a fair price overall."
+15,price,Positive,0.843,pyabsa,multi_aspect,"Fast shipping, secure packaging, and a fair price overall."
+16,delivery,Negative,0.9955,pyabsa,mixed_sentiment,The product is excellent but the delivery was painfully slow.
+17,Packaging,Positive,0.9948,pyabsa,mixed_sentiment,"Packaging was great, though the quality did not match the photos."
+17,quality,Negative,0.9798,pyabsa,mixed_sentiment,"Packaging was great, though the quality did not match the photos."
+18,price,Positive,0.9747,pyabsa,mixed_sentiment,"Cheap price, but you get what you pay for. The material feels flimsy."
+18,material,Negative,0.9885,pyabsa,mixed_sentiment,"Cheap price, but you get what you pay for. The material feels flimsy."
+19,Customer service,Positive,0.9962,pyabsa,mixed_sentiment,"Customer service was very responsive, but the refund took a month."
+19,refund,Negative,0.9711,pyabsa,mixed_sentiment,"Customer service was very responsive, but the refund took a month."
+20,design,Positive,0.9878,pyabsa,mixed_sentiment,"Love the design, hate the price."
+20,price,Negative,0.9917,pyabsa,mixed_sentiment,"Love the design, hate the price."
+21,Shipping,Positive,0.9883,pyabsa,mixed_sentiment,Shipping was fast but the item was the wrong colour.
+21,colour,Negative,0.9956,pyabsa,mixed_sentiment,Shipping was fast but the item was the wrong colour.
+24,size guide,Positive,0.985,pyabsa,long_form,"Genuinely one of the better online purchases I have made this year. The website made it easy to compare options and the size guide was accurate, which is rare. Checkout was quick and I got a confirmation email immediately. Delivery arrived within the promised window and the driver was polite. The product itself exceeded expectations, the material is thick and well finished. The price was higher than competitors but I think the quality justifies it."
+24,Delivery,Positive,0.9942,pyabsa,long_form,"Genuinely one of the better online purchases I have made this year. The website made it easy to compare options and the size guide was accurate, which is rare. Checkout was quick and I got a confirmation email immediately. Delivery arrived within the promised window and the driver was polite. The product itself exceeded expectations, the material is thick and well finished. The price was higher than competitors but I think the quality justifies it."
+24,driver,Positive,0.9924,pyabsa,long_form,"Genuinely one of the better online purchases I have made this year. The website made it easy to compare options and the size guide was accurate, which is rare. Checkout was quick and I got a confirmation email immediately. Delivery arrived within the promised window and the driver was polite. The product itself exceeded expectations, the material is thick and well finished. The price was higher than competitors but I think the quality justifies it."
+24,material,Positive,0.8855,pyabsa,long_form,"Genuinely one of the better online purchases I have made this year. The website made it easy to compare options and the size guide was accurate, which is rare. Checkout was quick and I got a confirmation email immediately. Delivery arrived within the promised window and the driver was polite. The product itself exceeded expectations, the material is thick and well finished. The price was higher than competitors but I think the quality justifies it."
+24,price,Positive,0.8209,pyabsa,long_form,"Genuinely one of the better online purchases I have made this year. The website made it easy to compare options and the size guide was accurate, which is rare. Checkout was quick and I got a confirmation email immediately. Delivery arrived within the promised window and the driver was polite. The product itself exceeded expectations, the material is thick and well finished. The price was higher than competitors but I think the quality justifies it."
+25,packaging,Positive,0.9339,pyabsa,long_form,"I want to be fair here because there are good and bad parts. The product arrived on time and the packaging was recyclable which I liked. But the instructions were almost unreadable, poorly translated and missing two steps. Assembly took me three hours instead of the advertised thirty minutes. Once assembled the item is sturdy and looks good in the room. The price is fair for the size. I would buy again but I would watch a video first."
+25,instructions,Negative,0.9087,pyabsa,long_form,"I want to be fair here because there are good and bad parts. The product arrived on time and the packaging was recyclable which I liked. But the instructions were almost unreadable, poorly translated and missing two steps. Assembly took me three hours instead of the advertised thirty minutes. Once assembled the item is sturdy and looks good in the room. The price is fair for the size. I would buy again but I would watch a video first."
+25,Assembly,Negative,0.7335,pyabsa,long_form,"I want to be fair here because there are good and bad parts. The product arrived on time and the packaging was recyclable which I liked. But the instructions were almost unreadable, poorly translated and missing two steps. Assembly took me three hours instead of the advertised thirty minutes. Once assembled the item is sturdy and looks good in the room. The price is fair for the size. I would buy again but I would watch a video first."
+25,price,Positive,0.7752,pyabsa,long_form,"I want to be fair here because there are good and bad parts. The product arrived on time and the packaging was recyclable which I liked. But the instructions were almost unreadable, poorly translated and missing two steps. Assembly took me three hours instead of the advertised thirty minutes. Once assembled the item is sturdy and looks good in the room. The price is fair for the size. I would buy again but I would watch a video first."
+25,size,Positive,0.761,pyabsa,long_form,"I want to be fair here because there are good and bad parts. The product arrived on time and the packaging was recyclable which I liked. But the instructions were almost unreadable, poorly translated and missing two steps. Assembly took me three hours instead of the advertised thirty minutes. Once assembled the item is sturdy and looks good in the room. The price is fair for the size. I would buy again but I would watch a video first."
+27,delivery,Positive,0.9963,pyabsa,hindi,डिलीवरी बहुत तेज़ थी और पैकेजिंग भी अच्छी थी।
+27,package,Positive,0.9978,pyabsa,hindi,डिलीवरी बहुत तेज़ थी और पैकेजिंग भी अच्छी थी।
+28,price,Negative,0.9943,pyabsa,hindi,कीमत बहुत ज़्यादा है और गुणवत्ता खराब है।
+28,quality,Negative,0.9955,pyabsa,hindi,कीमत बहुत ज़्यादा है और गुणवत्ता खराब है।
+29,Delivery,Positive,0.9941,pyabsa,hinglish,Delivery bahut fast thi but quality thodi average hai.
+29,quality,Neutral,0.9049,pyabsa,hinglish,Delivery bahut fast thi but quality thodi average hai.
+30,Packaging,Positive,0.9928,pyabsa,hinglish,Packaging ekdum solid tha aur price bhi reasonable hai.
+30,price,Positive,0.9458,pyabsa,hinglish,Packaging ekdum solid tha aur price bhi reasonable hai.
+31,interface,Positive,0.9961,pyabsa,single_aspect_control,The interface is clean and intuitive.
+32,Battery,Negative,0.9953,pyabsa,single_aspect_control,Battery drain is severe when the app runs in the background.
+32,app,Negative,0.9953,pyabsa,single_aspect_control,Battery drain is severe when the app runs in the background.
+33,Sync,Positive,0.9973,pyabsa,single_aspect_control,Sync works flawlessly across all my devices.
+34,ads,Negative,0.9794,pyabsa,single_aspect_control,There are far too many ads in the free version.
+34,free,Neutral,0.5484,pyabsa,single_aspect_control,There are far too many ads in the free version.
+35,dark mode,Positive,0.9983,pyabsa,single_aspect_control,The dark mode looks fantastic.
+36,app,Negative,0.9963,pyabsa,single_aspect_control,The app crashes every time I open the settings.
+37,performance,Positive,0.9987,pyabsa,multi_aspect,Fast performance and a beautiful interface. Highly recommended.
+37,interface,Positive,0.9988,pyabsa,multi_aspect,Fast performance and a beautiful interface. Highly recommended.
+38,app,Negative,0.9912,pyabsa,multi_aspect,The app is slow to load and notifications never arrive on time.
+39,search function,Positive,0.9978,pyabsa,multi_aspect,"Great search function, smooth animations, and offline mode actually works."
+39,animations,Positive,0.9907,pyabsa,multi_aspect,"Great search function, smooth animations, and offline mode actually works."
+39,offline mode,Positive,0.9773,pyabsa,multi_aspect,"Great search function, smooth animations, and offline mode actually works."
+40,subscription,Negative,0.9943,pyabsa,multi_aspect,The subscription is overpriced and the free tier is unusable.
+40,free,Negative,0.9911,pyabsa,multi_aspect,The subscription is overpriced and the free tier is unusable.
+41,Login,Positive,0.9714,pyabsa,multi_aspect,Login was simple and the onboarding tutorial was genuinely helpful.
+41,tutorial,Positive,0.9922,pyabsa,multi_aspect,Login was simple and the onboarding tutorial was genuinely helpful.
+42,data sync,Negative,0.9974,pyabsa,multi_aspect,Constant crashes and the data sync lost two weeks of my notes.
+43,widget,Positive,0.9982,pyabsa,multi_aspect,The widget is useful and the customisation options are extensive.
+43,customisation,Positive,0.9982,pyabsa,multi_aspect,The widget is useful and the customisation options are extensive.
+44,privacy policy,Negative,0.987,pyabsa,multi_aspect,Permissions requested are excessive and the privacy policy is vague.
+45,performance,Positive,0.9818,pyabsa,multi_aspect,"Smooth performance, no ads, and the export feature saves me hours."
+45,ads,Positive,0.9646,pyabsa,multi_aspect,"Smooth performance, no ads, and the export feature saves me hours."
+45,export feature,Positive,0.9821,pyabsa,multi_aspect,"Smooth performance, no ads, and the export feature saves me hours."
+46,interface,Positive,0.9927,pyabsa,mixed_sentiment,The interface is gorgeous but the app drains my battery in hours.
+46,app,Negative,0.9951,pyabsa,mixed_sentiment,The interface is gorgeous but the app drains my battery in hours.
+47,features,Positive,0.9916,pyabsa,mixed_sentiment,"Powerful features, shame about the confusing navigation."
+47,navigation,Negative,0.9942,pyabsa,mixed_sentiment,"Powerful features, shame about the confusing navigation."
+48,performance,Positive,0.6482,pyabsa,mixed_sentiment,The latest update improved performance but removed my favourite widget.
+48,widget,Negative,0.9708,pyabsa,mixed_sentiment,The latest update improved performance but removed my favourite widget.
+49,Sync,Positive,0.9947,pyabsa,mixed_sentiment,"Sync is reliable, however the interface feels dated."
+49,interface,Negative,0.9958,pyabsa,mixed_sentiment,"Sync is reliable, however the interface feels dated."
+50,Customer support,Positive,0.9689,pyabsa,mixed_sentiment,Customer support replied within an hour but could not fix the crash.
+50,crash,Negative,0.9938,pyabsa,mixed_sentiment,Customer support replied within an hour but could not fix the crash.
+51,ads,Negative,0.9952,pyabsa,mixed_sentiment,"Free version is generous, though the ads are intrusive."
+56,interface,Negative,0.9935,pyabsa,long_form,"I installed this after seeing it recommended and I regret it. The signup process demanded access to my contacts and location before I could even see the app, which is an immediate red flag. The interface is cluttered with upsell banners. Performance is sluggish, scrolling stutters constantly on a recent phone. The one positive is that the export function works properly and let me get my data back out easily, so uninstalling was painless."
+56,Performance,Negative,0.9196,pyabsa,long_form,"I installed this after seeing it recommended and I regret it. The signup process demanded access to my contacts and location before I could even see the app, which is an immediate red flag. The interface is cluttered with upsell banners. Performance is sluggish, scrolling stutters constantly on a recent phone. The one positive is that the export function works properly and let me get my data back out easily, so uninstalling was painless."
+56,uninstalling,Positive,0.9523,pyabsa,long_form,"I installed this after seeing it recommended and I regret it. The signup process demanded access to my contacts and location before I could even see the app, which is an immediate red flag. The interface is cluttered with upsell banners. Performance is sluggish, scrolling stutters constantly on a recent phone. The one positive is that the export function works properly and let me get my data back out easily, so uninstalling was painless."
+57,interface,Positive,0.991,pyabsa,hindi,ऐप का इंटरफेस बहुत साफ है लेकिन बैटरी जल्दी खत्म होती है।
+57,battery,Negative,0.9842,pyabsa,hindi,ऐप का इंटरफेस बहुत साफ है लेकिन बैटरी जल्दी खत्म होती है।
+58,ads,Negative,0.9963,pyabsa,hindi,विज्ञापन बहुत ज़्यादा हैं और ऐप बार बार बंद हो जाता है।
+59,interface,Positive,0.9935,pyabsa,hinglish,App ka interface bahut accha hai lekin ads irritating hain.
+59,ads,Negative,0.9943,pyabsa,hinglish,App ka interface bahut accha hai lekin ads irritating hain.
+60,Performance,Positive,0.9985,pyabsa,hinglish,Performance fast hai aur sync bhi perfectly kaam karta hai.
+60,sync,Positive,0.9987,pyabsa,hinglish,Performance fast hai aur sync bhi perfectly kaam karta hai.
+61,food,Positive,0.9987,pyabsa,single_aspect_control,The food was absolutely delicious.
+62,Service,Negative,0.9964,pyabsa,single_aspect_control,Service was painfully slow all evening.
+63,ambiance,Positive,0.9984,pyabsa,single_aspect_control,The ambiance is warm and welcoming.
+64,Portions,Negative,0.9928,pyabsa,single_aspect_control,Portions are far too small for the price.
+64,price,Neutral,0.9628,pyabsa,single_aspect_control,Portions are far too small for the price.
+65,staff,Positive,0.9984,pyabsa,single_aspect_control,The staff were friendly and attentive throughout.
+66,dessert menu,Negative,0.9948,pyabsa,single_aspect_control,The dessert menu is very limited.
+67,food,Positive,0.9987,pyabsa,multi_aspect,Wonderful food and excellent service. We will be back.
+67,service,Positive,0.9987,pyabsa,multi_aspect,Wonderful food and excellent service. We will be back.
+68,pasta,Negative,0.9849,pyabsa,multi_aspect,The pasta was undercooked and the waiter was rude.
+68,waiter,Negative,0.9959,pyabsa,multi_aspect,The pasta was undercooked and the waiter was rude.
+69,atmosphere,Positive,0.9975,pyabsa,multi_aspect,"Lovely atmosphere, generous portions, and reasonable prices."
+69,portions,Positive,0.9952,pyabsa,multi_aspect,"Lovely atmosphere, generous portions, and reasonable prices."
+69,prices,Positive,0.693,pyabsa,multi_aspect,"Lovely atmosphere, generous portions, and reasonable prices."
+70,wait time,Negative,0.794,pyabsa,multi_aspect,The wait time was over an hour and the table was sticky.
+70,table,Negative,0.9546,pyabsa,multi_aspect,The wait time was over an hour and the table was sticky.
+71,wine list,Positive,0.9979,pyabsa,multi_aspect,Excellent wine list and the steak was cooked perfectly.
+71,steak,Positive,0.9973,pyabsa,multi_aspect,Excellent wine list and the steak was cooked perfectly.
+72,dining room,Negative,0.9964,pyabsa,multi_aspect,Noisy dining room and the music was far too loud to talk.
+72,music,Negative,0.9945,pyabsa,multi_aspect,Noisy dining room and the music was far too loud to talk.
+73,bread,Positive,0.998,pyabsa,multi_aspect,The bread was fresh and the olive oil was excellent quality.
+73,olive oil,Positive,0.9958,pyabsa,multi_aspect,The bread was fresh and the olive oil was excellent quality.
+74,menu,Negative,0.9895,pyabsa,multi_aspect,Overpriced menu and the parking situation is a nightmare.
+74,parking situation,Negative,0.9946,pyabsa,multi_aspect,Overpriced menu and the parking situation is a nightmare.
+75,ingredients,Positive,0.9982,pyabsa,multi_aspect,"Fresh ingredients, beautiful presentation, and friendly staff."
+75,presentation,Positive,0.9982,pyabsa,multi_aspect,"Fresh ingredients, beautiful presentation, and friendly staff."
+75,staff,Positive,0.9984,pyabsa,multi_aspect,"Fresh ingredients, beautiful presentation, and friendly staff."
+76,food,Positive,0.994,pyabsa,mixed_sentiment,The food was outstanding but the service was incredibly slow.
+76,service,Negative,0.995,pyabsa,mixed_sentiment,The food was outstanding but the service was incredibly slow.
+77,decor,Positive,0.9936,pyabsa,mixed_sentiment,"Beautiful decor, shame the food was bland."
+77,food,Negative,0.994,pyabsa,mixed_sentiment,"Beautiful decor, shame the food was bland."
+78,Staff,Positive,0.987,pyabsa,mixed_sentiment,Staff were lovely but the kitchen got our order wrong twice.
+78,kitchen,Negative,0.9952,pyabsa,mixed_sentiment,Staff were lovely but the kitchen got our order wrong twice.
+79,seating,Negative,0.9943,pyabsa,mixed_sentiment,"Great value for money, although the seating is uncomfortable."
+80,curry,Positive,0.9947,pyabsa,mixed_sentiment,"The curry was superb, however the naan arrived cold."
+80,naan,Negative,0.9952,pyabsa,mixed_sentiment,"The curry was superb, however the naan arrived cold."
+81,service,Positive,0.8754,pyabsa,mixed_sentiment,Quick service but the coffee tasted burnt.
+81,coffee,Negative,0.9872,pyabsa,mixed_sentiment,Quick service but the coffee tasted burnt.
+84,meals,Positive,0.9588,pyabsa,long_form,"Genuinely one of the best meals I have had this year. Everything from start to finish was considered. The bread arrived warm with excellent butter. The tasting menu was well paced and each course was distinct. Portions were judged well, I left satisfied but not uncomfortable. The staff were knowledgeable and clearly enjoyed working there. Prices are high but honestly justified given the quality of the ingredients. The only small criticism is that the restaurant is quite hard to find."
+84,bread,Positive,0.9727,pyabsa,long_form,"Genuinely one of the best meals I have had this year. Everything from start to finish was considered. The bread arrived warm with excellent butter. The tasting menu was well paced and each course was distinct. Portions were judged well, I left satisfied but not uncomfortable. The staff were knowledgeable and clearly enjoyed working there. Prices are high but honestly justified given the quality of the ingredients. The only small criticism is that the restaurant is quite hard to find."
+84,butter,Positive,0.965,pyabsa,long_form,"Genuinely one of the best meals I have had this year. Everything from start to finish was considered. The bread arrived warm with excellent butter. The tasting menu was well paced and each course was distinct. Portions were judged well, I left satisfied but not uncomfortable. The staff were knowledgeable and clearly enjoyed working there. Prices are high but honestly justified given the quality of the ingredients. The only small criticism is that the restaurant is quite hard to find."
+84,menu,Positive,0.9554,pyabsa,long_form,"Genuinely one of the best meals I have had this year. Everything from start to finish was considered. The bread arrived warm with excellent butter. The tasting menu was well paced and each course was distinct. Portions were judged well, I left satisfied but not uncomfortable. The staff were knowledgeable and clearly enjoyed working there. Prices are high but honestly justified given the quality of the ingredients. The only small criticism is that the restaurant is quite hard to find."
+84,course,Positive,0.965,pyabsa,long_form,"Genuinely one of the best meals I have had this year. Everything from start to finish was considered. The bread arrived warm with excellent butter. The tasting menu was well paced and each course was distinct. Portions were judged well, I left satisfied but not uncomfortable. The staff were knowledgeable and clearly enjoyed working there. Prices are high but honestly justified given the quality of the ingredients. The only small criticism is that the restaurant is quite hard to find."
+84,Portions,Positive,0.9727,pyabsa,long_form,"Genuinely one of the best meals I have had this year. Everything from start to finish was considered. The bread arrived warm with excellent butter. The tasting menu was well paced and each course was distinct. Portions were judged well, I left satisfied but not uncomfortable. The staff were knowledgeable and clearly enjoyed working there. Prices are high but honestly justified given the quality of the ingredients. The only small criticism is that the restaurant is quite hard to find."
+84,staff,Neutral,0.5461,pyabsa,long_form,"Genuinely one of the best meals I have had this year. Everything from start to finish was considered. The bread arrived warm with excellent butter. The tasting menu was well paced and each course was distinct. Portions were judged well, I left satisfied but not uncomfortable. The staff were knowledgeable and clearly enjoyed working there. Prices are high but honestly justified given the quality of the ingredients. The only small criticism is that the restaurant is quite hard to find."
+84,Prices,Neutral,0.7478,pyabsa,long_form,"Genuinely one of the best meals I have had this year. Everything from start to finish was considered. The bread arrived warm with excellent butter. The tasting menu was well paced and each course was distinct. Portions were judged well, I left satisfied but not uncomfortable. The staff were knowledgeable and clearly enjoyed working there. Prices are high but honestly justified given the quality of the ingredients. The only small criticism is that the restaurant is quite hard to find."
+85,food,Positive,0.9601,pyabsa,long_form,"Went for a casual weekday lunch and it was fine, nothing more. The food was competent, my sandwich was fresh and the soup was properly seasoned. Service was efficient and we were in and out in forty minutes which suited us. The interior is a bit tired, the chairs are worn and the lighting is harsh. Prices are on the higher side for what is essentially a cafe. It does the job if you need a quick lunch nearby."
+85,sandwich,Positive,0.9849,pyabsa,long_form,"Went for a casual weekday lunch and it was fine, nothing more. The food was competent, my sandwich was fresh and the soup was properly seasoned. Service was efficient and we were in and out in forty minutes which suited us. The interior is a bit tired, the chairs are worn and the lighting is harsh. Prices are on the higher side for what is essentially a cafe. It does the job if you need a quick lunch nearby."
+85,soup,Positive,0.9891,pyabsa,long_form,"Went for a casual weekday lunch and it was fine, nothing more. The food was competent, my sandwich was fresh and the soup was properly seasoned. Service was efficient and we were in and out in forty minutes which suited us. The interior is a bit tired, the chairs are worn and the lighting is harsh. Prices are on the higher side for what is essentially a cafe. It does the job if you need a quick lunch nearby."
+85,Service,Positive,0.9867,pyabsa,long_form,"Went for a casual weekday lunch and it was fine, nothing more. The food was competent, my sandwich was fresh and the soup was properly seasoned. Service was efficient and we were in and out in forty minutes which suited us. The interior is a bit tired, the chairs are worn and the lighting is harsh. Prices are on the higher side for what is essentially a cafe. It does the job if you need a quick lunch nearby."
+85,interior,Negative,0.9827,pyabsa,long_form,"Went for a casual weekday lunch and it was fine, nothing more. The food was competent, my sandwich was fresh and the soup was properly seasoned. Service was efficient and we were in and out in forty minutes which suited us. The interior is a bit tired, the chairs are worn and the lighting is harsh. Prices are on the higher side for what is essentially a cafe. It does the job if you need a quick lunch nearby."
+85,chairs,Negative,0.9907,pyabsa,long_form,"Went for a casual weekday lunch and it was fine, nothing more. The food was competent, my sandwich was fresh and the soup was properly seasoned. Service was efficient and we were in and out in forty minutes which suited us. The interior is a bit tired, the chairs are worn and the lighting is harsh. Prices are on the higher side for what is essentially a cafe. It does the job if you need a quick lunch nearby."
+85,lighting,Negative,0.9872,pyabsa,long_form,"Went for a casual weekday lunch and it was fine, nothing more. The food was competent, my sandwich was fresh and the soup was properly seasoned. Service was efficient and we were in and out in forty minutes which suited us. The interior is a bit tired, the chairs are worn and the lighting is harsh. Prices are on the higher side for what is essentially a cafe. It does the job if you need a quick lunch nearby."
+85,Prices,Negative,0.9754,pyabsa,long_form,"Went for a casual weekday lunch and it was fine, nothing more. The food was competent, my sandwich was fresh and the soup was properly seasoned. Service was efficient and we were in and out in forty minutes which suited us. The interior is a bit tired, the chairs are worn and the lighting is harsh. Prices are on the higher side for what is essentially a cafe. It does the job if you need a quick lunch nearby."
+87,food,Positive,0.9975,pyabsa,hindi,खाना बहुत स्वादिष्ट था और सेवा भी अच्छी थी।
+87,service,Positive,0.5661,pyabsa,hindi,खाना बहुत स्वादिष्ट था और सेवा भी अच्छी थी।
+88,price,Negative,0.9958,pyabsa,hindi,कीमत बहुत ज़्यादा थी और माहौल शोरगुल वाला था।
+88,atmosphere,Negative,0.9939,pyabsa,hindi,कीमत बहुत ज़्यादा थी और माहौल शोरगुल वाला था।
+89,Khana,Positive,0.9939,pyabsa,hinglish,Khana bahut tasty tha lekin service slow thi.
+89,service,Negative,0.9949,pyabsa,hinglish,Khana bahut tasty tha lekin service slow thi.
+90,Ambiance,Positive,0.6784,pyabsa,hinglish,Ambiance ekdum mast tha aur staff bhi friendly the.
+90,staff,Positive,0.9975,pyabsa,hinglish,Ambiance ekdum mast tha aur staff bhi friendly the.
+91,room,Positive,0.9975,pyabsa,single_aspect_control,The room was spotlessly clean.
+92,wifi,Negative,0.9646,pyabsa,single_aspect_control,The wifi was unusable for the entire stay.
+92,stay,Neutral,0.9911,pyabsa,single_aspect_control,The wifi was unusable for the entire stay.
+93,Breakfast,Positive,0.9983,pyabsa,single_aspect_control,Breakfast was excellent with plenty of choice.
+94,bathroom,Negative,0.9965,pyabsa,single_aspect_control,The bathroom was outdated and poorly maintained.
+95,location,Positive,0.9981,pyabsa,single_aspect_control,The location is perfect for exploring the city.
+96,beds,Negative,0.9962,pyabsa,single_aspect_control,The beds were extremely uncomfortable.
+97,room,Positive,0.9983,pyabsa,multi_aspect,Lovely room and the staff were incredibly helpful.
+97,staff,Positive,0.9984,pyabsa,multi_aspect,Lovely room and the staff were incredibly helpful.
+98,air conditioning,Negative,0.9894,pyabsa,multi_aspect,The air conditioning was broken and reception was unresponsive.
+98,reception,Negative,0.9956,pyabsa,multi_aspect,The air conditioning was broken and reception was unresponsive.
+99,beds,Positive,0.9979,pyabsa,multi_aspect,"Comfortable beds, quiet rooms, and an excellent breakfast spread."
+99,rooms,Positive,0.9977,pyabsa,multi_aspect,"Comfortable beds, quiet rooms, and an excellent breakfast spread."
+99,breakfast spread,Positive,0.998,pyabsa,multi_aspect,"Comfortable beds, quiet rooms, and an excellent breakfast spread."
+100,pool,Negative,0.9585,pyabsa,multi_aspect,The pool was closed and the gym equipment was broken.
+100,gym equipment,Negative,0.9814,pyabsa,multi_aspect,The pool was closed and the gym equipment was broken.
+101,Check in,Positive,0.9975,pyabsa,multi_aspect,Check in was fast and the room had a stunning view.
+101,room,Positive,0.9961,pyabsa,multi_aspect,Check in was fast and the room had a stunning view.
+101,view,Positive,0.997,pyabsa,multi_aspect,Check in was fast and the room had a stunning view.
+102,walls,Negative,0.9967,pyabsa,multi_aspect,"Thin walls, noisy corridors, and the heating never worked."
+102,corridors,Negative,0.9966,pyabsa,multi_aspect,"Thin walls, noisy corridors, and the heating never worked."
+102,heating,Negative,0.9961,pyabsa,multi_aspect,"Thin walls, noisy corridors, and the heating never worked."
+103,spa,Positive,0.9825,pyabsa,multi_aspect,The spa was wonderful and the restaurant served great food.
+103,food,Positive,0.9334,pyabsa,multi_aspect,The spa was wonderful and the restaurant served great food.
+104,Parking,Negative,0.9944,pyabsa,multi_aspect,Parking is expensive and the lift was out of service all week.
+104,lift,Negative,0.9308,pyabsa,multi_aspect,Parking is expensive and the lift was out of service all week.
+105,room,Positive,0.9967,pyabsa,multi_aspect,"Spacious room, modern bathroom, and very friendly reception staff."
+105,bathroom,Positive,0.9959,pyabsa,multi_aspect,"Spacious room, modern bathroom, and very friendly reception staff."
+105,reception staff,Positive,0.9978,pyabsa,multi_aspect,"Spacious room, modern bathroom, and very friendly reception staff."
+106,location,Positive,0.9944,pyabsa,mixed_sentiment,The location is excellent but the rooms are very dated.
+106,rooms,Negative,0.9908,pyabsa,mixed_sentiment,The location is excellent but the rooms are very dated.
+107,Staff,Positive,0.9948,pyabsa,mixed_sentiment,"Staff were wonderful, though the breakfast was disappointing."
+107,breakfast,Negative,0.9904,pyabsa,mixed_sentiment,"Staff were wonderful, though the breakfast was disappointing."
+108,lobby,Positive,0.9889,pyabsa,mixed_sentiment,"Beautiful lobby, but our room smelled of damp."
+108,room,Negative,0.9948,pyabsa,mixed_sentiment,"Beautiful lobby, but our room smelled of damp."
+109,price,Positive,0.9914,pyabsa,mixed_sentiment,"Great value for the price, although the wifi kept dropping."
+109,wifi,Negative,0.9928,pyabsa,mixed_sentiment,"Great value for the price, although the wifi kept dropping."
+110,bed,Positive,0.9935,pyabsa,mixed_sentiment,The bed was extremely comfortable but the shower had no pressure.
+110,shower,Negative,0.9039,pyabsa,mixed_sentiment,The bed was extremely comfortable but the shower had no pressure.
+111,garden,Positive,0.994,pyabsa,mixed_sentiment,"The garden was quiet and peaceful, however the check out process was chaotic."
+111,check,Negative,0.9919,pyabsa,mixed_sentiment,"The garden was quiet and peaceful, however the check out process was chaotic."
+111,process,Negative,0.9928,pyabsa,mixed_sentiment,"The garden was quiet and peaceful, however the check out process was chaotic."
+117,room,Positive,0.9968,pyabsa,hindi,कमरा बहुत साफ था और स्टाफ मददगार था।
+117,staff,Positive,0.9367,pyabsa,hindi,कमरा बहुत साफ था और स्टाफ मददगार था।
+118,bathroom,Negative,0.9956,pyabsa,hindi,बाथरूम गंदा था और नाश्ता बहुत खराब था।
+118,breakfast,Negative,0.9963,pyabsa,hindi,बाथरूम गंदा था और नाश्ता बहुत खराब था।
+119,Room,Positive,0.9842,pyabsa,hinglish,Room ekdum clean tha lekin wifi bilkul kaam nahi kar raha tha.
+119,wifi,Negative,0.9928,pyabsa,hinglish,Room ekdum clean tha lekin wifi bilkul kaam nahi kar raha tha.
+120,Location,Positive,0.9968,pyabsa,hinglish,Location bahut acchi hai aur breakfast bhi tasty tha.
+120,breakfast,Positive,0.9984,pyabsa,hinglish,Location bahut acchi hai aur breakfast bhi tasty tha.
+121,battery life,Positive,0.9985,pyabsa,single_aspect_control,"The battery life is outstanding, easily two full days."
+122,screen,Negative,0.9964,pyabsa,single_aspect_control,The screen scratches far too easily.
+123,Sound quality,Positive,0.9974,pyabsa,single_aspect_control,Sound quality is rich and well balanced.
+124,charging cable,Negative,0.9956,pyabsa,single_aspect_control,The charging cable stopped working after two weeks.
+125,build quality,Positive,0.9985,pyabsa,single_aspect_control,The build quality feels premium and solid.
+126,camera,Negative,0.9971,pyabsa,single_aspect_control,The camera struggles badly in low light.
+127,display,Positive,0.9983,pyabsa,multi_aspect,Excellent display and the battery lasts all day.
+127,battery,Positive,0.9978,pyabsa,multi_aspect,Excellent display and the battery lasts all day.
+128,speakers,Negative,0.9961,pyabsa,multi_aspect,The speakers are tinny and the microphone picks up too much noise.
+128,microphone,Negative,0.9968,pyabsa,multi_aspect,The speakers are tinny and the microphone picks up too much noise.
+129,processor,Positive,0.9987,pyabsa,multi_aspect,"Fast processor, sharp screen, and the fingerprint sensor is reliable."
+129,screen,Positive,0.9986,pyabsa,multi_aspect,"Fast processor, sharp screen, and the fingerprint sensor is reliable."
+129,fingerprint sensor,Positive,0.9988,pyabsa,multi_aspect,"Fast processor, sharp screen, and the fingerprint sensor is reliable."
+130,fan,Negative,0.9958,pyabsa,multi_aspect,The device overheats during use and the fan is very loud.
+131,keyboard feel,Positive,0.9982,pyabsa,multi_aspect,Great keyboard feel and the trackpad is very precise.
+131,trackpad,Positive,0.9981,pyabsa,multi_aspect,Great keyboard feel and the trackpad is very precise.
+132,software,Positive,0.8282,pyabsa,multi_aspect,The software is bloated and storage fills up within months.
+132,storage,Negative,0.4282,pyabsa,multi_aspect,The software is bloated and storage fills up within months.
+133,design,Positive,0.9972,pyabsa,multi_aspect,"Lightweight design, long battery, and it charges very quickly."
+133,battery,Positive,0.9968,pyabsa,multi_aspect,"Lightweight design, long battery, and it charges very quickly."
+133,charges,Positive,0.9967,pyabsa,multi_aspect,"Lightweight design, long battery, and it charges very quickly."
+134,port selection,Negative,0.9955,pyabsa,multi_aspect,The port selection is limited and the included adapter feels cheap.
+134,adapter,Negative,0.9898,pyabsa,multi_aspect,The port selection is limited and the included adapter feels cheap.
+135,display,Positive,0.9963,pyabsa,multi_aspect,"Crisp display, excellent speakers, and a very responsive touchscreen."
+135,speakers,Positive,0.9979,pyabsa,multi_aspect,"Crisp display, excellent speakers, and a very responsive touchscreen."
+135,touchscreen,Positive,0.9982,pyabsa,multi_aspect,"Crisp display, excellent speakers, and a very responsive touchscreen."
+136,camera,Positive,0.9848,pyabsa,mixed_sentiment,The camera is superb but the battery drains within four hours.
+136,battery,Negative,0.9893,pyabsa,mixed_sentiment,The camera is superb but the battery drains within four hours.
+137,screen,Positive,0.9933,pyabsa,mixed_sentiment,"Beautiful screen, shame about the flimsy hinge."
+137,hinge,Negative,0.99,pyabsa,mixed_sentiment,"Beautiful screen, shame about the flimsy hinge."
+138,Performance,Positive,0.9958,pyabsa,mixed_sentiment,"Performance is excellent, although the fan noise is distracting."
+138,fan noise,Negative,0.9932,pyabsa,mixed_sentiment,"Performance is excellent, although the fan noise is distracting."
+139,price,Positive,0.9954,pyabsa,mixed_sentiment,The price is very competitive but the build feels cheap.
+139,build,Negative,0.9922,pyabsa,mixed_sentiment,The price is very competitive but the build feels cheap.
+140,Sound quality,Positive,0.9958,pyabsa,mixed_sentiment,"Sound quality is great, however the bluetooth connection keeps dropping."
+140,bluetooth connection,Negative,0.9953,pyabsa,mixed_sentiment,"Sound quality is great, however the bluetooth connection keeps dropping."
+141,Setup,Positive,0.9029,pyabsa,mixed_sentiment,Setup was straightforward but the manual was useless.
+141,manual,Negative,0.9909,pyabsa,mixed_sentiment,Setup was straightforward but the manual was useless.
+145,sound quality,Positive,0.9372,pyabsa,long_form,"These headphones are a mixed proposition. The sound quality is genuinely very good, detailed with controlled bass that does not overwhelm. Noise cancellation is effective on a plane and on public transport. However the comfort is poor for me, the clamping force is strong and after about ninety minutes my ears ache. The companion app is buggy and disconnects regularly. Battery life is strong at around thirty hours. The carrying case is well made and compact."
+145,Noise,Positive,0.9279,pyabsa,long_form,"These headphones are a mixed proposition. The sound quality is genuinely very good, detailed with controlled bass that does not overwhelm. Noise cancellation is effective on a plane and on public transport. However the comfort is poor for me, the clamping force is strong and after about ninety minutes my ears ache. The companion app is buggy and disconnects regularly. Battery life is strong at around thirty hours. The carrying case is well made and compact."
+145,comfort,Negative,0.9522,pyabsa,long_form,"These headphones are a mixed proposition. The sound quality is genuinely very good, detailed with controlled bass that does not overwhelm. Noise cancellation is effective on a plane and on public transport. However the comfort is poor for me, the clamping force is strong and after about ninety minutes my ears ache. The companion app is buggy and disconnects regularly. Battery life is strong at around thirty hours. The carrying case is well made and compact."
+145,Battery life,Positive,0.8587,pyabsa,long_form,"These headphones are a mixed proposition. The sound quality is genuinely very good, detailed with controlled bass that does not overwhelm. Noise cancellation is effective on a plane and on public transport. However the comfort is poor for me, the clamping force is strong and after about ninety minutes my ears ache. The companion app is buggy and disconnects regularly. Battery life is strong at around thirty hours. The carrying case is well made and compact."
+145,carrying case,Positive,0.8183,pyabsa,long_form,"These headphones are a mixed proposition. The sound quality is genuinely very good, detailed with controlled bass that does not overwhelm. Noise cancellation is effective on a plane and on public transport. However the comfort is poor for me, the clamping force is strong and after about ninety minutes my ears ache. The companion app is buggy and disconnects regularly. Battery life is strong at around thirty hours. The carrying case is well made and compact."
+147,Battery,Positive,0.9982,pyabsa,hindi,बैटरी बहुत अच्छी है और कैमरा भी शानदार है।
+147,camera,Positive,0.9986,pyabsa,hindi,बैटरी बहुत अच्छी है और कैमरा भी शानदार है।
+148,screen,Negative,0.995,pyabsa,hindi,स्क्रीन खराब है और कीमत बहुत ज़्यादा है।
+148,price,Negative,0.9956,pyabsa,hindi,स्क्रीन खराब है और कीमत बहुत ज़्यादा है।
+149,Camera quality,Positive,0.9937,pyabsa,hinglish,Camera quality bahut acchi hai lekin battery jaldi khatam hoti hai.
+149,battery jaldi,Negative,0.9896,pyabsa,hinglish,Camera quality bahut acchi hai lekin battery jaldi khatam hoti hai.
+150,Sound,Positive,0.9984,pyabsa,hinglish,Sound bahut clear hai aur build quality bhi solid hai.
+150,build quality,Positive,0.9985,pyabsa,hinglish,Sound bahut clear hai aur build quality bhi solid hai.
