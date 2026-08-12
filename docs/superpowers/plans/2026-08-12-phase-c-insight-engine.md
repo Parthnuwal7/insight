@@ -628,15 +628,49 @@ Start the backend, upload one of `streamlit-deployment/test_data_*.csv`, and con
 
 Verified to resolve to `mcp 2.0.0` with no upgrades to existing packages. Re-check the pins afterwards exactly as in Task 1, and re-run the suite.
 
-- [ ] **Step 2: Implement the adapter**
+- [ ] **Step 2: Preload pyabsa at the server entry point — before any other import**
+
+`insights/__init__.py` carries a pyabsa preload guard, but it only helps when
+`insights` is the **first** pandas-touching import in the process. It cannot
+protect a caller that imports pandas — or anything importing pandas — first.
+Verified during Task 3: `import pandas` followed by
+`from insights.tools import InsightTools` still segfaults with exit 139 *with
+the guard present*.
+
+The MCP server is a standalone entry point with no conftest, so it must preload
+explicitly, exactly as `ABSA/app.py` and `benchmarks/harness/run_benchmark.py`
+do. Put this at the very top of `mcp_server.py`, above every other import:
+
+```python
+# IMPORT ORDER IS LOAD-BEARING: pyabsa must precede pandas or the interpreter
+# segfaults on Windows (exit 139). insights/__init__.py guards consumers whose
+# first pandas-touching import goes through this package, but a standalone
+# entry point may pull in pandas by another route first, so preload here too.
+try:
+    import pyabsa  # noqa: F401
+except Exception:  # noqa: BLE001
+    pass
+```
+
+Verify the server module imports cleanly in a fresh interpreter, and also
+verify it survives the hostile ordering:
+
+```bash
+.venv-bench/Scripts/python.exe -c "import sys; sys.path.insert(0,'ABSA/src'); import pandas; import insights.mcp_server; print('OK')"
+```
+
+Expected: exit 0. If this segfaults, the preload is in the wrong place or below
+another import.
+
+- [ ] **Step 3: Implement the adapter**
 
 Thin: each MCP tool calls the matching `InsightTools` method and returns its result. **No logic lives here** — that is what keeps `tools.py` testable without a transport.
 
-- [ ] **Step 3: Test that each exposed tool maps to a real method**
+- [ ] **Step 4: Test that each exposed tool maps to a real method**
 
 A test asserting the MCP tool list matches `InsightTools`' public accessors, so the two cannot drift apart silently.
 
-- [ ] **Step 4: Commit**
+- [ ] **Step 5: Commit**
 
 ---
 
