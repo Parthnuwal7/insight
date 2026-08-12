@@ -247,7 +247,7 @@ curl -X POST http://localhost:7860/jobs \
 | **Translation** | Helsinki-NLP opus-mt via HF Inference API |
 | **Persistence** | SQLite (WAL) |
 | **Frontend** | Streamlit, Plotly, NetworkX, WordCloud |
-| **Testing** | pytest — 160 tests, plus a reproducible accuracy benchmark |
+| **Testing** | pytest — 302 tests by default (2 `slow` deselected), plus a 20-test groundedness benchmark suite and a reproducible accuracy benchmark |
 
 ---
 
@@ -260,7 +260,7 @@ Work is planned in four phases. Specs and task-level plans live in
 |---|---|---|
 | **A** | Decouple the backend from Streamlit; batch inference | ✅ **Done** — 2.5× faster extraction, accuracy unchanged |
 | **B** | Durable SQLite job store, chunked resumption, per-stage concurrency | ✅ **Done** — restart-resumption proven against a killed process |
-| **C** | Insight engine: embeddings, clustering, grounded agent, verifier, report | 📋 **Planned** — 9 tasks specced |
+| **C** | Insight engine: embeddings, clustering, grounded agent, verifier, report | ✅ **Done** — 9 tasks shipped, plus a whole-branch review pass |
 | **D** | Decoupled Next.js frontend | 📝 **Specified** |
 
 ### What Phase C changes
